@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:fluttertoast/fluttertoast.dart';
 import '../cascadeStyle/color.dart';
 import '../cascadeStyle/fonts.dart';
 
@@ -30,6 +30,16 @@ class Utils {
       content: Text(content, style: TextStyleMobile.body_14.copyWith(color: Colors.white)),));
   }
   static void showSnackBarAlert(BuildContext context, String content) {
+    // Fluttertoast.showToast(
+    //     msg: content,
+    //     toastLength: Toast.LENGTH_SHORT,
+    //     gravity: ToastGravity.TOP_RIGHT,
+    //     timeInSecForIosWeb: 1,
+    //     textColor: Colors.white,
+    //     fontSize: 16.0,
+    //   backgroundColor: MobileColor.orangeColor
+    // );
+
     ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(backgroundColor: Colors.red,
       content: Text(content, style: TextStyleMobile.body_14.copyWith(color: Colors.white)),));

@@ -4,14 +4,8 @@ class ShippingPackage {
   int? _id;
   OutboundPackage? _outboundPackage;
 
-  ShippingPackages({int? id, OutboundPackage? outboundPackage}) {
-    if (id != null) {
-      this._id = id;
-    }
-    if (outboundPackage != null) {
-      this._outboundPackage = outboundPackage;
-    }
-  }
+
+  ShippingPackage(this._id, this._outboundPackage);
 
   int? get id => _id;
   set id(int? id) => _id = id;
@@ -22,15 +16,15 @@ class ShippingPackage {
   ShippingPackage.fromJson(Map<String, dynamic> json) {
     _id = json['id'];
     _outboundPackage = json['outboundPackage'] != null
-        ? new OutboundPackage.fromJson(json['outboundPackage'])
+        ? OutboundPackage.fromJson(json['outboundPackage'])
         : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this._id;
-    if (this._outboundPackage != null) {
-      data['outboundPackage'] = this._outboundPackage!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = _id;
+    if (_outboundPackage != null) {
+      data['outboundPackage'] = _outboundPackage!.toJson();
     }
     return data;
   }

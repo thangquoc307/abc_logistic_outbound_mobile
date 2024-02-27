@@ -19,7 +19,6 @@ class _PickedListState extends State<PickedList> {
   @override
   Widget build(BuildContext context) {
     Provider.of<GlobalState>(context, listen: false).getPickedListDatabase(context);
-
     return Consumer<GlobalState>(
       builder: (context, state, child) {
         return Column(

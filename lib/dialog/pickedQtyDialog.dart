@@ -92,7 +92,7 @@ class _PickedQtyDialogState extends State<PickedQtyDialog> {
               Utils.showSnackBarAlert(context, "Number of Product not equal request");
             } else if (_formKey.currentState!.validate()){
               var state = Provider.of<GlobalState>(context, listen: false);
-              state.updateQtyPicked(widget.outboundProductDetail, listController);
+              state.updateQtyPicked(widget.outboundProductDetail, listController, context);
               Navigator.of(context).pop();
             }
           },

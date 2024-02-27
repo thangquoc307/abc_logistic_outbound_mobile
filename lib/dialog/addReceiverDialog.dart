@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_outbound/model/shipping.dart';
+import 'package:flutter_outbound/model/shippingPackage.dart';
 import 'package:flutter_outbound/service/util.dart';
 
 import '../cascadeStyle/color.dart';
 import '../cascadeStyle/fonts.dart';
 import '../cascadeStyle/input.dart';
+import '../model/outboundPackage.dart';
 import '../model/shippingAddress.dart';
 import '../service/stepRender.dart';
 import 'locationDialog.dart';
 
 class AddReceiverDialog extends StatefulWidget {
-  const AddReceiverDialog({super.key, required this.shipping});
+  const AddReceiverDialog({super.key, required this.shipping, required this.setPackaged, required this.dataSubmit});
   final Shipping shipping;
+  final Set<OutboundPackage> setPackaged;
+  final Function(Shipping) dataSubmit;
 
   @override
   State<AddReceiverDialog> createState() => _AddReceiverDialogState();
@@ -22,11 +26,32 @@ class _AddReceiverDialogState extends State<AddReceiverDialog> {
   int step = 0;
   final GlobalKey<FormState> _formKey1 = GlobalKey<FormState>();
   final GlobalKey<FormState> _formKey2 = GlobalKey<FormState>();
-  final GlobalKey<FormState> _formKey3 = GlobalKey<FormState>();
 
   static const List<String> _deliveryStatus = ["pending", "shipped", "delivered", "cancelled",];
   static const List<String> _carrier = ["FEDEX", "UPS", "USPS", "DHL", "AMAZON", "OTHERS"];
   static const List<String> _shipmentMethod = ["FEDEX", "UPS", "USPS", "DHL", "AMAZON", "OTHERS"];
+
+  Map<int, OutboundPackage> selectedPackaged = {};
+
+  int? checkExistShippingId(int outboundPackageId){
+    for (var element in widget.shipping.shippingPackages!) {
+      if (outboundPackageId == element.outboundPackage!.id) {
+        return element.id;
+      }
+    }
+    return null;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    selectedPackaged = widget.shipping.shippingPackages != null
+        ? Map.fromIterable(
+      widget.shipping.shippingPackages!,
+      key: (element) => element.outboundPackage.id,
+      value: (element) => element.outboundPackage,
+    ) : {};
+  }
 
   List<Widget>? renderButton() {
     switch (step) {
@@ -87,8 +112,15 @@ class _AddReceiverDialogState extends State<AddReceiverDialog> {
           ),
           TextButton(
             onPressed: () {
-              if(_formKey3.currentState!.validate()) {
-                //save
+              if (selectedPackaged.isEmpty) {
+                Utils.showSnackBarAlert(context, "Please select least one package");
+              } else {
+                Set<ShippingPackage> setShipping = {};
+                for (var element in selectedPackaged.values) {
+                  setShipping.add(ShippingPackage(checkExistShippingId(element.id!), element));
+                }
+                widget.shipping.shippingPackages = setShipping;
+                widget.dataSubmit(widget.shipping);
                 Navigator.of(context).pop();
               }
             },
@@ -100,7 +132,6 @@ class _AddReceiverDialogState extends State<AddReceiverDialog> {
   }
 
   Widget? renderForm() {
-    print(widget.shipping.carrier);
     switch (step) {
       case 0:
         return Form(
@@ -364,8 +395,6 @@ class _AddReceiverDialogState extends State<AddReceiverDialog> {
                   widget.shipping.emailSender = value;
                 },
               ),
-
-
             ],
           ),
         );
@@ -583,10 +612,102 @@ class _AddReceiverDialogState extends State<AddReceiverDialog> {
           ),
         );
       case 2:
-
+        return Column(
+          children: widget.setPackaged.map((e) {
+            if (selectedPackaged.containsKey(e.id)) {
+              return InkWell(
+              onTap: () {
+                setState(() {
+                  selectedPackaged.remove(e.id);
+                });
+              },
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                alignment: Alignment.centerLeft,
+                margin: const EdgeInsets.only(bottom: 10),
+                width: double.infinity,
+                height: 85,
+                decoration: BoxDecoration(
+                    color: MobileColor.softOrangeColor,
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                        color: MobileColor.orangeColor,
+                        width: 2
+                    )
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Text(e.name!, style: TextStyleMobile.h1_14.copyWith(
+                        color: MobileColor.orangeColor,),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      ),
+                    ),
+                    Expanded(
+                      child: Row(
+                        children: [
+                          Expanded(
+                            flex: 2,
+                              child: Text("Tracking no:",
+                                style: TextStyleMobile.body_14.copyWith(
+                                  color: Colors.grey
+                                ),
+                              )
+                          ),
+                          Expanded(
+                            child: Container(
+                              color: Colors.white,
+                              child: TextFormField(
+                                onChanged: (value) {
+                                  selectedPackaged[e.id!]!.trackingNo = value;
+                                },
+                                initialValue: e.trackingNo,
+                                decoration: InputStyle.inputTextForm,
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            );
+            } else {
+              return InkWell(
+              onTap: () {
+                setState(() {
+                  selectedPackaged[e.id!] = e;
+                });
+              },
+              child: Container(
+                padding: const EdgeInsets.only(left: 10),
+                alignment: Alignment.centerLeft,
+                margin: const EdgeInsets.only(bottom: 10),
+                width: double.infinity,
+                height: 60,
+                decoration: BoxDecoration(
+                  color: MobileColor.grayButtonColor,
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    color: Colors.grey,
+                    width: 2
+                  )
+                ),
+                child: Text(e.name!, style: TextStyleMobile.h1_14.copyWith(
+                  color: Colors.grey,),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
+              ),
+            );
+            }
+          }).toList()
+        );
     }
   }
-
 
     @override
   Widget build(BuildContext context) {
@@ -625,5 +746,4 @@ class _AddReceiverDialogState extends State<AddReceiverDialog> {
       ),
     );
   }
-
 }

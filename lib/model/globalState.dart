@@ -16,35 +16,42 @@ import 'outboundProductDetails.dart';
 class GlobalState extends ChangeNotifier{
   Outbound _objectForm = Outbound.nullObject();
   List<Product> productList = [];
-  bool _create = true;
+  bool create = true;
   int _currentStep = 0;
   int _finishStep = 0;
 
-  Map<int, String> _weightUnit = {};
-  Map<int, String> _dimensiontUnit = {};
+  Map<int, String> weightUnit = {};
+  Map<int, String> dimensiontUnit = {};
 
   String _searchkey = "";
 
-  int _pageOrderList = 0;
-  int _totalPageOrderList = 0;
+  int pageOrderList = 0;
+  int totalPageOrderList = 0;
   List<Outbound> outboundList = [];
 
-  int _pagePickList = 0;
-  int _totalPagePickList = 0;
+  int pagePickList = 0;
+  int totalPagePickList = 0;
   List<OutboundProductDetailDto> pickedList = [];
 
-  int _pagePackList = 0;
-  int _totalPagePackList = 0;
+  int pagePackList = 0;
+  int totalPagePackList = 0;
   List<OutboundPackedDto> packedList = [];
 
-  int _pageShipList = 0;
-  int _totalPageShipList = 0;
+  int pageShipList = 0;
+  int totalPageShipList = 0;
   List<Outbound> shippingList = [];
 
   GlobalState(){
     getUnit();
   }
 
+
+  String get searchkey => _searchkey;
+
+  set searchkey(String value) {
+    _searchkey = value;
+    notifyListeners();
+  }
 
   Map<int, double> getUnfulfilledQty() {
     Map<int, double> result = {};
@@ -60,13 +67,6 @@ class GlobalState extends ChangeNotifier{
       }
     }
     return result;
-  }
-
-  bool get create => _create;
-
-  set create(bool value) {
-    _create = value;
-    notifyListeners();
   }
 
   int get finishStep => _finishStep;
@@ -90,135 +90,92 @@ class GlobalState extends ChangeNotifier{
 
   set objectForm(Outbound value) {
     _objectForm = value;
-  }
-
-  String get searchkey => _searchkey;
-
-  set searchkey(String value) {
-    _searchkey = value;
-  }
-
-  int get totalPageShipList => _totalPageShipList;
-
-  set totalPageShipList(int value) {
-    _totalPageShipList = value;
     notifyListeners();
   }
-
-  int get pageShipList => _pageShipList;
-
-  set pageShipList(int value) {
-    _pageShipList = value;
-
-  }
-
-  int get totalPagePackList => _totalPagePackList;
-
-  set totalPagePackList(int value) {
-    _totalPagePackList = value;
-    notifyListeners();
-  }
-
-  int get pagePackList => _pagePackList;
 
   void statePagePackList(int value, BuildContext context) {
-    _pagePackList = value;
+    pagePackList = value;
     getPackedListDatabase(context);
   }
 
-  int get totalPagePickList => _totalPagePickList;
-
-  set totalPagePickList(int value) {
-    _totalPagePickList = value;
-    notifyListeners();
-  }
-
-  int get pagePickList => _pagePickList;
-
   void statePagePickList(int value, BuildContext context) {
-    _pagePickList = value;
+    pagePickList = value;
     getPickedListDatabase(context);
   }
 
-  int get totalPageOrderList => _totalPageOrderList;
-
-  set totalPageOrderList(int value) {
-    _totalPageOrderList = value;
-    notifyListeners();
-  }
-
-  int get pageOrderList => _pageOrderList;
-
   void statePageOrderList(int value, BuildContext context) {
-    _pageOrderList = value;
+    pageOrderList = value;
     getOrderListDatabase(context);
   }
-
-
-  Map<int, String> get weightUnit => _weightUnit;
-
-  set weightUnit(Map<int, String> value) {
-    _weightUnit = value;
-  }
-
-  Map<int, String> get dimensiontUnit => _dimensiontUnit;
-
-  set dimensiontUnit(Map<int, String> value) {
-    _dimensiontUnit = value;
+  void statePageShipList(int value, BuildContext context) {
+    pageShipList = value;
+    getShipListDatabase(context);
   }
 
   Future<void> getOrderListDatabase(BuildContext context) async {
-    Map<String, dynamic>? newData = await ApiConnector.pageSearchOutbound(_pageOrderList, _searchkey, context);
+    Map<String, dynamic>? newData = await ApiConnector.pageSearchOutbound(pageOrderList, _searchkey, context);
     if (newData != null) {
       outboundList = newData["data"];
-      _totalPageOrderList = newData["totalPages"];
+      totalPageOrderList = newData["totalPages"];
     } else {
       outboundList = [];
-      _totalPageOrderList = 0;
+      totalPageOrderList = 0;
+    }
+    notifyListeners();
+  }
+  Future<void> getShipListDatabase(BuildContext context) async {
+    Map<String, dynamic>? newData = await ApiConnector.pageSearchOutbound(pageShipList, _searchkey, context);
+    if (newData != null) {
+      shippingList = newData["data"];
+      totalPageShipList = newData["totalPages"];
+    } else {
+      shippingList = [];
+      totalPageShipList = 0;
     }
     notifyListeners();
   }
   Future<void> getPickedListDatabase(BuildContext context) async {
-    Map<String, dynamic>? newData = await ApiConnector.pageSearchPickedOutbound(_pagePickList, _searchkey, context);
+    Map<String, dynamic>? newData = await ApiConnector.pageSearchPickedOutbound(pagePickList, _searchkey, context);
     if (newData != null) {
       pickedList = newData["data"];
-      _totalPagePickList = newData["totalPages"];
+      totalPagePickList = newData["totalPages"];
     } else {
       pickedList = [];
-      _totalPagePickList = 0;
+      totalPagePickList = 0;
     }
     notifyListeners();
   }
   Future<void> getPackedListDatabase(BuildContext context) async {
-    Map<String, dynamic>? newData = await ApiConnector.pageSearchPackedOutbound(_pagePackList, _searchkey, context);
+    Map<String, dynamic>? newData = await ApiConnector.pageSearchPackedOutbound(pagePackList, _searchkey, context);
     if (newData != null) {
       packedList = newData["data"];
-      _totalPagePackList = newData["totalPages"];
+      totalPagePackList = newData["totalPages"];
     } else {
       packedList = [];
-      _totalPagePackList = 0;
+      totalPagePackList = 0;
     }
     notifyListeners();
   }
 
-  Future<void> search(BuildContext context) async {
-    _pageOrderList = 0;
-    _pagePickList = 0;
-    _pagePackList = 0;
-    _pageShipList = 0;
+  Future<void> refresh(BuildContext context) async {
+    pageOrderList = 0;
+    pagePickList = 0;
+    pagePackList = 0;
+    pageShipList = 0;
     await getOrderListDatabase(context);
     await getPickedListDatabase(context);
     await getPackedListDatabase(context);
+    await getShipListDatabase(context);
   }
 
   Future<void> getUnit() async {
     List<Weight>? weightList = await ApiConnector.getAllWeightUnit();
     if(weightList != null){
-      weightList.forEach((element) {_weightUnit[element.id!] = element.weightUnit!; });
+      weightList.forEach((element) {weightUnit[element.id!] = element.weightUnit!; });
     }
     List<DimensionDto>? dimensionList = await ApiConnector.getAllDimensionUnit();
     if(dimensionList != null){
-      dimensionList.forEach((element) {_dimensiontUnit[element.id!] = element.dimensionUnit!; });
+      dimensionList.forEach((element) {dimensiontUnit[element.id!] = element.dimensionUnit!; });
     }
     notifyListeners();
   }
@@ -252,13 +209,13 @@ class GlobalState extends ChangeNotifier{
   }
   void setupFormCreate(){
     _objectForm = Outbound.nullObject();
-    _create = true;
+    create = true;
     _finishStep = 0;
     _currentStep = 0;
   }
   void setupFormEdit(Outbound outbound){
     _objectForm = outbound.copyWith();
-    _create = false;
+    create = false;
     int initStep;
 
     if (outbound.totalShipped! > 0){
@@ -273,7 +230,7 @@ class GlobalState extends ChangeNotifier{
     _finishStep = initStep;
     _currentStep = initStep;
   }
-  Future<void> updateQtyPicked(OutboundProductDetail outboundProductDetail, Map<int, TextEditingController> listController) async {
+  Future<void> updateQtyPicked(OutboundProductDetail outboundProductDetail, Map<int, TextEditingController> listController, BuildContext context) async {
     List<OutboundLocationProductDetails>? list = outboundProductDetail.outboundLocationProductDetails;
     double? factor = await ApiConnector.getConvertFactor(outboundProductDetail.product!.id!);
 
@@ -293,11 +250,14 @@ class GlobalState extends ChangeNotifier{
       }
     });
 
-    Outbound? callBackObject = await ApiConnector.createOutbound(_objectForm, false);
+    Outbound? callBackObject = await ApiConnector.createOutbound(_objectForm, false, context);
     if (callBackObject != null){
+      await getOrderListDatabase(context);
+      await getPickedListDatabase(context);
+      await getPackedListDatabase(context);
+      await getShipListDatabase(context);
       _objectForm = callBackObject;
     }
-    notifyListeners();
   }
   OutboundLocationProductDetails? _getOutboundLocation (int locationId, List<OutboundLocationProductDetails> list){
     for (var element in list) {

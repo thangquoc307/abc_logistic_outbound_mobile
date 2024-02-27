@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_outbound/model/globalState.dart';
 import 'package:flutter_outbound/model/inventoryLocationProductDetail.dart';
 import 'package:flutter_outbound/model/outboundProductDetailDto.dart';
 import 'package:flutter_outbound/model/customer.dart';
@@ -9,6 +10,7 @@ import 'package:flutter_outbound/model/outboundPackedDto.dart';
 import 'package:flutter_outbound/model/product.dart';
 import 'package:flutter_outbound/model/weight.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 
 class ApiConnector {
   static const int heightItem = 120;
@@ -135,8 +137,6 @@ class ApiConnector {
       final List<Product> result = productList
           .map((dynamic e) => Product.fromJson(e))
           .toList();
-
-      print(result);
       return result;
     } else {
       print("Error: ${res.statusCode}");
@@ -159,8 +159,8 @@ class ApiConnector {
     }
   }
 
-  static Future<Outbound?>? createOutbound(Outbound outbound, bool isCreate) async {
-    final String link = "${prefixUrlOldOutboundApi}${isCreate ? 'create' : 'update'}";
+  static Future<Outbound?>? createOutbound(Outbound outbound, bool isCreate, BuildContext context) async {
+    final String link = "$prefixUrlOldOutboundApi${isCreate ? 'create' : 'update'}";
     print(link);
     final Uri uri = Uri.parse(link);
     final res = await http.post(
@@ -175,6 +175,9 @@ class ApiConnector {
       final String responseBody = utf8.decode(res.bodyBytes);
       final dynamic responseData = json.decode(responseBody)['data']['outbound'];
       Outbound result = Outbound.fromJson(responseData);
+
+      Provider.of<GlobalState>(context, listen: false).objectForm = result;
+
       return result;
     } else {
       print("Error: ${res.statusCode}");

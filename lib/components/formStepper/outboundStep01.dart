@@ -24,6 +24,7 @@ class Step01 extends StatefulWidget {
 class _Step01State extends State<Step01> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   static bool _formMode = true;
+  static bool _formValidate = false;
 
   static const List<String> _channelList = ["ECOMMERCE", "WOOCOMMERCE"];
   static const List<String> _storeList = ["AMAZON", "ALIEXPRESS"];
@@ -38,6 +39,8 @@ class _Step01State extends State<Step01> {
       _customerList = data;
     }
   }
+  String searchKey = "";
+
   @override
   void initState() {
     super.initState();
@@ -47,22 +50,22 @@ class _Step01State extends State<Step01> {
   @override
   Widget build(BuildContext context) {
     final state = Provider.of<GlobalState>(context, listen: true);
-    TextEditingController _outboundOrderNoController = TextEditingController(
+    TextEditingController outboundOrderNoController = TextEditingController(
         text: state.objectForm.orderNo
     );
-    TextEditingController _customerController = TextEditingController(
+    TextEditingController customerController = TextEditingController(
         text: state.objectForm.customer?.customerName ?? ""
     );
-    TextEditingController _issuerController = TextEditingController(
+    TextEditingController issuerController = TextEditingController(
         text: state.objectForm.issuser
     );
-    TextEditingController _senderController = TextEditingController(
+    TextEditingController senderController = TextEditingController(
         text: state.objectForm.sender
     );
-    TextEditingController _receiverController = TextEditingController(
+    TextEditingController receiverController = TextEditingController(
         text: state.objectForm.receiver
     );
-    TextEditingController _noteController = TextEditingController(
+    TextEditingController noteController = TextEditingController(
         text: state.objectForm.note
     );
 
@@ -78,6 +81,7 @@ class _Step01State extends State<Step01> {
                   onTap: () {
                     setState(() {
                       _formMode = true;
+                      _formValidate = false;
                     });
                   },
                   child: Container(
@@ -97,6 +101,7 @@ class _Step01State extends State<Step01> {
                       if (state.objectForm.customer?.customerId != null) {
                         state.getProductByCustomerId(state.objectForm.customer!.customerId);
                         _formMode = false;
+                        _formValidate = _formKey.currentState!.validate();
                       } else {
                         Utils.showSnackBarAlert(context, "Please choose Customer");
                       }
@@ -148,7 +153,7 @@ class _Step01State extends State<Step01> {
                                 ),
                                 InputStyle.offsetText,
                                 TextFormField(
-                                    controller: _outboundOrderNoController,
+                                    controller: outboundOrderNoController,
                                     validator: (value) => Utils.validateRequire(value, "Outbound Order No."),
                                     textAlignVertical: TextAlignVertical.center,
                                     decoration: InputStyle.inputTextForm,
@@ -175,7 +180,7 @@ class _Step01State extends State<Step01> {
                                 InputStyle.offsetText,
                                 TextFormField(
                                   readOnly: true,
-                                    controller: _issuerController,
+                                    controller: issuerController,
                                     textAlignVertical: TextAlignVertical.center,
                                     decoration: InputStyle.inputTextForm
                                 ),
@@ -198,7 +203,7 @@ class _Step01State extends State<Step01> {
                                 InputStyle.offsetText,
                                 TypeAheadField<Customer>(
                                   constraints: const BoxConstraints(maxHeight: 300),
-                                  controller: _customerController,
+                                  controller: customerController,
                                   builder: (context, controller, focusNode) {
                                     return TextFormField(
                                       decoration: InputStyle.inputTextForm,
@@ -433,7 +438,7 @@ class _Step01State extends State<Step01> {
                                 ),
                                 InputStyle.offsetText,
                                 TextFormField(
-                                  controller: _senderController,
+                                  controller: senderController,
                                     validator: (value) => Utils.validateRequire(value, "Sender"),
                                     textAlignVertical: TextAlignVertical.center,
                                     decoration: InputStyle.inputTextForm,
@@ -460,7 +465,7 @@ class _Step01State extends State<Step01> {
                                 ),
                                 InputStyle.offsetText,
                                 TextFormField(
-                                  controller: _receiverController,
+                                  controller: receiverController,
                                     validator: (value) => Utils.validateRequire(value, "Receiver"),
                                     textAlignVertical: TextAlignVertical.center,
                                     decoration: InputStyle.inputTextForm,
@@ -636,7 +641,7 @@ class _Step01State extends State<Step01> {
                                 ),
                                 InputStyle.offsetText,
                                 TextFormField(
-                                    controller: _noteController,
+                                    controller: noteController,
                                     textAlignVertical: TextAlignVertical.center,
                                     decoration: InputStyle.inputTextForm,
                                   onChanged: (value) {
@@ -694,7 +699,11 @@ class _Step01State extends State<Step01> {
                                   child:
                                     TextField(
                                       onChanged: (value) {
-
+                                        if (value != null){
+                                          setState(() {
+                                            searchKey = value;
+                                          });
+                                        }
                                       },
                                       decoration: const InputDecoration(
                                           prefixIcon: Icon(Icons.search),
@@ -747,6 +756,8 @@ class _Step01State extends State<Step01> {
                           child: SingleChildScrollView(
                             child: Column(
                               children: state.objectForm.outboundProductDetails!.map((e) {
+                                bool check = e.product!.upc!.contains(searchKey);
+                                if (check) {
                                 return Container(
                                   width: double.infinity,
                                   height: 80,
@@ -822,8 +833,8 @@ class _Step01State extends State<Step01> {
                                       )
                                     ],
                                   ),
-
-                                );
+                                );}
+                                return const SizedBox();
                               }).toList(),
                             ),
                           ),
@@ -861,19 +872,39 @@ class _Step01State extends State<Step01> {
                     constraints: const BoxConstraints.expand(),
                     child: TextButton(
                       onPressed: () {
-                        if(_formKey.currentState!.validate()) {
-                          if(state.objectForm.outboundProductDetails == null || state.objectForm.outboundProductDetails!.isEmpty){
-                            Utils.showSnackBarAlert(context, "Please choose Products");
-                          } else {
-                            ApiConnector.createOutbound(
-                                state.objectForm,
-                                state.create
-                            );
-                            Utils.showSnackBar(context, "Data is saved");
-                            if (state.finishStep == 0){
-                              state.finishStep++;
+                        if (_formMode){
+                          if(_formKey.currentState!.validate()) {
+                            if(state.objectForm.outboundProductDetails == null || state.objectForm.outboundProductDetails!.isEmpty){
+                              Utils.showSnackBarAlert(context, "Please choose Products");
+                            } else {
+                              ApiConnector.createOutbound(
+                                  state.objectForm,
+                                  state.create,
+                                  context
+                              );
+                              Utils.showSnackBar(context, "Data is saved");
+                              if (state.finishStep == 0){
+                                state.finishStep++;
+                              }
+                              state.currentStep = 1;
                             }
-                            state.currentStep = 1;
+                          }
+                        } else {
+                          if(_formValidate) {
+                            if(state.objectForm.outboundProductDetails == null || state.objectForm.outboundProductDetails!.isEmpty){
+                              Utils.showSnackBarAlert(context, "Please choose Products");
+                            } else {
+                              ApiConnector.createOutbound(
+                                  state.objectForm,
+                                  state.create,
+                                  context
+                              );
+                              Utils.showSnackBar(context, "Data is saved");
+                              if (state.finishStep == 0){
+                                state.finishStep++;
+                              }
+                              state.currentStep = 1;
+                            }
                           }
                         }
                       },

@@ -1,35 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import '../cascadeStyle/button.dart';
 import '../cascadeStyle/color.dart';
 import '../cascadeStyle/fonts.dart';
 import '../model/globalState.dart';
+import '../service/util.dart';
 
-class PackedList extends StatefulWidget {
-  const PackedList({super.key});
-
-  @override
-  State<PackedList> createState() => _PackedListState();
-}
-
-class _PackedListState extends State<PackedList> {
+class OutboundShippedList extends StatelessWidget {
+  const OutboundShippedList({super.key});
   static const double spaceBetween = 3;
   static const double sizePageButton = 30;
 
   @override
   Widget build(BuildContext context) {
-    Provider.of<GlobalState>(context, listen: false).getPackedListDatabase(context);
+    Provider.of<GlobalState>(context, listen: false).getShipListDatabase(context);
     return Consumer<GlobalState>(
       builder: (context, state, child) {
         return Column(
           children: [
             Expanded(
-              child: state.packedList.isEmpty ? Text("No Data !",
+              child: state.shippingList.isEmpty ? Text("No Data !",
                 style: TextStyleMobile.h1_14,) :
               Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   mainAxisSize: MainAxisSize.max,
-                  children: state.packedList.map((e) {
+                  children: state.shippingList.map((e) {
                     return Expanded(
                       child: Container(
                         padding: const EdgeInsets.all(5),
@@ -47,7 +43,7 @@ class _PackedListState extends State<PackedList> {
                                         color: MobileColor.orangeColor,
                                       ),
                                       const SizedBox(width: 5,),
-                                      Text(e.name ?? "")
+                                      Text(e.orderNo ?? "")
                                     ],
                                   ),
                                   Row(
@@ -57,95 +53,60 @@ class _PackedListState extends State<PackedList> {
                                         color: MobileColor.orangeColor,
                                       ),
                                       const SizedBox(width: 5,),
-                                      Text(e.customerName ?? "", overflow: TextOverflow.ellipsis, maxLines: 1,)
+                                      Text(e.issuser ?? "")
                                     ],
                                   )
                                 ],
                               ),
                             ),
                             const SizedBox(width: 20,),
-                            Container(
-                              alignment: Alignment.centerRight,
-                              width: 90,
+                            SizedBox(
+                              width: 80,
                               child: Column(
                                 children: [
                                   Expanded(
-                                    child: Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: RichText(
-                                          text: TextSpan(
-                                              children: [
-                                                TextSpan(text: "- WxHxL ",
-                                                    style: TextStyleMobile.body_10.copyWith(color: Colors.black)),
-                                                TextSpan(text: "(${state.dimensiontUnit[e.dimensionId]})",
-                                                    style: TextStyleMobile.lable_12.copyWith(color: Colors.black)),
-                                              ]
-                                          ),
-                                        )
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Align(
-                                      alignment: Alignment.centerRight,
-                                      child: (e.pWidth != -1 || e.pHeight != -1 || e.pWeight != -1)
-                                          ? RichText(
-                                            text: TextSpan(
-                                              children: [
-                                                TextSpan(text: e.pWidth.toString(),
-                                                    style: TextStyleMobile.h2_12
-                                                        .copyWith(color: Colors.green)),
-                                                TextSpan(text: "x",
-                                                    style: TextStyleMobile.body_10
-                                                        .copyWith(color: Colors.green)),
-                                                TextSpan(text: e.pHeight.toString(),
-                                                    style: TextStyleMobile.h2_12
-                                                        .copyWith(color: Colors.green)),
-                                                TextSpan(text: "x",
-                                                    style: TextStyleMobile.body_10
-                                                        .copyWith(color: Colors.green)),
-                                                TextSpan(text: e.pLength.toString(),
-                                                    style: TextStyleMobile.h2_12
-                                                        .copyWith(color: Colors.green)),
-                                              ]
-                                            ),
-                                          )
-                                          : Text("No data",
-                                          style: TextStyleMobile.h2_12
-                                            .copyWith(color: Colors.red))
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: RichText(
-                                        text: TextSpan(
-                                          children: [
-                                            TextSpan(text: "- Weight ",
-                                                style: TextStyleMobile.body_10.copyWith(color: Colors.black)),
-                                            TextSpan(text: "(${state.weightUnit[e.weightId]})",
-                                                style: TextStyleMobile.lable_12.copyWith(color: Colors.black)),
-                                          ]
+                                    child: Container(
+                                      alignment: Alignment.topRight,
+                                      child: Container(
+                                        alignment: Alignment.center,
+                                        width: double.infinity,
+                                        height: 25,
+                                        decoration: BoxDecoration(
+                                            color: (e.status == "OPEN")
+                                                ? MobileColor.greenButtonColor
+                                                : MobileColor.grayButtonColor,
+                                            borderRadius: BorderRadius
+                                                .circular(5)
                                         ),
-                                      )
+                                        child: (e.status == "OPEN")
+                                            ? Text("Open",
+                                            style: TextStyleMobile.button_14
+                                                .copyWith(
+                                                color: Colors.white))
+                                            : Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 8),
+                                          child: Text("Acknowledged",
+                                            style: TextStyleMobile.button_14
+                                                .copyWith(
+                                                color: Colors.black),
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
+                                          ),
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                  Expanded(
-                                    child: Align(
-                                      alignment: Alignment.centerRight,
-                                      child: e.pWeight != -1 ? Text("${e.pWeight}",
-                                          style: TextStyleMobile.h2_12
-                                              .copyWith(color: Colors.green))
-                                      : Text("No data",
-                                          style: TextStyleMobile.h2_12
-                                              .copyWith(color: Colors.red)),
-                                    ),
-                                  ),
+                                  Text(Utils.convertTime(e.createdDate),
+                                    style: TextStyleMobile.body_12,
+                                  )
                                 ],
                               ),
                             )
                           ],
                         ),
                       ),
+
                     );
                   },).toList()
               ),
@@ -156,15 +117,16 @@ class _PackedListState extends State<PackedList> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
-                    margin: const EdgeInsets.symmetric(horizontal: spaceBetween),
+                    margin: const EdgeInsets.symmetric(
+                        horizontal: spaceBetween),
                     width: sizePageButton,
                     height: sizePageButton,
                     decoration: MobileButton.buttonPage.copyWith(
                         color: MobileColor.grayButtonColor
                     ),
                     child: TextButton(
-                        onPressed: (state.pagePackList > 0) ? () {
-                          state.statePagePackList(0, context);
+                        onPressed: (state.pageShipList > 0) ? () {
+                          state.statePageShipList(0, context);
                         } : null,
                         style: MobileButton.buttonPageStyle,
                         child: Text("<<",
@@ -173,15 +135,17 @@ class _PackedListState extends State<PackedList> {
                     ),
                   ),
                   Container(
-                    margin: const EdgeInsets.symmetric(horizontal: spaceBetween),
+                    margin: const EdgeInsets.symmetric(
+                        horizontal: spaceBetween),
                     width: sizePageButton,
                     height: sizePageButton,
                     decoration: MobileButton.buttonPage.copyWith(
                         color: MobileColor.grayButtonColor
                     ),
                     child: TextButton(
-                        onPressed: (state.pagePackList > 0) ? () {
-                          state.statePagePackList(state.pagePackList - 1, context);
+                        onPressed: (state.pageShipList > 0) ? () {
+                          state.statePageShipList(state.pageShipList - 1,
+                              context);
                         } : null,
                         style: MobileButton.buttonPageStyle,
                         child: Text("<",
@@ -189,8 +153,11 @@ class _PackedListState extends State<PackedList> {
                         )
                     ),
                   ),
-                  (state.pagePackList - 1 > 0 && state.pagePackList == state.totalPagePackList - 1) ? Container(
-                    margin: const EdgeInsets.symmetric(horizontal: spaceBetween),
+                  (state.pageShipList - 1 > 0 &&
+                      state.pageShipList == state.totalPageShipList - 1)
+                      ? Container(
+                    margin: const EdgeInsets.symmetric(
+                        horizontal: spaceBetween),
                     width: 30,
                     height: 30,
                     decoration: MobileButton.buttonPage.copyWith(
@@ -198,16 +165,19 @@ class _PackedListState extends State<PackedList> {
                     ),
                     child: TextButton(
                         onPressed: () {
-                          state.statePagePackList(state.pagePackList - 2, context);
+                          state.statePageShipList(state.pageShipList - 2,
+                              context);
                         },
                         style: MobileButton.buttonPageStyle,
-                        child: Text((state.pagePackList - 1).toString(),
+                        child: Text((state.pageShipList - 1).toString(),
                             style: TextStyleMobile.button_14
                         )
                     ),
-                  ) : const SizedBox(),
-                  (state.pagePackList > 0) ? Container(
-                    margin: const EdgeInsets.symmetric(horizontal: spaceBetween),
+                  )
+                      : const SizedBox(),
+                  (state.pageShipList > 0) ? Container(
+                    margin: const EdgeInsets.symmetric(
+                        horizontal: spaceBetween),
                     width: 30,
                     height: 30,
                     decoration: MobileButton.buttonPage.copyWith(
@@ -215,16 +185,18 @@ class _PackedListState extends State<PackedList> {
                     ),
                     child: TextButton(
                         onPressed: () {
-                          state.statePagePackList(state.pagePackList - 1, context);
+                          state.statePageShipList(state.pageShipList - 1,
+                              context);
                         },
                         style: MobileButton.buttonPageStyle,
-                        child: Text(state.pagePackList.toString(),
+                        child: Text(state.pageShipList.toString(),
                             style: TextStyleMobile.button_14
                         )
                     ),
                   ) : const SizedBox(),
                   Container(
-                    margin: const EdgeInsets.symmetric(horizontal: spaceBetween),
+                    margin: const EdgeInsets.symmetric(
+                        horizontal: spaceBetween),
                     width: sizePageButton,
                     height: sizePageButton,
                     decoration: MobileButton.buttonPage.copyWith(
@@ -233,15 +205,17 @@ class _PackedListState extends State<PackedList> {
                     child: TextButton(
                         onPressed: () {},
                         style: MobileButton.buttonPageStyle,
-                        child: Text((state.pagePackList + 1).toString(),
+                        child: Text((state.pageShipList + 1).toString(),
                             style: TextStyleMobile.button_14.copyWith(
                                 color: Colors.white
                             )
                         )
                     ),
                   ),
-                  (state.pagePackList + 1 < state.totalPagePackList) ? Container(
-                    margin: const EdgeInsets.symmetric(horizontal: spaceBetween),
+                  (state.pageShipList + 1 < state.totalPageShipList)
+                      ? Container(
+                    margin: const EdgeInsets.symmetric(
+                        horizontal: spaceBetween),
                     width: sizePageButton,
                     height: sizePageButton,
                     decoration: MobileButton.buttonPage.copyWith(
@@ -249,16 +223,20 @@ class _PackedListState extends State<PackedList> {
                     ),
                     child: TextButton(
                         onPressed: () {
-                          state.statePagePackList(state.pagePackList + 1, context);
+                          state.statePageShipList(state.pageShipList + 1,
+                              context);
                         },
                         style: MobileButton.buttonPageStyle,
-                        child: Text((state.pagePackList + 2).toString(),
+                        child: Text((state.pageShipList + 2).toString(),
                             style: TextStyleMobile.button_14
                         )
                     ),
-                  ) : const SizedBox(),
-                  (state.pagePackList + 2 < state.totalPagePackList && state.pagePackList == 0) ? Container(
-                    margin: const EdgeInsets.symmetric(horizontal: spaceBetween),
+                  )
+                      : const SizedBox(),
+                  (state.pageShipList + 2 < state.totalPageShipList &&
+                      state.pageShipList == 0) ? Container(
+                    margin: const EdgeInsets.symmetric(
+                        horizontal: spaceBetween),
                     width: sizePageButton,
                     height: sizePageButton,
                     decoration: MobileButton.buttonPage.copyWith(
@@ -266,24 +244,28 @@ class _PackedListState extends State<PackedList> {
                     ),
                     child: TextButton(
                         onPressed: () {
-                          state.statePagePackList(state.pagePackList + 2, context);
+                          state.statePageShipList(state.pageShipList + 2,
+                              context);
                         },
                         style: MobileButton.buttonPageStyle,
-                        child: Text((state.pagePackList + 3).toString(),
+                        child: Text((state.pageShipList + 3).toString(),
                             style: TextStyleMobile.button_14
                         )
                     ),
                   ) : const SizedBox(),
                   Container(
-                    margin: const EdgeInsets.symmetric(horizontal: spaceBetween),
+                    margin: const EdgeInsets.symmetric(
+                        horizontal: spaceBetween),
                     width: sizePageButton,
                     height: sizePageButton,
                     decoration: MobileButton.buttonPage.copyWith(
                         color: MobileColor.grayButtonColor
                     ),
                     child: TextButton(
-                        onPressed: (state.pagePackList + 1 < state.totalPagePackList) ? () {
-                          state.statePagePackList(state.pagePackList + 1, context);
+                        onPressed: (state.pageShipList + 1 <
+                            state.totalPageShipList) ? () {
+                          state.statePageShipList(state.pageShipList + 1,
+                              context);
                         } : null,
                         style: MobileButton.buttonPageStyle,
                         child: Text(">",
@@ -292,15 +274,18 @@ class _PackedListState extends State<PackedList> {
                     ),
                   ),
                   Container(
-                    margin: const EdgeInsets.symmetric(horizontal: spaceBetween),
+                    margin: const EdgeInsets.symmetric(
+                        horizontal: spaceBetween),
                     width: sizePageButton,
                     height: sizePageButton,
                     decoration: MobileButton.buttonPage.copyWith(
                         color: MobileColor.grayButtonColor
                     ),
                     child: TextButton(
-                        onPressed: (state.pagePackList + 1 < state.totalPagePackList) ? () {
-                          state.statePagePackList(state.totalPagePackList - 1, context);
+                        onPressed: (state.pageShipList + 1 <
+                            state.totalPageShipList) ? () {
+                          state.statePageShipList(state.totalPageShipList - 1,
+                              context);
                         } : null,
                         style: MobileButton.buttonPageStyle,
                         child: Text(">>",

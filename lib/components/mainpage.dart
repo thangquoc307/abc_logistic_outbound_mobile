@@ -4,6 +4,7 @@ import 'package:flutter_outbound/cascadeStyle/fonts.dart';
 import 'package:flutter_outbound/components/orderList.dart';
 import 'package:flutter_outbound/components/packedList.dart';
 import 'package:flutter_outbound/components/pickedList.dart';
+import 'package:flutter_outbound/components/shipList.dart';
 import 'package:flutter_outbound/model/globalState.dart';
 import 'package:provider/provider.dart';
 
@@ -74,7 +75,6 @@ class MainPage extends StatelessWidget {
                             );
                         },
                     ),
-
                   ],
                 ),
                 const SizedBox(height: 10,),
@@ -158,7 +158,7 @@ class MainPage extends StatelessWidget {
                             const SizedBox(width: 10,),
                             IconButton(
                                 onPressed: (){
-                                  Provider.of<GlobalState>(context, listen: false).search(context);
+                                  Provider.of<GlobalState>(context, listen: false).refresh(context);
                                 },
                                 icon: const Icon(Icons.filter_list),
                                 style: ButtonStyle(
@@ -181,7 +181,7 @@ class MainPage extends StatelessWidget {
                               OrderOutboundList(),
                               PickedList(),
                               PackedList(),
-                              Text("check"),
+                              OutboundShippedList(),
                             ],
                           )
                       ),

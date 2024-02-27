@@ -21,6 +21,7 @@ dev_dependencies:
   flutter_typeahead:
   google_fonts:
   mobkit_dashed_border: ^0.0.6
+  fluttertoast:
 flutter:
   assets:
     - assets/images/

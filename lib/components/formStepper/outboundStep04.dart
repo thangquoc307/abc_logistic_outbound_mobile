@@ -1,10 +1,10 @@
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_outbound/dialog/addReceiverDialog.dart';
 import 'package:flutter_outbound/model/outboundPackageProductDetail.dart';
 import 'package:flutter_outbound/model/shipping.dart';
+import 'package:flutter_outbound/model/shippingAddress.dart';
 import 'package:flutter_outbound/model/shippingPackage.dart';
+import 'package:flutter_outbound/service/apiConnector.dart';
 import 'package:provider/provider.dart';
 import 'package:mobkit_dashed_border/mobkit_dashed_border.dart';
 
@@ -47,39 +47,27 @@ class _Step04State extends State<Step04> {
                     const SizedBox(height: 15,),
                     InkWell(
                       onTap: () {
-                        // showDialog(
-                        //   context: context,
-                        //   builder: (context) {
-                        //     return AddReceiverDialog(
-                        //         shipping: Shipping(
-                        //             null,
-                        //             DateTime.now(),
-                        //             DateTime.now(),
-                        //             _identificationNumber,
-                        //             _shippingAmount,
-                        //             _invoiceNumber,
-                        //             _estimatedDeliveryDate,
-                        //             _description,
-                        //             _taxNumber,
-                        //             _billNumber,
-                        //             _sender,
-                        //             _phoneSender,
-                        //             _emailSender,
-                        //             _phoneReceiver,
-                        //             _receiver,
-                        //             _emailReceiver,
-                        //             _shipmentMethod,
-                        //             _deliveryStatus,
-                        //             _carrier,
-                        //             _shippedDate,
-                        //             _shippingPackages,
-                        //             _shipToAddress,
-                        //             _shipFromAddress
-                        //         )
-                        //     );
-                        //   },
-                        // );
-
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AddReceiverDialog(
+                                shipping: Shipping(
+                                    null, DateTime.now(), DateTime.now(),
+                                    null, null, null, null, null, null,
+                                    null, null, null, null, null, null,
+                                    null, null, null, null,
+                                    DateTime.now(), {},
+                                    ShippingAddress(null, null, null, null, null, null, null),
+                                    ShippingAddress(null, null, null, null, null, null, null)
+                                ),
+                              setPackaged: state.objectForm.outboundPackages ?? {},
+                              dataSubmit: (Shipping shipping) {
+                                state.objectForm.shippings?.add(shipping);
+                                ApiConnector.createOutbound(state.objectForm, false, context);
+                              },
+                            );
+                          },
+                        );
                       },
                       child: Container(
                           height: 50,
@@ -109,7 +97,13 @@ class _Step04State extends State<Step04> {
                                   context: context,
                                   builder: (context) {
                                     return AddReceiverDialog(
-                                        shipping: Shipping.fromJson(e.toJson())
+                                        shipping: Shipping.fromJson(e.toJson()),
+                                      setPackaged: state.objectForm.outboundPackages ?? {},
+                                      dataSubmit: (Shipping shipping) {
+                                          state.objectForm.shippings?.remove(e);
+                                          state.objectForm.shippings?.add(shipping);
+                                          ApiConnector.createOutbound(state.objectForm, false, context);
+                                      },
                                     );
                                   },
                                 );
@@ -215,10 +209,8 @@ class _Step04State extends State<Step04> {
                     ),
                   ],
                 ),
-
               ),
             )
-
           ],
         )
     );

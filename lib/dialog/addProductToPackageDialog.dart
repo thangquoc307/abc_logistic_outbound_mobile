@@ -32,6 +32,7 @@ class _AddProductToPackageState extends State<AddProductToPackageDialog> {
 
   Map<int, OutboundPackageProductDetail> mapResult = {};
   Map<int, double> mapFactor = {};
+  String searchKey = "";
 
   @override
   void initState() {
@@ -164,7 +165,7 @@ class _AddProductToPackageState extends State<AddProductToPackageDialog> {
                 }
                 widget.outboundPackage.outboundPackageProductDetails = setPack;
 
-                ApiConnector.createOutbound(state.objectForm, false);
+                ApiConnector.createOutbound(state.objectForm, false, context);
                 Navigator.of(context).pop();
               }
             } else {
@@ -177,7 +178,7 @@ class _AddProductToPackageState extends State<AddProductToPackageDialog> {
               .copyWith(color: MobileColor.orangeColor)),
         ),
       ],
-      content: Container(
+      content: SizedBox(
         width: MediaQuery.of(context).size.width * 0.8,
         child: Column(
           children: [
@@ -371,7 +372,11 @@ class _AddProductToPackageState extends State<AddProductToPackageDialog> {
                   children: [
                     TextField(
                       onChanged: (value) {
-
+                        if (value != null){
+                          setState(() {
+                            searchKey = value;
+                          });
+                        }
                       },
                       decoration: const InputDecoration(
                           prefixIcon: Icon(Icons.search),
@@ -401,119 +406,122 @@ class _AddProductToPackageState extends State<AddProductToPackageDialog> {
                       child: SingleChildScrollView(
                         child: Column(
                           children: state.objectForm.outboundProductDetails!.map((e) {
-                            OutboundPackageProductDetail oldPackage = _getOldPackage(e.product!);
-                            double oldValue =  oldPackage.packagedQty ?? 0;
-                            double unfulfilled = e.pickedUnitQty! - (unfulfilledQty[e.product!.id] ?? 0);
-                            mapResult[e.product!.id!] = oldPackage;
-                            double factor = mapFactor[e.product!.id!] ?? 1;
+                            bool check = e.sku!.contains(searchKey);
+                            if(check){
+                              OutboundPackageProductDetail oldPackage = _getOldPackage(e.product!);
+                              double oldValue =  oldPackage.packagedQty ?? 0;
+                              double unfulfilled = e.pickedUnitQty! - (unfulfilledQty[e.product!.id] ?? 0);
+                              mapResult[e.product!.id!] = oldPackage;
+                              double factor = mapFactor[e.product!.id!] ?? 1;
 
-                            return Container(
-                              margin: const EdgeInsets.only(bottom: 10),
-                              height: 100,
-                              decoration: BoxDecoration(
-                                  color: oldValue > 0
-                                      ? MobileColor.softOrangeColor
-                                      : MobileColor.grayButtonColor,
-                                  borderRadius: BorderRadius.circular(10),
-                                  border: oldValue > 0 ? Border.all(
-                                      color: MobileColor.orangeColor,
-                                      width: 2
-                                  ) : null
-                              ),
-                              child: Row(
-                                children: [
-                                  Container(
-                                    width: 50,
-                                    alignment: Alignment.topRight,
-                                    padding: const EdgeInsets.only(top: 10),
-                                    child: Container(
-                                      width: 40,
-                                      height: 40,
-                                      decoration: BoxDecoration(
-                                          color: oldValue > 0 ? MobileColor.orangeColor : Colors.white,
-                                          borderRadius: BorderRadius.circular(5)
+                              return Container(
+                                margin: const EdgeInsets.only(bottom: 10),
+                                height: 100,
+                                decoration: BoxDecoration(
+                                    color: oldValue > 0
+                                        ? MobileColor.softOrangeColor
+                                        : MobileColor.grayButtonColor,
+                                    borderRadius: BorderRadius.circular(10),
+                                    border: oldValue > 0 ? Border.all(
+                                        color: MobileColor.orangeColor,
+                                        width: 2
+                                    ) : null
+                                ),
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      width: 50,
+                                      alignment: Alignment.topRight,
+                                      padding: const EdgeInsets.only(top: 10),
+                                      child: Container(
+                                        width: 40,
+                                        height: 40,
+                                        decoration: BoxDecoration(
+                                            color: oldValue > 0 ? MobileColor.orangeColor : Colors.white,
+                                            borderRadius: BorderRadius.circular(5)
+                                        ),
+                                        child: Image.asset(oldValue > 0
+                                            ? 'assets/images/Vectorwhite.png'
+                                            : 'assets/images/Vector.png'),
                                       ),
-                                      child: Image.asset(oldValue > 0
-                                          ? 'assets/images/Vectorwhite.png'
-                                          : 'assets/images/Vector.png'),
                                     ),
-                                  ),
-                                  Expanded(child: Container(
-                                    padding: const EdgeInsets.all(10),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        Text(e.product?.name ?? "",
-                                          overflow: TextOverflow.ellipsis,
-                                          maxLines: 1,
-                                          style: TextStyleMobile.h2_12,),
-                                        Text("SKU: ${e.sku}",
-                                          overflow: TextOverflow.ellipsis,
-                                          maxLines: 1,
-                                          style: TextStyleMobile.body_12,),
-                                        RichText(
-                                            text: TextSpan(
-                                                children: [
-                                                  TextSpan(text: "Picked: ",
-                                                    style: TextStyleMobile.body_12.copyWith(
-                                                        color: Colors.black
+                                    Expanded(child: Container(
+                                      padding: const EdgeInsets.all(10),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          Text(e.product?.name ?? "",
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
+                                            style: TextStyleMobile.h2_12,),
+                                          Text("SKU: ${e.sku}",
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
+                                            style: TextStyleMobile.body_12,),
+                                          RichText(
+                                              text: TextSpan(
+                                                  children: [
+                                                    TextSpan(text: "Picked: ",
+                                                      style: TextStyleMobile.body_12.copyWith(
+                                                          color: Colors.black
+                                                      ),
                                                     ),
-                                                  ),
-                                                  TextSpan(text: e.pickedUnitQty.toString(),
-                                                    style: TextStyleMobile.h2_12.copyWith(
-                                                        color: Colors.black
+                                                    TextSpan(text: e.pickedUnitQty.toString(),
+                                                      style: TextStyleMobile.h2_12.copyWith(
+                                                          color: Colors.black
+                                                      ),
                                                     ),
-                                                  ),
-                                                ]
-                                            )
-                                        ),
-                                        RichText(
-                                            text: TextSpan(
-                                                children: [
-                                                  TextSpan(text: "Unfulfilled: ",
-                                                    style: TextStyleMobile.body_12.copyWith(
-                                                        color: Colors.black
+                                                  ]
+                                              )
+                                          ),
+                                          RichText(
+                                              text: TextSpan(
+                                                  children: [
+                                                    TextSpan(text: "Unfulfilled: ",
+                                                      style: TextStyleMobile.body_12.copyWith(
+                                                          color: Colors.black
+                                                      ),
                                                     ),
-                                                  ),
-                                                  TextSpan(text: unfulfilled.toString(),
-                                                    style: TextStyleMobile.h2_12.copyWith(
-                                                        color: Colors.black
+                                                    TextSpan(text: unfulfilled.toString(),
+                                                      style: TextStyleMobile.h2_12.copyWith(
+                                                          color: Colors.black
+                                                      ),
                                                     ),
-                                                  ),
-                                                ]
-                                            )
-                                        ),
-                                      ],
+                                                  ]
+                                              )
+                                          ),
+                                        ],
+                                      ),
+                                    )),
+                                    Container(
+                                      alignment: Alignment.topCenter,
+                                      width: 70,
+                                      height: 45,
+                                      margin: const EdgeInsets.only(right: 10, top: 10),
+                                      padding: const EdgeInsets.symmetric(horizontal: 5),
+                                      child: TextFormField(
+                                        initialValue: oldValue.toString(),
+                                        maxLines: 1,
+                                        textAlignVertical: TextAlignVertical.center,
+                                        textAlign: TextAlign.center,
+                                        decoration: InputStyle.qtyTextForm,
+                                        validator: (value) => _checkPackageQty(value, unfulfilled, oldValue),
+                                        keyboardType: TextInputType.number,
+                                        inputFormatters: <TextInputFormatter>[
+                                          FilteringTextInputFormatter.digitsOnly
+                                        ],
+                                        onChanged: (value) {
+                                          oldPackage.packagedUnitQty = double.parse(value) * factor;
+                                          oldPackage.packagedQty = double.parse(value);
+                                        },
+                                      ),
                                     ),
-                                  )),
-                                  Container(
-                                    alignment: Alignment.topCenter,
-                                    width: 70,
-                                    height: 45,
-                                    margin: const EdgeInsets.only(right: 10, top: 10),
-                                    padding: const EdgeInsets.symmetric(horizontal: 5),
-                                    child: TextFormField(
-                                      initialValue: oldValue.toString(),
-                                      maxLines: 1,
-                                      textAlignVertical: TextAlignVertical.center,
-                                      textAlign: TextAlign.center,
-                                      decoration: InputStyle.qtyTextForm,
-                                      validator: (value) => _checkPackageQty(value, unfulfilled, oldValue),
-                                      keyboardType: TextInputType.number,
-                                      inputFormatters: <TextInputFormatter>[
-                                        FilteringTextInputFormatter.digitsOnly
-                                      ],
-                                      onChanged: (value) {
-                                        oldPackage.packagedUnitQty = double.parse(value) * factor;
-                                        oldPackage.packagedQty = double.parse(value);
-                                      },
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          }).toList()
+                                  ],
+                                ),
+                              );}
+                            return const SizedBox();
+                              }).toList()
                         ),
                       ),
                     )

@@ -6,23 +6,17 @@ import 'package:flutter_outbound/model/globalState.dart';
 import 'package:flutter_outbound/service/util.dart';
 import 'package:provider/provider.dart';
 
-class OrderOutboundList extends StatefulWidget {
+class OrderOutboundList extends StatelessWidget {
   const OrderOutboundList({super.key});
-
-  @override
-  State<OrderOutboundList> createState() => _OrderOutboundListState();
-}
-
-class _OrderOutboundListState extends State<OrderOutboundList> {
   static const double spaceBetween = 3;
   static const double sizePageButton = 30;
 
   @override
   Widget build(BuildContext context) {
     Provider.of<GlobalState>(context, listen: false).getOrderListDatabase(context);
-
     return Consumer<GlobalState>(
         builder: (context, state, child) {
+          // state.getOrderListDatabase(context);
           return Column(
             children: [
               Expanded(

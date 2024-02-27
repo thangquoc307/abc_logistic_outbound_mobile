@@ -9,10 +9,15 @@ import '../../cascadeStyle/color.dart';
 import '../../cascadeStyle/fonts.dart';
 import '../../model/outboundLocationProductDetails.dart';
 import '../../service/apiConnector.dart';
-
-class Step02 extends StatelessWidget {
+class Step02 extends StatefulWidget {
   const Step02({super.key});
 
+  @override
+  State<Step02> createState() => _Step02State();
+}
+
+class _Step02State extends State<Step02> {
+  String searchkey = "";
   num _sumQty(List<OutboundLocationProductDetails> list) {
     num result = 0;
     for (var element in list) {
@@ -46,6 +51,11 @@ class Step02 extends StatelessWidget {
                 height: 65,
                 child: TextField(
                   onChanged: (value) {
+                    if (value != null){
+                      setState(() {
+                        searchkey = value;
+                      });
+                    }
                   },
                   decoration: const InputDecoration(
                       prefixIcon: Icon(Icons.search),
@@ -78,91 +88,107 @@ class Step02 extends StatelessWidget {
                 child: Column(
                   children: state.objectForm.outboundProductDetails!.map((e) {
                     num qtyPick = _sumQty(e.outboundLocationProductDetails!);
-                    return
-                      Container(
-                        width: double.infinity,
-                        height: 80,
-                        margin: const EdgeInsetsDirectional.only(bottom: 10),
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(10)
-                        ),
-                        child: Row(
-                          children: [
-                            Container(
-                              width: 50,
-                              alignment: Alignment.topRight,
-                              padding: const EdgeInsets.only(top: 10),
-                              child: Container(
-                                width: 40,
-                                height: 40,
-                                decoration: BoxDecoration(
-                                    color: MobileColor.grayButtonColor,
-                                    borderRadius: BorderRadius.circular(5)
-                                ),
-                                child: Image.asset('assets/images/Vector.png'),
-                              ),
-                            ),
-                            Expanded(child: Container(
-                              padding: const EdgeInsets.all(10),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  Text(e.product?.name ?? "",
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
-                                    style: TextStyleMobile.h2_12,),
-                                  Text("SKU: ${e.sku}",
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
-                                    style: TextStyleMobile.body_12,),
-                                  RichText(
-                                      text: TextSpan(
-                                          children: [
-                                            TextSpan(text: "Unit QTY: ",
-                                              style: TextStyleMobile.body_12.copyWith(
-                                                  color: Colors.black
-                                              ),
-                                            ),
-                                            TextSpan(text: qtyPick.toString(),
-                                              style: TextStyleMobile.h2_12.copyWith(
-                                                  color: qtyPick == e.pickedUnitQty
-                                                      ? MobileColor.greenButtonColor
-                                                      : Colors.red
-                                              ),
-                                            ),
-                                            TextSpan(text: " / ${e.pickedUnitQty.toString()}",
-                                              style: TextStyleMobile.h2_12.copyWith(
-                                                  color: Colors.black
-                                              ),
-                                            ),
-                                          ]
-                                      )
+                    bool check = e.product!.upc!.contains(searchkey);
+                    if (check) {
+                      return
+                        Container(
+                          width: double.infinity,
+                          height: 80,
+                          margin: const EdgeInsetsDirectional.only(bottom: 10),
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10)
+                          ),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 50,
+                                alignment: Alignment.topRight,
+                                padding: const EdgeInsets.only(top: 10),
+                                child: Container(
+                                  width: 40,
+                                  height: 40,
+                                  decoration: BoxDecoration(
+                                      color: MobileColor.grayButtonColor,
+                                      borderRadius: BorderRadius.circular(5)
                                   ),
-                                ],
+                                  child: Image.asset(
+                                      'assets/images/Vector.png'),
+                                ),
                               ),
-                            )),
-                            InkWell(
-                              onTap: () {
-                                showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return PickedQtyDialog(outboundProductDetail: e,);
-                                  },
-                                );
-                              },
-                              child: Container(
-                                alignment: Alignment.topCenter,
-                                width: 30,
-                                padding: const EdgeInsets.only(right: 10, top: 10),
-                                child: const Icon(Icons.location_on_outlined, color: Colors.grey, size: 20),
-                              ),
-                            )
-                          ],
-                        ),
-                      );}
-                  ).toList(),
+                              Expanded(child: Container(
+                                padding: const EdgeInsets.all(10),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment
+                                      .spaceEvenly,
+                                  children: [
+                                    Text(e.product?.name ?? "",
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                      style: TextStyleMobile.h2_12,),
+                                    Text("SKU: ${e.sku}",
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                      style: TextStyleMobile.body_12,),
+                                    RichText(
+                                        text: TextSpan(
+                                            children: [
+                                              TextSpan(text: "Unit QTY: ",
+                                                style: TextStyleMobile.body_12
+                                                    .copyWith(
+                                                    color: Colors.black
+                                                ),
+                                              ),
+                                              TextSpan(text: qtyPick.toString(),
+                                                style: TextStyleMobile.h2_12
+                                                    .copyWith(
+                                                    color: qtyPick ==
+                                                        e.pickedUnitQty
+                                                        ? MobileColor
+                                                        .greenButtonColor
+                                                        : Colors.red
+                                                ),
+                                              ),
+                                              TextSpan(
+                                                text: " / ${e.pickedUnitQty
+                                                    .toString()}",
+                                                style: TextStyleMobile.h2_12
+                                                    .copyWith(
+                                                    color: Colors.black
+                                                ),
+                                              ),
+                                            ]
+                                        )
+                                    ),
+                                  ],
+                                ),
+                              )),
+                              InkWell(
+                                onTap: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return PickedQtyDialog(
+                                        outboundProductDetail: e,);
+                                    },
+                                  );
+                                },
+                                child: Container(
+                                  alignment: Alignment.topCenter,
+                                  width: 30,
+                                  padding: const EdgeInsets.only(
+                                      right: 10, top: 10),
+                                  child: const Icon(Icons.location_on_outlined,
+                                      color: Colors.grey, size: 20),
+                                ),
+                              )
+                            ],
+                          ),
+                        );
+                    }
+                    return const SizedBox();
+                  }).toList(),
                 )
               ),
             ),
@@ -216,7 +242,7 @@ class Step02 extends StatelessWidget {
                             bool checkQty = _checkQty(state.objectForm.outboundProductDetails!);
                             if (checkQty) {
                               ApiConnector.createOutbound(
-                                  state.objectForm, false
+                                  state.objectForm, false, context
                               );
                               Utils.showSnackBar(context, "Data is saved");
                               if (state.finishStep == 1){

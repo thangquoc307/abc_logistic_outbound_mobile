@@ -1,64 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_outbound/cascadeStyle/color.dart';
 import 'package:flutter_outbound/cascadeStyle/fonts.dart';
-import 'package:flutter_outbound/model/billing.dart';
-import 'package:flutter_outbound/model/globalState.dart';
-import 'package:provider/provider.dart';
-
+import 'package:flutter_outbound/service/util.dart';
 import '../cascadeStyle/input.dart';
 
 class BillingDialog extends StatelessWidget {
   BillingDialog({super.key, required this.dataSubmit, required this.initValue});
   final Function(Map<String, String>) dataSubmit;
   final GlobalKey<FormState> _billingLocationKey = GlobalKey<FormState>();
-
   final initValue;
-
-
-  String? _add1Validate(String? value){
-    if(value == null || value.isEmpty){
-      return 'Address 1 is required';
-    }
-  }
-  String? _cityValidate(String? value){
-    if(value == null || value.isEmpty){
-      return 'City is required';
-    }
-  }
-  String? _stateValidate(String? value){
-    if(value == null || value.isEmpty){
-      return 'State is required';
-    }
-  }
-  String? _zipCodeValidate(String? value){
-    if(value == null || value.isEmpty){
-      return 'Zip code is required';
-    }
-  }
-  String? _countryValidate(String? value){
-    if(value == null || value.isEmpty){
-      return 'Country is required';
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController _add1Controller = TextEditingController(
+    TextEditingController add1Controller = TextEditingController(
         text: initValue.addressOne
     );
-    TextEditingController _add2Controller = TextEditingController(
+    TextEditingController add2Controller = TextEditingController(
         text: initValue.addressTwo
     );
-    TextEditingController _cityController = TextEditingController(
+    TextEditingController cityController = TextEditingController(
         text: initValue.city
     );
-    TextEditingController _stateController = TextEditingController(
+    TextEditingController stateController = TextEditingController(
         text: initValue.state
     );
-    TextEditingController _zipCodeController = TextEditingController(
+    TextEditingController zipCodeController = TextEditingController(
         text: initValue.zipCode
     );
-    TextEditingController _countryController = TextEditingController(
+    TextEditingController countryController = TextEditingController(
         text: initValue.country
     );
     final double widthDialog = MediaQuery.of(context).size.width;
@@ -99,8 +68,8 @@ class BillingDialog extends StatelessWidget {
                 ),
                 InputStyle.offsetText,
                 TextFormField(
-                  controller: _add1Controller,
-                  validator: _add1Validate,
+                  controller: add1Controller,
+                  validator: (value) => Utils.validateRequire(value, "Address 1"),
                   textAlignVertical: TextAlignVertical.center,
                   decoration: InputStyle.inputTextForm,
                 ),
@@ -118,7 +87,7 @@ class BillingDialog extends StatelessWidget {
                 ),
                 InputStyle.offsetText,
                 TextFormField(
-                  controller: _add2Controller,
+                  controller: add2Controller,
                   textAlignVertical: TextAlignVertical.center,
                   decoration: InputStyle.inputTextForm,
                 ),
@@ -140,8 +109,8 @@ class BillingDialog extends StatelessWidget {
                 ),
                 InputStyle.offsetText,
                 TextFormField(
-                  controller: _cityController,
-                  validator: _cityValidate,
+                  controller: cityController,
+                  validator: (value) => Utils.validateRequire(value, "City"),
                   textAlignVertical: TextAlignVertical.center,
                   decoration: InputStyle.inputTextForm,
                 ),
@@ -163,8 +132,8 @@ class BillingDialog extends StatelessWidget {
                 ),
                 InputStyle.offsetText,
                 TextFormField(
-                  controller: _stateController,
-                  validator: _stateValidate,
+                  controller: stateController,
+                  validator: (value) => Utils.validateRequire(value, "State"),
                   textAlignVertical: TextAlignVertical.center,
                   decoration: InputStyle.inputTextForm,
                 ),
@@ -186,8 +155,8 @@ class BillingDialog extends StatelessWidget {
                 ),
                 InputStyle.offsetText,
                 TextFormField(
-                  controller: _zipCodeController,
-                  validator: _zipCodeValidate,
+                  controller: zipCodeController,
+                  validator: (value) => Utils.validateRequire(value, "Zip code"),
                   textAlignVertical: TextAlignVertical.center,
                   decoration: InputStyle.inputTextForm,
                 ),
@@ -209,8 +178,8 @@ class BillingDialog extends StatelessWidget {
                 ),
                 InputStyle.offsetText,
                 TextFormField(
-                  controller: _countryController,
-                  validator: _countryValidate,
+                  controller: countryController,
+                  validator: (value) => Utils.validateRequire(value, "Country"),
                   textAlignVertical: TextAlignVertical.center,
                   decoration: InputStyle.inputTextForm,
                 ),
@@ -232,12 +201,12 @@ class BillingDialog extends StatelessWidget {
           onPressed: () {
             if(_billingLocationKey.currentState!.validate()){
               Map<String, String> result = {};
-              result['add1'] = _add1Controller.text;
-              result['add2'] = _add2Controller.text;
-              result['city'] = _cityController.text;
-              result['state'] = _stateController.text;
-              result['zipcode'] = _zipCodeController.text;
-              result['country'] = _countryController.text;
+              result['add1'] = add1Controller.text;
+              result['add2'] = add2Controller.text;
+              result['city'] = cityController.text;
+              result['state'] = stateController.text;
+              result['zipcode'] = zipCodeController.text;
+              result['country'] = countryController.text;
 
               dataSubmit(result);
               Navigator.of(context).pop();
