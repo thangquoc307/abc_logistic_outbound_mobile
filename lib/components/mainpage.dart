@@ -117,19 +117,18 @@ class MainPage extends StatelessWidget {
                             )),
                           ]
                       ),
-                      Container(
-                        padding: const EdgeInsetsDirectional.only(top: 12, bottom: 12),
-                        height: 65,
-                        child: Row(
-                          children: [
-                            Expanded(
-                                child:
-                                Consumer<GlobalState>(
-                                  builder: (context, state, child) {
-                                    return
-                                      TextField(
+                      Consumer<GlobalState>(
+                          builder: (context, state, child) {
+                            return Container(
+                              padding: const EdgeInsetsDirectional.only(top: 12, bottom: 12),
+                              height: 65,
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                      child: TextField(
                                         onChanged: (value) {
                                           state.searchkey = value;
+                                          state.refresh(context);
                                         },
                                         decoration: const InputDecoration(
                                             prefixIcon: Icon(Icons.search),
@@ -151,29 +150,29 @@ class MainPage extends StatelessWidget {
                                             ),
                                             contentPadding: EdgeInsets.symmetric(vertical: 0)
                                         ),
-                                      );
-                                  },
-                                )
-                            ),
-                            const SizedBox(width: 10,),
-                            IconButton(
-                                onPressed: (){
-                                  Provider.of<GlobalState>(context, listen: false).refresh(context);
-                                },
-                                icon: const Icon(Icons.filter_list),
-                                style: ButtonStyle(
-                                    shape: MaterialStatePropertyAll(RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(5)
-                                    )),
-                                    side: const MaterialStatePropertyAll(BorderSide(
-                                        color: Colors.grey,
-                                        style: BorderStyle.solid,
-                                        width: 1
-                                    ))
-                                )
-                            )
-                          ],
-                        ),
+                                      )
+                                  ),
+                                  const SizedBox(width: 10,),
+                                  IconButton(
+                                      onPressed: (){
+
+                                      },
+                                      icon: const Icon(Icons.filter_list),
+                                      style: ButtonStyle(
+                                          shape: MaterialStatePropertyAll(RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(5)
+                                          )),
+                                          side: const MaterialStatePropertyAll(BorderSide(
+                                              color: Colors.grey,
+                                              style: BorderStyle.solid,
+                                              width: 1
+                                          ))
+                                      )
+                                  )
+                                ],
+                              ),
+                            );
+                          },
                       ),
                       const Expanded(
                           child: TabBarView(

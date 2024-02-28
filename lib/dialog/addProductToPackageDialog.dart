@@ -164,8 +164,7 @@ class _AddProductToPackageState extends State<AddProductToPackageDialog> {
                   }
                 }
                 widget.outboundPackage.outboundPackageProductDetails = setPack;
-
-                ApiConnector.createOutbound(state.objectForm, false, context);
+                state.createOutbound(false);
                 Navigator.of(context).pop();
               }
             } else {

@@ -1,7 +1,6 @@
 import 'mcDimension.dart';
 import 'mcVolume.dart';
 import 'mcWeight.dart';
-
 class UnitOfMeasurement {
   int? id;
   McWeight? mcWeight;

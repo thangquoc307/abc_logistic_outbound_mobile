@@ -14,7 +14,10 @@ class OutboundShippedList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Provider.of<GlobalState>(context, listen: false).getShipListDatabase(context);
+    var init = Provider.of<GlobalState>(context, listen: false);
+    init.setCountItemOutboundDisplay(context);
+    init.getShipListDatabase();
+
     return Consumer<GlobalState>(
       builder: (context, state, child) {
         return Column(

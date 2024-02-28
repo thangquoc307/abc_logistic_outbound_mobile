@@ -18,7 +18,10 @@ class _PickedListState extends State<PickedList> {
 
   @override
   Widget build(BuildContext context) {
-    Provider.of<GlobalState>(context, listen: false).getPickedListDatabase(context);
+    var init = Provider.of<GlobalState>(context, listen: false);
+    init.setCountItemOutboundDisplay(context);
+    init.getPickedListDatabase();
+
     return Consumer<GlobalState>(
       builder: (context, state, child) {
         return Column(
@@ -30,7 +33,6 @@ class _PickedListState extends State<PickedList> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   mainAxisSize: MainAxisSize.max,
                   children: state.pickedList.map((e) {
-                    print(e);
                     return Expanded(
                       child: Container(
                         padding: const EdgeInsets.all(5),

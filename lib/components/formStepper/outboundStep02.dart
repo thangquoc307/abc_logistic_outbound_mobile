@@ -241,9 +241,8 @@ class _Step02State extends State<Step02> {
                           onPressed: () {
                             bool checkQty = _checkQty(state.objectForm.outboundProductDetails!);
                             if (checkQty) {
-                              ApiConnector.createOutbound(
-                                  state.objectForm, false, context
-                              );
+                              state.createOutbound(false);
+
                               Utils.showSnackBar(context, "Data is saved");
                               if (state.finishStep == 1){
                                 state.finishStep++;

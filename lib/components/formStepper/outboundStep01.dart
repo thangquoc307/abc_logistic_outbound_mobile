@@ -50,6 +50,7 @@ class _Step01State extends State<Step01> {
   @override
   Widget build(BuildContext context) {
     final state = Provider.of<GlobalState>(context, listen: true);
+
     TextEditingController outboundOrderNoController = TextEditingController(
         text: state.objectForm.orderNo
     );
@@ -208,7 +209,6 @@ class _Step01State extends State<Step01> {
                                     return TextFormField(
                                       decoration: InputStyle.inputTextForm,
                                       focusNode: focusNode,
-                                      autofocus: true,
                                       controller: controller,
                                       validator: (value) => Utils.validateRequire(value, "Customer"),
                                     );
@@ -877,11 +877,7 @@ class _Step01State extends State<Step01> {
                             if(state.objectForm.outboundProductDetails == null || state.objectForm.outboundProductDetails!.isEmpty){
                               Utils.showSnackBarAlert(context, "Please choose Products");
                             } else {
-                              ApiConnector.createOutbound(
-                                  state.objectForm,
-                                  state.create,
-                                  context
-                              );
+                              state.createOutbound(state.create);
                               Utils.showSnackBar(context, "Data is saved");
                               if (state.finishStep == 0){
                                 state.finishStep++;
@@ -894,11 +890,7 @@ class _Step01State extends State<Step01> {
                             if(state.objectForm.outboundProductDetails == null || state.objectForm.outboundProductDetails!.isEmpty){
                               Utils.showSnackBarAlert(context, "Please choose Products");
                             } else {
-                              ApiConnector.createOutbound(
-                                  state.objectForm,
-                                  state.create,
-                                  context
-                              );
+                              state.createOutbound(state.create);
                               Utils.showSnackBar(context, "Data is saved");
                               if (state.finishStep == 0){
                                 state.finishStep++;

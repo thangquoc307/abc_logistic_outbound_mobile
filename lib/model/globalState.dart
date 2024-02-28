@@ -45,6 +45,16 @@ class GlobalState extends ChangeNotifier{
     getUnit();
   }
 
+  int _countItemOutboundDisplay = 0;
+
+  void setCountItemOutboundDisplay(BuildContext context) {
+    double heightItem = 120;
+    int itemOfPage = (MediaQuery.of(context).size.height / heightItem).floor();
+
+    if (_countItemOutboundDisplay == 0) {
+      _countItemOutboundDisplay = itemOfPage;
+    }
+  }
 
   String get searchkey => _searchkey;
 
@@ -95,25 +105,25 @@ class GlobalState extends ChangeNotifier{
 
   void statePagePackList(int value, BuildContext context) {
     pagePackList = value;
-    getPackedListDatabase(context);
+    getPackedListDatabase();
   }
 
   void statePagePickList(int value, BuildContext context) {
     pagePickList = value;
-    getPickedListDatabase(context);
+    getPickedListDatabase();
   }
 
   void statePageOrderList(int value, BuildContext context) {
     pageOrderList = value;
-    getOrderListDatabase(context);
+    getOrderListDatabase();
   }
   void statePageShipList(int value, BuildContext context) {
     pageShipList = value;
-    getShipListDatabase(context);
+    getShipListDatabase();
   }
 
-  Future<void> getOrderListDatabase(BuildContext context) async {
-    Map<String, dynamic>? newData = await ApiConnector.pageSearchOutbound(pageOrderList, _searchkey, context);
+  Future<void> getOrderListDatabase() async {
+    Map<String, dynamic>? newData = await ApiConnector.pageSearchOutbound(pageOrderList, _searchkey, _countItemOutboundDisplay);
     if (newData != null) {
       outboundList = newData["data"];
       totalPageOrderList = newData["totalPages"];
@@ -123,8 +133,8 @@ class GlobalState extends ChangeNotifier{
     }
     notifyListeners();
   }
-  Future<void> getShipListDatabase(BuildContext context) async {
-    Map<String, dynamic>? newData = await ApiConnector.pageSearchOutbound(pageShipList, _searchkey, context);
+  Future<void> getShipListDatabase() async {
+    Map<String, dynamic>? newData = await ApiConnector.pageSearchOutbound(pageShipList, _searchkey, _countItemOutboundDisplay);
     if (newData != null) {
       shippingList = newData["data"];
       totalPageShipList = newData["totalPages"];
@@ -134,8 +144,8 @@ class GlobalState extends ChangeNotifier{
     }
     notifyListeners();
   }
-  Future<void> getPickedListDatabase(BuildContext context) async {
-    Map<String, dynamic>? newData = await ApiConnector.pageSearchPickedOutbound(pagePickList, _searchkey, context);
+  Future<void> getPickedListDatabase() async {
+    Map<String, dynamic>? newData = await ApiConnector.pageSearchPickedOutbound(pagePickList, _searchkey, _countItemOutboundDisplay);
     if (newData != null) {
       pickedList = newData["data"];
       totalPagePickList = newData["totalPages"];
@@ -145,8 +155,8 @@ class GlobalState extends ChangeNotifier{
     }
     notifyListeners();
   }
-  Future<void> getPackedListDatabase(BuildContext context) async {
-    Map<String, dynamic>? newData = await ApiConnector.pageSearchPackedOutbound(pagePackList, _searchkey, context);
+  Future<void> getPackedListDatabase() async {
+    Map<String, dynamic>? newData = await ApiConnector.pageSearchPackedOutbound(pagePackList, _searchkey, _countItemOutboundDisplay);
     if (newData != null) {
       packedList = newData["data"];
       totalPagePackList = newData["totalPages"];
@@ -162,10 +172,10 @@ class GlobalState extends ChangeNotifier{
     pagePickList = 0;
     pagePackList = 0;
     pageShipList = 0;
-    await getOrderListDatabase(context);
-    await getPickedListDatabase(context);
-    await getPackedListDatabase(context);
-    await getShipListDatabase(context);
+    await getOrderListDatabase();
+    await getPickedListDatabase();
+    await getPackedListDatabase();
+    await getShipListDatabase();
   }
 
   Future<void> getUnit() async {
@@ -249,15 +259,7 @@ class GlobalState extends ChangeNotifier{
         list.add(outboundLocationProductDetails);
       }
     });
-
-    Outbound? callBackObject = await ApiConnector.createOutbound(_objectForm, false, context);
-    if (callBackObject != null){
-      await getOrderListDatabase(context);
-      await getPickedListDatabase(context);
-      await getPackedListDatabase(context);
-      await getShipListDatabase(context);
-      _objectForm = callBackObject;
-    }
+    createOutbound(false);
   }
   OutboundLocationProductDetails? _getOutboundLocation (int locationId, List<OutboundLocationProductDetails> list){
     for (var element in list) {
@@ -266,5 +268,16 @@ class GlobalState extends ChangeNotifier{
       }
     }
     return null;
+  }
+  Future<void> createOutbound(bool isCreate) async {
+    Outbound? result = await ApiConnector.createOutbound(_objectForm, isCreate);
+    if (result != null) {
+      _objectForm = result;
+      await getOrderListDatabase();
+      await getPickedListDatabase();
+      await getPackedListDatabase();
+      await getShipListDatabase();
+    }
+
   }
 }

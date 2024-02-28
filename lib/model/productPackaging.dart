@@ -1,21 +1,21 @@
-import 'unitOfMeasurement.dart';
+import 'package:flutter_outbound/model/unitOfMeasurement.dart';
 
 class ProductPackaging {
   int? id;
-  double? size;
-  double? mcVolume;
-  double? mcNetWeight;
-  double? mcShipment;
-  double? mcLength;
-  double? mcWidth;
-  double? mcHeight;
+  num? size;
+  num? mcVolume;
+  num? mcNetWeight;
+  num? mcShipment;
+  num? mcLength;
+  num? mcWidth;
+  num? mcHeight;
   UnitOfMeasurement? unitOfMeasurement;
-  double? ulength;
-  double? uheight;
-  double? ushipment;
-  double? uwidth;
-  double? uvolume;
-  double? unetWeight;
+  num? unetWeight;
+  num? uvolume;
+  num? uheight;
+  num? ulength;
+  num? uwidth;
+  num? ushipment;
 
   ProductPackaging(
       {this.id,
@@ -27,12 +27,12 @@ class ProductPackaging {
         this.mcWidth,
         this.mcHeight,
         this.unitOfMeasurement,
-        this.ulength,
-        this.uheight,
-        this.ushipment,
-        this.uwidth,
+        this.unetWeight,
         this.uvolume,
-        this.unetWeight});
+        this.uheight,
+        this.ulength,
+        this.uwidth,
+        this.ushipment});
 
   ProductPackaging.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -43,17 +43,19 @@ class ProductPackaging {
     mcLength = json['mcLength'];
     mcWidth = json['mcWidth'];
     mcHeight = json['mcHeight'];
-    unitOfMeasurement = json['unitOfMeasurement'];
-    ulength = json['ulength'];
-    uheight = json['uheight'];
-    ushipment = json['ushipment'];
-    uwidth = json['uwidth'];
-    uvolume = json['uvolume'];
+    unitOfMeasurement = json['unitOfMeasurement'] != null
+        ? UnitOfMeasurement.fromJson(json['unitOfMeasurement'])
+        : null;
     unetWeight = json['unetWeight'];
+    uvolume = json['uvolume'];
+    uheight = json['uheight'];
+    ulength = json['ulength'];
+    uwidth = json['uwidth'];
+    ushipment = json['ushipment'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     data['size'] = this.size;
     data['mcVolume'] = this.mcVolume;
@@ -62,13 +64,15 @@ class ProductPackaging {
     data['mcLength'] = this.mcLength;
     data['mcWidth'] = this.mcWidth;
     data['mcHeight'] = this.mcHeight;
-    data['unitOfMeasurement'] = this.unitOfMeasurement;
-    data['ulength'] = this.ulength;
-    data['uheight'] = this.uheight;
-    data['ushipment'] = this.ushipment;
-    data['uwidth'] = this.uwidth;
-    data['uvolume'] = this.uvolume;
+    if (this.unitOfMeasurement != null) {
+      data['unitOfMeasurement'] = this.unitOfMeasurement!.toJson();
+    }
     data['unetWeight'] = this.unetWeight;
+    data['uvolume'] = this.uvolume;
+    data['uheight'] = this.uheight;
+    data['ulength'] = this.ulength;
+    data['uwidth'] = this.uwidth;
+    data['ushipment'] = this.ushipment;
     return data;
   }
 }

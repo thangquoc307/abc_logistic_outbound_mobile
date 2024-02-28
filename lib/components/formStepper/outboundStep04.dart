@@ -63,7 +63,8 @@ class _Step04State extends State<Step04> {
                               setPackaged: state.objectForm.outboundPackages ?? {},
                               dataSubmit: (Shipping shipping) {
                                 state.objectForm.shippings?.add(shipping);
-                                ApiConnector.createOutbound(state.objectForm, false, context);
+                                state.createOutbound(false);
+
                               },
                             );
                           },
@@ -102,7 +103,8 @@ class _Step04State extends State<Step04> {
                                       dataSubmit: (Shipping shipping) {
                                           state.objectForm.shippings?.remove(e);
                                           state.objectForm.shippings?.add(shipping);
-                                          ApiConnector.createOutbound(state.objectForm, false, context);
+                                          state.createOutbound(false);
+
                                       },
                                     );
                                   },

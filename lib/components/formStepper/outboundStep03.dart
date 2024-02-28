@@ -335,9 +335,8 @@ class _Step03State extends State<Step03> {
                             onPressed: () {
                               bool checkProduct = checkAllProductPacked(unfulfilledQty, state.objectForm.outboundProductDetails!);
                               if (checkProduct) {
-                                ApiConnector.createOutbound(
-                                    state.objectForm, false, context
-                                );
+                                state.createOutbound(false);
+
                                 Utils.showSnackBar(context, "Data is saved");
                                 if (state.finishStep == 2){
                                   state.finishStep = state.finishStep + 2;

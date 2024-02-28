@@ -18,7 +18,10 @@ class _PackedListState extends State<PackedList> {
 
   @override
   Widget build(BuildContext context) {
-    Provider.of<GlobalState>(context, listen: false).getPackedListDatabase(context);
+    var init = Provider.of<GlobalState>(context, listen: false);
+    init.setCountItemOutboundDisplay(context);
+    init.getPackedListDatabase();
+
     return Consumer<GlobalState>(
       builder: (context, state, child) {
         return Column(

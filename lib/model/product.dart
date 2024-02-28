@@ -22,7 +22,6 @@ class Product {
   List<ProductImageDto>? images;
   Inventory? inventory;
 
-
   Product(
       {this.id,
         this.productNo,

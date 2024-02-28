@@ -13,10 +13,12 @@ class OrderOutboundList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Provider.of<GlobalState>(context, listen: false).getOrderListDatabase(context);
+    var init = Provider.of<GlobalState>(context, listen: false);
+    init.setCountItemOutboundDisplay(context);
+    init.getOrderListDatabase();
+
     return Consumer<GlobalState>(
         builder: (context, state, child) {
-          // state.getOrderListDatabase(context);
           return Column(
             children: [
               Expanded(
