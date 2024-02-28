@@ -86,33 +86,33 @@ class MainPage extends StatelessWidget {
                           indicatorSize: TabBarIndicatorSize.tab,
                           indicatorColor: Colors.orange,
                           labelStyle: TextStyleMobile.button_14,
-                          tabs: const [
-                            Tab(child: Row(
+                          tabs: [
+                            Tab(child: Column(
                               children: [
-                                Icon(Icons.view_list, size: 20),
-                                SizedBox(width: 3,),
-                                Text("Order"),
+                                const Icon(Icons.view_list, size: 20),
+                                const SizedBox(height: 3,),
+                                Text("Order", style: TextStyleMobile.h1_14),
                               ],
                             )),
-                            Tab(child: Row(
+                            Tab(child: Column(
                               children: [
-                                Icon(Icons.shelves, size: 20),
-                                SizedBox(width: 3,),
-                                Text("Pick"),
+                                const Icon(Icons.shelves, size: 20),
+                                const SizedBox(height: 3,),
+                                Text("Pick", style: TextStyleMobile.h1_14),
                               ],
                             )),
-                            Tab(child: Row(
+                            Tab(child: Column(
                               children: [
-                                Icon(Icons.inventory, size: 20),
-                                SizedBox(width: 3,),
-                                Text("Pack"),
+                                const Icon(Icons.inventory, size: 20),
+                                const SizedBox(height: 3,),
+                                Text("Pack", style: TextStyleMobile.h1_14),
                               ],
                             )),
-                            Tab(child: Row(
+                            Tab(child: Column(
                               children: [
-                                Icon(Icons.local_shipping, size: 20),
-                                SizedBox(width: 3,),
-                                Text("Ship"),
+                                const Icon(Icons.local_shipping, size: 20),
+                                const SizedBox(height: 3,),
+                                Text("Ship", style: TextStyleMobile.h1_14),
                               ],
                             )),
                           ]

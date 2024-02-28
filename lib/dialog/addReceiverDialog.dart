@@ -732,7 +732,7 @@ class _AddReceiverDialogState extends State<AddReceiverDialog> {
           children: [
             SizedBox(width: MediaQuery.of(context).size.width * 0.8),
             StepRenderCustom.stepRender(
-                ["Sending and\nreceiving information",
+                ["Sending and\nreceiving",
                   "Delivery\ninformation", "Add Package\n"],
                 step, context),
             InputStyle.offsetForm,

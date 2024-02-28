@@ -175,9 +175,7 @@ class ApiConnector {
       final String responseBody = utf8.decode(res.bodyBytes);
       final dynamic responseData = json.decode(responseBody)['data']['outbound'];
       Outbound result = Outbound.fromJson(responseData);
-
       Provider.of<GlobalState>(context, listen: false).objectForm = result;
-
       return result;
     } else {
       print("Error: ${res.statusCode}");

@@ -199,7 +199,7 @@ class _Step04State extends State<Step04> {
                           constraints: const BoxConstraints.expand(),
                           child: TextButton(
                             onPressed: () {
-
+                              state.currentStep++;
                             },
                             child: Text("Ready to ship",
                                 style: TextStyleMobile.button_14.copyWith(color: Colors.white)),

@@ -46,14 +46,13 @@ class CreateOutboundOrder extends StatelessWidget {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                const Icon(Icons.delete_forever_outlined, color: Colors.white,),
-                                const SizedBox(width: 3,),
+                                const Icon(Icons.delete_forever_outlined, color: Colors.white, size: 20),
                                 Text("Void", style: TextStyleMobile.button_14.copyWith(color: Colors.white)),
                               ],
                             )
                         ),
                       ),
-                      const SizedBox(width: 10,),
+                      const SizedBox(width: 8,),
                       Expanded(
                         child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
@@ -66,14 +65,13 @@ class CreateOutboundOrder extends StatelessWidget {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                const Icon(Icons.save_outlined, color: Colors.white,),
-                                const SizedBox(width: 3,),
+                                const Icon(Icons.save_outlined, color: Colors.white, size: 20),
                                 Text("Save", style: TextStyleMobile.button_14.copyWith(color: Colors.white)),
                               ],
                             )
                         ),
                       ),
-                      const SizedBox(width: 10,),
+                      const SizedBox(width: 8,),
                       Expanded(
                         child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
@@ -86,8 +84,7 @@ class CreateOutboundOrder extends StatelessWidget {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                const Icon(Icons.print_outlined, color: Colors.white,),
-                                const SizedBox(width: 3,),
+                                const Icon(Icons.print_outlined, color: Colors.white, size: 20),
                                 Text("Print", style: TextStyleMobile.button_14.copyWith(color: Colors.white)),
                               ],
                             )
