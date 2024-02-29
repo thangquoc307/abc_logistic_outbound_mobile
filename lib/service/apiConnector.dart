@@ -6,6 +6,7 @@ import 'package:flutter_outbound/model/dimension.dart';
 import 'package:flutter_outbound/model/outbound.dart';
 import 'package:flutter_outbound/model/outboundPackedDto.dart';
 import 'package:flutter_outbound/model/product.dart';
+import 'package:flutter_outbound/model/shipping.dart';
 import 'package:flutter_outbound/model/weight.dart';
 import 'package:http/http.dart' as http;
 
@@ -80,6 +81,32 @@ class ApiConnector {
         final List<OutboundPackedDto> outboundList = productList
             .map((dynamic e) => OutboundPackedDto.fromJson(e)).toList();
         result['data'] = outboundList;
+      } else {
+        result['data'] = [];
+      }
+      return result;
+    } else {
+      print("Error: ${res.statusCode}");
+      return null;
+    }
+  }
+
+  static Future<Map<String, dynamic>?> pageSearchShipping(int page, String searchWord, int itemOfPage) async {
+    String link = "${prefixUrlOutboundApi}shipped-information?"
+        "page=${page}&numberOfPage=${itemOfPage}&searchWord=${searchWord}";
+    print(link);
+    final res = await http.get(Uri.parse(link));
+
+    if (res.statusCode == 200) {
+      final String responseBody = utf8.decode(res.bodyBytes);
+      final Map<String, dynamic> responseData = json.decode(responseBody);
+      final Map<String, dynamic> result = {"totalPages" : responseData["totalPages"]};
+
+      if (responseData.containsKey("content") && responseData["content"] is List) {
+        final List<dynamic> productList = responseData["content"];
+        final List<Shipping> shippingList = productList
+            .map((dynamic e) => Shipping.fromJson(e)).toList();
+        result['data'] = shippingList;
       } else {
         result['data'] = [];
       }
@@ -209,6 +236,19 @@ class ApiConnector {
     if (res.statusCode == 200) {
       final double factor = json.decode(res.body)['data']['product']['productPackaging']['size'];
       return factor;
+    } else {
+      print("Error: ${res.statusCode}");
+      return null;
+    }
+  }
+  static Future<Outbound?> getOutboundById (int outboundId) async {
+    final String link = "$prefixUrlOldOutboundApi$outboundId";
+    print(link);
+    final res = await http.get(Uri.parse(link));
+    if (res.statusCode == 200) {
+      final Outbound outbound =
+      Outbound.fromJson(json.decode(res.body)['data']['outbound']);
+      return outbound;
     } else {
       print("Error: ${res.statusCode}");
       return null;

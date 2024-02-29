@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_outbound/dialog/reviewPacked.dart';
 import 'package:provider/provider.dart';
 import '../cascadeStyle/button.dart';
 import '../cascadeStyle/color.dart';
@@ -34,119 +35,37 @@ class _PackedListState extends State<PackedList> {
                   mainAxisSize: MainAxisSize.max,
                   children: state.packedList.map((e) {
                     return Expanded(
-                      child: Container(
-                        padding: const EdgeInsets.all(5),
-                        decoration: MobileButton.itemOfList,
-                        width: double.infinity,
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Column(
-                                children: [
-                                  Row(
-                                    children: [
-                                      const Icon(
-                                        Icons.feed,
-                                        color: MobileColor.orangeColor,
-                                      ),
-                                      const SizedBox(width: 5,),
-                                      Text(e.name ?? "")
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      const Icon(
-                                        Icons.supervisor_account,
-                                        color: MobileColor.orangeColor,
-                                      ),
-                                      const SizedBox(width: 5,),
-                                      Text(e.customerName ?? "", overflow: TextOverflow.ellipsis, maxLines: 1,)
-                                    ],
-                                  )
-                                ],
-                              ),
+                      child: InkWell(
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return ReviewPackageDialog(outboundPackedDto: e,);
+                            },
+                          );
+                        },
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(vertical: 3),
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          decoration: BoxDecoration(
+                            color: MobileColor.softOrangeColor,
+                            border: Border.all(
+                              color: MobileColor.orangeColor,
+                              width: 2,
                             ),
-                            const SizedBox(width: 20,),
-                            Container(
-                              alignment: Alignment.centerRight,
-                              width: 90,
-                              child: Column(
-                                children: [
-                                  Expanded(
-                                    child: Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: RichText(
-                                          text: TextSpan(
-                                              children: [
-                                                TextSpan(text: "- WxHxL ",
-                                                    style: TextStyleMobile.body_10.copyWith(color: Colors.black)),
-                                                TextSpan(text: "(${state.dimensiontUnit[e.dimensionId]})",
-                                                    style: TextStyleMobile.lable_12.copyWith(color: Colors.black)),
-                                              ]
-                                          ),
-                                        )
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Align(
-                                      alignment: Alignment.centerRight,
-                                      child: (e.pWidth != -1 || e.pHeight != -1 || e.pWeight != -1)
-                                          ? RichText(
-                                            text: TextSpan(
-                                              children: [
-                                                TextSpan(text: e.pWidth.toString(),
-                                                    style: TextStyleMobile.h2_12
-                                                        .copyWith(color: Colors.green)),
-                                                TextSpan(text: "x",
-                                                    style: TextStyleMobile.body_10
-                                                        .copyWith(color: Colors.green)),
-                                                TextSpan(text: e.pHeight.toString(),
-                                                    style: TextStyleMobile.h2_12
-                                                        .copyWith(color: Colors.green)),
-                                                TextSpan(text: "x",
-                                                    style: TextStyleMobile.body_10
-                                                        .copyWith(color: Colors.green)),
-                                                TextSpan(text: e.pLength.toString(),
-                                                    style: TextStyleMobile.h2_12
-                                                        .copyWith(color: Colors.green)),
-                                              ]
-                                            ),
-                                          )
-                                          : Text("No data",
-                                          style: TextStyleMobile.h2_12
-                                            .copyWith(color: Colors.red))
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: RichText(
-                                        text: TextSpan(
-                                          children: [
-                                            TextSpan(text: "- Weight ",
-                                                style: TextStyleMobile.body_10.copyWith(color: Colors.black)),
-                                            TextSpan(text: "(${state.weightUnit[e.weightId]})",
-                                                style: TextStyleMobile.lable_12.copyWith(color: Colors.black)),
-                                          ]
-                                        ),
-                                      )
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Align(
-                                      alignment: Alignment.centerRight,
-                                      child: e.pWeight != -1 ? Text("${e.pWeight}",
-                                          style: TextStyleMobile.h2_12
-                                              .copyWith(color: Colors.green))
-                                      : Text("No data",
-                                          style: TextStyleMobile.h2_12
-                                              .copyWith(color: Colors.red)),
-                                    ),
-                                  ),
-                                ],
+                            borderRadius: BorderRadius.circular(10)
+                          ),
+                          width: double.infinity,
+                          child: Row(
+                            children: [
+                              Expanded(
+                                  child: Text(e.name ?? "",
+                                    style: TextStyleMobile.body_14,
+                                  )
                               ),
-                            )
-                          ],
+                              const Icon(Icons.print_outlined, color: MobileColor.orangeColor,)
+                            ],
+                          ),
                         ),
                       ),
                     );

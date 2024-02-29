@@ -7,15 +7,15 @@ import '../model/shipping.dart';
 import '../service/stepRender.dart';
 import '../service/util.dart';
 
-class ReviewShipping extends StatefulWidget {
-  const ReviewShipping({super.key, required this.shipping});
+class ReviewShippingDialog extends StatefulWidget {
+  const ReviewShippingDialog({super.key, required this.shipping});
   final Shipping shipping;
 
   @override
-  State<ReviewShipping> createState() => _ReviewShippingState();
+  State<ReviewShippingDialog> createState() => _ReviewShippingDialogState();
 }
 
-class _ReviewShippingState extends State<ReviewShipping> {
+class _ReviewShippingDialogState extends State<ReviewShippingDialog> {
   List<int> factorWidth = [2, 3];
   Widget sepa = const SizedBox(width: 20,);
 
@@ -111,11 +111,11 @@ class _ReviewShippingState extends State<ReviewShipping> {
                     child: RichText(text: TextSpan(
                         children: [
                           TextSpan(text: "Sender",
-                              style: TextStyleMobile.h1_14.
+                              style: TextStyleMobile.button_14.
                               copyWith(color: Colors.grey)
                           ),
                           TextSpan(text: " *",
-                              style: TextStyleMobile.h1_14.
+                              style: TextStyleMobile.button_14.
                               copyWith(color: Colors.red)
                           ),
                         ]
@@ -128,7 +128,7 @@ class _ReviewShippingState extends State<ReviewShipping> {
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text(widget.shipping.sender ?? "",
-                          style: TextStyleMobile.h1_14),
+                          style: TextStyleMobile.button_14),
                     )
                 )
               ],
@@ -144,11 +144,11 @@ class _ReviewShippingState extends State<ReviewShipping> {
                     child: RichText(text: TextSpan(
                         children: [
                           TextSpan(text: "Ship from",
-                              style: TextStyleMobile.h1_14.
+                              style: TextStyleMobile.button_14.
                               copyWith(color: Colors.grey)
                           ),
                           TextSpan(text: " *",
-                              style: TextStyleMobile.h1_14.
+                              style: TextStyleMobile.button_14.
                               copyWith(color: Colors.red)
                           ),
                         ]
@@ -167,7 +167,7 @@ class _ReviewShippingState extends State<ReviewShipping> {
                           "${widget.shipping.shipFromAddress?.zipCode}, "
                           "${widget.shipping.shipFromAddress?.country}"
                           ?? "",
-                          style: TextStyleMobile.h1_14),
+                          style: TextStyleMobile.button_14),
                     )
                 )
               ],
@@ -183,7 +183,7 @@ class _ReviewShippingState extends State<ReviewShipping> {
                     child: RichText(text: TextSpan(
                         children: [
                           TextSpan(text: "Phone",
-                              style: TextStyleMobile.h1_14.
+                              style: TextStyleMobile.button_14.
                               copyWith(color: Colors.grey)
                           ),
                         ]
@@ -196,7 +196,7 @@ class _ReviewShippingState extends State<ReviewShipping> {
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text(widget.shipping.phoneSender ?? "",
-                          style: TextStyleMobile.h1_14),
+                          style: TextStyleMobile.button_14),
                     )
                 )
               ],
@@ -212,7 +212,7 @@ class _ReviewShippingState extends State<ReviewShipping> {
                     child: RichText(text: TextSpan(
                         children: [
                           TextSpan(text: "Email",
-                              style: TextStyleMobile.h1_14.
+                              style: TextStyleMobile.button_14.
                               copyWith(color: Colors.grey)
                           ),
                         ]
@@ -225,7 +225,7 @@ class _ReviewShippingState extends State<ReviewShipping> {
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text(widget.shipping.emailSender ?? "",
-                          style: TextStyleMobile.h1_14),
+                          style: TextStyleMobile.button_14),
                     )
                 )
               ],
@@ -239,7 +239,7 @@ class _ReviewShippingState extends State<ReviewShipping> {
               width: double.infinity,
               color: MobileColor.grayButtonColor,
               child: Text("RECEIVING ADDRESS",
-                  style: TextStyleMobile.h1_14.copyWith(
+                  style: TextStyleMobile.button_14.copyWith(
                       color: Colors.grey
                   )
               ),
@@ -255,11 +255,11 @@ class _ReviewShippingState extends State<ReviewShipping> {
                     child: RichText(text: TextSpan(
                         children: [
                           TextSpan(text: "Receiver",
-                              style: TextStyleMobile.h1_14.
+                              style: TextStyleMobile.button_14.
                               copyWith(color: Colors.grey)
                           ),
                           TextSpan(text: " *",
-                              style: TextStyleMobile.h1_14.
+                              style: TextStyleMobile.button_14.
                               copyWith(color: Colors.red)
                           ),
                         ]
@@ -272,7 +272,7 @@ class _ReviewShippingState extends State<ReviewShipping> {
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text(widget.shipping.receiver ?? "",
-                          style: TextStyleMobile.h1_14),
+                          style: TextStyleMobile.button_14),
                     )
                 )
               ],
@@ -288,11 +288,11 @@ class _ReviewShippingState extends State<ReviewShipping> {
                     child: RichText(text: TextSpan(
                         children: [
                           TextSpan(text: "Ship to",
-                              style: TextStyleMobile.h1_14.
+                              style: TextStyleMobile.button_14.
                               copyWith(color: Colors.grey)
                           ),
                           TextSpan(text: " *",
-                              style: TextStyleMobile.h1_14.
+                              style: TextStyleMobile.button_14.
                               copyWith(color: Colors.red)
                           ),
                         ]
@@ -311,7 +311,7 @@ class _ReviewShippingState extends State<ReviewShipping> {
                           "${widget.shipping.shipToAddress?.zipCode}, "
                           "${widget.shipping.shipToAddress?.country}"
                           ?? "",
-                          style: TextStyleMobile.h1_14),
+                          style: TextStyleMobile.button_14),
                     )
                 )
               ],
@@ -327,7 +327,7 @@ class _ReviewShippingState extends State<ReviewShipping> {
                     child: RichText(text: TextSpan(
                         children: [
                           TextSpan(text: "Phone",
-                              style: TextStyleMobile.h1_14.
+                              style: TextStyleMobile.button_14.
                               copyWith(color: Colors.grey)
                           ),
                         ]
@@ -340,7 +340,7 @@ class _ReviewShippingState extends State<ReviewShipping> {
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text(widget.shipping.phoneReceiver ?? "",
-                          style: TextStyleMobile.h1_14),
+                          style: TextStyleMobile.button_14),
                     )
                 )
               ],
@@ -356,7 +356,7 @@ class _ReviewShippingState extends State<ReviewShipping> {
                     child: RichText(text: TextSpan(
                         children: [
                           TextSpan(text: "Email",
-                              style: TextStyleMobile.h1_14.
+                              style: TextStyleMobile.button_14.
                               copyWith(color: Colors.grey)
                           ),
                         ]
@@ -369,7 +369,7 @@ class _ReviewShippingState extends State<ReviewShipping> {
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text(widget.shipping.emailReceiver ?? "",
-                          style: TextStyleMobile.h1_14),
+                          style: TextStyleMobile.button_14),
                     )
                 )
               ],
@@ -389,11 +389,11 @@ class _ReviewShippingState extends State<ReviewShipping> {
                     child: RichText(text: TextSpan(
                         children: [
                           TextSpan(text: "Create Date",
-                              style: TextStyleMobile.h1_14.
+                              style: TextStyleMobile.button_14.
                               copyWith(color: Colors.grey)
                           ),
                           TextSpan(text: " *",
-                              style: TextStyleMobile.h1_14.
+                              style: TextStyleMobile.button_14.
                               copyWith(color: Colors.red)
                           ),
                         ]
@@ -406,7 +406,7 @@ class _ReviewShippingState extends State<ReviewShipping> {
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text(Utils.convertTime(widget.shipping.createdDate),
-                          style: TextStyleMobile.h1_14),
+                          style: TextStyleMobile.button_14),
                     )
                 )
               ],
@@ -422,11 +422,11 @@ class _ReviewShippingState extends State<ReviewShipping> {
                     child: RichText(text: TextSpan(
                         children: [
                           TextSpan(text: "Delivery Status",
-                              style: TextStyleMobile.h1_14.
+                              style: TextStyleMobile.button_14.
                               copyWith(color: Colors.grey)
                           ),
                           TextSpan(text: " *",
-                              style: TextStyleMobile.h1_14.
+                              style: TextStyleMobile.button_14.
                               copyWith(color: Colors.red)
                           ),
                         ]
@@ -439,7 +439,7 @@ class _ReviewShippingState extends State<ReviewShipping> {
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text(widget.shipping.deliveryStatus ?? "",
-                          style: TextStyleMobile.h1_14),
+                          style: TextStyleMobile.button_14),
                     )
                 )
               ],
@@ -455,11 +455,11 @@ class _ReviewShippingState extends State<ReviewShipping> {
                     child: RichText(text: TextSpan(
                         children: [
                           TextSpan(text: "Shipped Date",
-                              style: TextStyleMobile.h1_14.
+                              style: TextStyleMobile.button_14.
                               copyWith(color: Colors.grey)
                           ),
                           TextSpan(text: " *",
-                              style: TextStyleMobile.h1_14.
+                              style: TextStyleMobile.button_14.
                               copyWith(color: Colors.red)
                           ),
                         ]
@@ -472,7 +472,7 @@ class _ReviewShippingState extends State<ReviewShipping> {
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text(Utils.convertTime(widget.shipping.shippedDate),
-                          style: TextStyleMobile.h1_14),
+                          style: TextStyleMobile.button_14),
                     )
                 )
               ],
@@ -488,7 +488,7 @@ class _ReviewShippingState extends State<ReviewShipping> {
                     child: RichText(text: TextSpan(
                         children: [
                           TextSpan(text: "Estimated Delivery Date",
-                              style: TextStyleMobile.h1_14.
+                              style: TextStyleMobile.button_14.
                               copyWith(color: Colors.grey)
                           ),
                         ]
@@ -501,7 +501,7 @@ class _ReviewShippingState extends State<ReviewShipping> {
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text(Utils.convertTime(widget.shipping.estimatedDeliveryDate),
-                          style: TextStyleMobile.h1_14),
+                          style: TextStyleMobile.button_14),
                     )
                 )
               ],
@@ -517,7 +517,7 @@ class _ReviewShippingState extends State<ReviewShipping> {
                     child: RichText(text: TextSpan(
                         children: [
                           TextSpan(text: "Shipment Identification Number",
-                              style: TextStyleMobile.h1_14.
+                              style: TextStyleMobile.button_14.
                               copyWith(color: Colors.grey)
                           ),
                         ]
@@ -530,7 +530,7 @@ class _ReviewShippingState extends State<ReviewShipping> {
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text(widget.shipping.identificationNumber ?? "",
-                          style: TextStyleMobile.h1_14),
+                          style: TextStyleMobile.button_14),
                     )
                 )
               ],
@@ -546,7 +546,7 @@ class _ReviewShippingState extends State<ReviewShipping> {
                     child: RichText(text: TextSpan(
                         children: [
                           TextSpan(text: "Carrier/Forwarder",
-                              style: TextStyleMobile.h1_14.
+                              style: TextStyleMobile.button_14.
                               copyWith(color: Colors.grey)
                           ),
                         ]
@@ -559,7 +559,7 @@ class _ReviewShippingState extends State<ReviewShipping> {
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text(widget.shipping.carrier ?? "",
-                          style: TextStyleMobile.h1_14),
+                          style: TextStyleMobile.button_14),
                     )
                 )
               ],
@@ -575,7 +575,7 @@ class _ReviewShippingState extends State<ReviewShipping> {
                     child: RichText(text: TextSpan(
                         children: [
                           TextSpan(text: "Shipping Amount",
-                              style: TextStyleMobile.h1_14.
+                              style: TextStyleMobile.button_14.
                               copyWith(color: Colors.grey)
                           ),
                         ]
@@ -588,7 +588,7 @@ class _ReviewShippingState extends State<ReviewShipping> {
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text(widget.shipping.shippingAmount?.toString() ?? "",
-                          style: TextStyleMobile.h1_14),
+                          style: TextStyleMobile.button_14),
                     )
                 )
               ],
@@ -605,7 +605,7 @@ class _ReviewShippingState extends State<ReviewShipping> {
                     child: RichText(text: TextSpan(
                         children: [
                           TextSpan(text: "Shipment Method",
-                              style: TextStyleMobile.h1_14.
+                              style: TextStyleMobile.button_14.
                               copyWith(color: Colors.grey)
                           ),
                         ]
@@ -618,7 +618,7 @@ class _ReviewShippingState extends State<ReviewShipping> {
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text(widget.shipping.shipmentMethod ?? "",
-                          style: TextStyleMobile.h1_14),
+                          style: TextStyleMobile.button_14),
                     )
                 )
               ],
@@ -634,7 +634,7 @@ class _ReviewShippingState extends State<ReviewShipping> {
                     child: RichText(text: TextSpan(
                         children: [
                           TextSpan(text: "Description",
-                              style: TextStyleMobile.h1_14.
+                              style: TextStyleMobile.button_14.
                               copyWith(color: Colors.grey)
                           ),
                         ]
@@ -647,7 +647,7 @@ class _ReviewShippingState extends State<ReviewShipping> {
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text(widget.shipping.description ?? "",
-                          style: TextStyleMobile.h1_14),
+                          style: TextStyleMobile.button_14),
                     )
                 )
               ],
@@ -663,7 +663,7 @@ class _ReviewShippingState extends State<ReviewShipping> {
                     child: RichText(text: TextSpan(
                         children: [
                           TextSpan(text: "Invoice Number",
-                              style: TextStyleMobile.h1_14.
+                              style: TextStyleMobile.button_14.
                               copyWith(color: Colors.grey)
                           ),
                         ]
@@ -676,7 +676,7 @@ class _ReviewShippingState extends State<ReviewShipping> {
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text(widget.shipping.invoiceNumber?.toString() ?? "",
-                          style: TextStyleMobile.h1_14),
+                          style: TextStyleMobile.button_14),
                     )
                 )
               ],
@@ -692,7 +692,7 @@ class _ReviewShippingState extends State<ReviewShipping> {
                     child: RichText(text: TextSpan(
                         children: [
                           TextSpan(text: "Tax Number",
-                              style: TextStyleMobile.h1_14.
+                              style: TextStyleMobile.button_14.
                               copyWith(color: Colors.grey)
                           ),
                         ]
@@ -705,7 +705,7 @@ class _ReviewShippingState extends State<ReviewShipping> {
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text(widget.shipping.taxNumber ?? "",
-                          style: TextStyleMobile.h1_14),
+                          style: TextStyleMobile.button_14),
                     )
                 )
               ],
@@ -721,7 +721,7 @@ class _ReviewShippingState extends State<ReviewShipping> {
                     child: RichText(text: TextSpan(
                         children: [
                           TextSpan(text: "Bill Number",
-                              style: TextStyleMobile.h1_14.
+                              style: TextStyleMobile.button_14.
                               copyWith(color: Colors.grey)
                           ),
                         ]
@@ -734,7 +734,7 @@ class _ReviewShippingState extends State<ReviewShipping> {
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text(widget.shipping.billNumber ?? "",
-                          style: TextStyleMobile.h1_14),
+                          style: TextStyleMobile.button_14),
                     )
                 )
               ],
@@ -745,7 +745,7 @@ class _ReviewShippingState extends State<ReviewShipping> {
         );
       case 2:
         return Column(
-            children: widget.shipping.shippingPackages!.map((e) {
+            children: widget.shipping.shippingPackages?.map((e) {
                 return Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                   alignment: Alignment.centerLeft,
@@ -764,7 +764,7 @@ class _ReviewShippingState extends State<ReviewShipping> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Expanded(
-                        child: Text(e.outboundPackage!.name!, style: TextStyleMobile.h1_14.copyWith(
+                        child: Text(e.outboundPackage!.name!, style: TextStyleMobile.button_14.copyWith(
                           color: MobileColor.orangeColor,),
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
@@ -798,7 +798,9 @@ class _ReviewShippingState extends State<ReviewShipping> {
                   ),
                 );
               }
-            ).toList()
+            ).toList() ?? [
+              Text("No package has been selected !!!", style: TextStyleMobile.button_14,)
+            ]
         );
     }
   }

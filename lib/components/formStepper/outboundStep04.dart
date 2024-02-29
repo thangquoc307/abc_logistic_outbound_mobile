@@ -104,7 +104,6 @@ class _Step04State extends State<Step04> {
                                           state.objectForm.shippings?.remove(e);
                                           state.objectForm.shippings?.add(shipping);
                                           state.createOutbound(false);
-
                                       },
                                     );
                                   },
@@ -122,6 +121,7 @@ class _Step04State extends State<Step04> {
                                       Image.asset("assets/images/shipItem.png"),
                                       const SizedBox(width: 10,),
                                       Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           Expanded(
                                             child: Text(e.sender ?? "",

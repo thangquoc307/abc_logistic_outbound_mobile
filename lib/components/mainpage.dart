@@ -91,28 +91,28 @@ class MainPage extends StatelessWidget {
                               children: [
                                 const Icon(Icons.view_list, size: 20),
                                 const SizedBox(height: 3,),
-                                Text("Order", style: TextStyleMobile.h1_14),
+                                Text("Order", style: TextStyleMobile.button_14),
                               ],
                             )),
                             Tab(child: Column(
                               children: [
                                 const Icon(Icons.shelves, size: 20),
                                 const SizedBox(height: 3,),
-                                Text("Pick", style: TextStyleMobile.h1_14),
+                                Text("Pick", style: TextStyleMobile.button_14),
                               ],
                             )),
                             Tab(child: Column(
                               children: [
                                 const Icon(Icons.inventory, size: 20),
                                 const SizedBox(height: 3,),
-                                Text("Pack", style: TextStyleMobile.h1_14),
+                                Text("Pack", style: TextStyleMobile.button_14),
                               ],
                             )),
                             Tab(child: Column(
                               children: [
                                 const Icon(Icons.local_shipping, size: 20),
                                 const SizedBox(height: 3,),
-                                Text("Ship", style: TextStyleMobile.h1_14),
+                                Text("Ship", style: TextStyleMobile.button_14),
                               ],
                             )),
                           ]

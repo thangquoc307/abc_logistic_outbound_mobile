@@ -9,7 +9,6 @@ import '../../cascadeStyle/color.dart';
 import '../../cascadeStyle/fonts.dart';
 import '../../model/globalState.dart';
 import '../../model/outboundProductDetails.dart';
-import '../../service/apiConnector.dart';
 
 class Step03 extends StatefulWidget {
   const Step03({super.key});

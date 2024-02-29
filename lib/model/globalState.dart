@@ -6,6 +6,7 @@ import 'package:flutter_outbound/model/outboundPackage.dart';
 import 'package:flutter_outbound/model/outboundPackageProductDetail.dart';
 import 'package:flutter_outbound/model/outboundPackedDto.dart';
 import 'package:flutter_outbound/model/product.dart';
+import 'package:flutter_outbound/model/shipping.dart';
 import 'package:flutter_outbound/model/weight.dart';
 import '../service/apiConnector.dart';
 import 'package:flutter_outbound/model/outboundProductDetailDto.dart';
@@ -39,7 +40,7 @@ class GlobalState extends ChangeNotifier{
 
   int pageShipList = 0;
   int totalPageShipList = 0;
-  List<Outbound> shippingList = [];
+  List<Shipping> shippingList = [];
 
   GlobalState(){
     getUnit();
@@ -134,7 +135,7 @@ class GlobalState extends ChangeNotifier{
     notifyListeners();
   }
   Future<void> getShipListDatabase() async {
-    Map<String, dynamic>? newData = await ApiConnector.pageSearchOutbound(pageShipList, _searchkey, _countItemOutboundDisplay);
+    Map<String, dynamic>? newData = await ApiConnector.pageSearchShipping(pageShipList, _searchkey, _countItemOutboundDisplay);
     if (newData != null) {
       shippingList = newData["data"];
       totalPageShipList = newData["totalPages"];

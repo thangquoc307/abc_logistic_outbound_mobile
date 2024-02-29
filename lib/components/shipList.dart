@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../cascadeStyle/button.dart';
 import '../cascadeStyle/color.dart';
 import '../cascadeStyle/fonts.dart';
+import '../dialog/reviewShipping.dart';
 import '../model/globalState.dart';
 import '../service/util.dart';
 
@@ -30,88 +31,64 @@ class OutboundShippedList extends StatelessWidget {
                   mainAxisSize: MainAxisSize.max,
                   children: state.shippingList.map((e) {
                     return Expanded(
-                      child: Container(
-                        padding: const EdgeInsets.all(5),
-                        decoration: MobileButton.itemOfList,
-                        width: double.infinity,
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Column(
-                                children: [
-                                  Row(
-                                    children: [
-                                      const Icon(
-                                        Icons.feed,
-                                        color: MobileColor.orangeColor,
-                                      ),
-                                      const SizedBox(width: 5,),
-                                      Text(e.orderNo ?? "")
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      const Icon(
-                                        Icons.supervisor_account,
-                                        color: MobileColor.orangeColor,
-                                      ),
-                                      const SizedBox(width: 5,),
-                                      Text(e.issuser ?? "")
-                                    ],
-                                  )
-                                ],
-                              ),
-                            ),
-                            const SizedBox(width: 20,),
-                            SizedBox(
-                              width: 80,
-                              child: Column(
-                                children: [
-                                  Expanded(
-                                    child: Container(
-                                      alignment: Alignment.topRight,
-                                      child: Container(
-                                        alignment: Alignment.center,
-                                        width: double.infinity,
-                                        height: 25,
-                                        decoration: BoxDecoration(
-                                            color: (e.status == "OPEN")
-                                                ? MobileColor.greenButtonColor
-                                                : MobileColor.grayButtonColor,
-                                            borderRadius: BorderRadius
-                                                .circular(5)
-                                        ),
-                                        child: (e.status == "OPEN")
-                                            ? Text("Open",
-                                            style: TextStyleMobile.button_14
-                                                .copyWith(
-                                                color: Colors.white))
-                                            : Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 8),
-                                          child: Text("Acknowledged",
-                                            style: TextStyleMobile.button_14
-                                                .copyWith(
-                                                color: Colors.black),
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 1,
-                                          ),
-                                        ),
+                      child: InkWell(
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return ReviewShippingDialog(
+                                shipping: e,
+                              );
+                            },
+                          );
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(5),
+                          decoration: MobileButton.itemOfList,
+                          width: double.infinity,
+                          child: Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(3.0),
+                                  child: Image.asset("assets/images/shipItem.png"),
+                                ),
+                                const SizedBox(width: 10,),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Expanded(
+                                      child: Text(e.sender ?? "",
+                                        style: TextStyleMobile.button_14.copyWith(color: MobileColor.orangeColor),
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
                                       ),
                                     ),
-                                  ),
-                                  Text(Utils.convertTime(e.createdDate),
-                                    style: TextStyleMobile.body_12,
-                                  )
-                                ],
-                              ),
-                            )
-                          ],
+                                    Expanded(
+                                      child: Text("Identification Number: ${e.identificationNumber}",
+                                        style: TextStyleMobile.body_12.copyWith(
+                                            color: Colors.grey
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Text("DeliveryStatus: ${e.deliveryStatus}",
+                                        style: TextStyleMobile.body_12.copyWith(
+                                            color: Colors.grey
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              ]
+                          ),
                         ),
                       ),
-
                     );
-                  },).toList()
+                  }).toList(),
               ),
             ),
             SizedBox(

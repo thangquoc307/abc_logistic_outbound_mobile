@@ -55,4 +55,40 @@ class Utils {
     }
     return null;
   }
+  static Widget renderBoxDimension(Widget inbound, Widget unit){
+    return Expanded(
+      child: Container(
+        height: 45,
+        decoration: BoxDecoration(
+          border: Border.all(
+            width: 1,
+            color: Colors.grey
+          ),
+          borderRadius: BorderRadius.circular(5)
+        ),
+        padding: const EdgeInsets.only(left: 10, top: 5, bottom: 5),
+        child: Row(
+          children: [
+            Expanded(
+                child: inbound
+            ),
+            Container(
+              alignment: Alignment.center,
+              width: 25,
+              decoration: const BoxDecoration(
+                border: BorderDirectional(
+                  start: BorderSide(
+                    color: Colors.grey,
+                    width: 1
+                  )
+                )
+              ),
+              child: unit,
+            )
+          ],
+        ),
+
+      ),
+    );
+  }
 }

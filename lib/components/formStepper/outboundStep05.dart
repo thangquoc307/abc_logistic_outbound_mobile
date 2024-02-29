@@ -49,7 +49,7 @@ class _Step05State extends State<Step05> {
                                   showDialog(
                                     context: context,
                                     builder: (context) {
-                                      return ReviewShipping(
+                                      return ReviewShippingDialog(
                                         shipping: e,
                                       );
                                     },
