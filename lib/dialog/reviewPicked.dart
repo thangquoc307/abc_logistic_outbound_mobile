@@ -5,6 +5,7 @@ import 'package:flutter_outbound/model/outboundProductDetails.dart';
 
 import '../cascadeStyle/color.dart';
 import '../cascadeStyle/fonts.dart';
+import '../model/inventoryLocationProductDetail.dart';
 import '../model/outbound.dart';
 import '../model/outboundProductDetailDto.dart';
 import '../service/apiConnector.dart';
@@ -19,15 +20,27 @@ class ReviewPickedDialog extends StatefulWidget {
 class _ReviewPickedDialogState extends State<ReviewPickedDialog> {
   OutboundProductDetail? outboundProductDetail;
   String searchKey = "";
-  bool isLoading = false;
+  bool outboundLoading = false;
+  bool inventoryLoading = false;
   double numberOfProduct = 0;
+  List<InventoryLocationProductDetail>? inventoryList;
 
   @override
   void initState() {
     super.initState();
     getOutboundPicked();
+    getInventory();
   }
 
+  Future<void> getInventory() async {
+    var res = await ApiConnector.getInventoryLocationProductDetail(widget.outboundProductDetailDto.productId);
+    if (res != null){
+      inventoryList = res;
+    }
+    setState(() {
+      inventoryLoading = true;
+    });
+  }
   Future<void> getOutboundPicked() async {
     Outbound? outbound = await ApiConnector.getOutboundById(widget.outboundProductDetailDto.outboundId!);
     Set<OutboundProductDetail> setProductDetail = outbound!.outboundProductDetails ?? {};
@@ -40,16 +53,29 @@ class _ReviewPickedDialogState extends State<ReviewPickedDialog> {
           }
         }
         setState(() {
-          isLoading = true;
+          outboundLoading = true;
         });
         break;
       }
     }
   }
 
+  num getOnHandQty(int locationId){
+    if (inventoryList != null){
+      for(var element in inventoryList!) {
+        if(element.locationId == locationId){
+          return element.totalUnitQty ?? 0;
+        }
+      }
+    } else {
+      return 0;
+    }
+    return 0;
+  }
+
   @override
   Widget build(BuildContext context) {
-    if (!isLoading) {
+    if (!outboundLoading || !inventoryLoading) {
       return const SizedBox();
     }
 
@@ -73,8 +99,7 @@ class _ReviewPickedDialogState extends State<ReviewPickedDialog> {
               .copyWith(color: Colors.grey)),
         ),
       ],
-      content:
-                Column(
+      content: Column(
                   children: [
                     Column(
                       children: [
@@ -200,7 +225,7 @@ class _ReviewPickedDialogState extends State<ReviewPickedDialog> {
                                       Expanded(
                                         child: Container(
                                           alignment: Alignment.center,
-                                          child: Text("check",
+                                          child: Text(getOnHandQty(e.location!.id!).toString(),
                                               style: TextStyleMobile.body_14
                                           ),
                                         ),

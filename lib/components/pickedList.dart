@@ -58,7 +58,8 @@ class _PickedListState extends State<PickedList> {
                               Expanded(
                                 child: Container(
                                 width: double.infinity,
-                                margin: const EdgeInsetsDirectional.only(bottom: ), decoration: MobileButton.itemOfList,
+                                margin: const EdgeInsetsDirectional.only(bottom: 5),
+                                  decoration: MobileButton.itemOfList,
                                 child: Row(
                                   children: [
                                     Container(
