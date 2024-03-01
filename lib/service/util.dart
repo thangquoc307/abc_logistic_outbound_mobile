@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../cascadeStyle/button.dart';
 import '../cascadeStyle/color.dart';
 import '../cascadeStyle/fonts.dart';
 
@@ -87,8 +88,191 @@ class Utils {
             )
           ],
         ),
-
       ),
     );
+  }
+  static Widget renderPageButton(List<int> listOfPageNumber, Function(int) setupPage) {
+    const double spaceBetween = 3;
+    const double sizePageButton = 30;
+
+    int page = listOfPageNumber[0];
+    int totalPage = listOfPageNumber[1];
+
+    return SizedBox(
+        height: 50,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: spaceBetween),
+              width: sizePageButton,
+              height: sizePageButton,
+              decoration: MobileButton.buttonPage.copyWith(
+                  color: (page > 0) ? Colors.white : Colors.grey
+              ),
+              child: TextButton(
+                  onPressed: (page > 0) ? () {
+                    setupPage(0);
+                  } : null,
+                  style: MobileButton.buttonPageStyle,
+                  child: Text("<<",
+                      style: TextStyleMobile.button_14.copyWith(
+                          color: (page > 0) ? Colors.black : MobileColor.grayButtonColor
+                      )
+                  )
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: spaceBetween),
+              width: sizePageButton,
+              height: sizePageButton,
+              decoration: MobileButton.buttonPage.copyWith(
+                  color: (page > 0) ? Colors.white : Colors.grey
+              ),
+              child: TextButton(
+                  onPressed: (page > 0) ? () {
+                    page--;
+                    setupPage(page);
+                  } : null,
+                  style: MobileButton.buttonPageStyle,
+                  child: Text("<",
+                      style: TextStyleMobile.button_14.copyWith(
+                          color: (page > 0) ? Colors.black : MobileColor.grayButtonColor
+                      )
+                  )
+              ),
+            ),
+            (page > 1 && page == totalPage - 1) ? Container(
+              margin: const EdgeInsets.symmetric(horizontal: spaceBetween),
+              width: 30,
+              height: 30,
+              decoration: MobileButton.buttonPage.copyWith(
+                  color: Colors.white
+              ),
+              child: TextButton(
+                  onPressed: () {
+                    page = page - 2;
+                    setupPage(page);
+                  },
+                  style: MobileButton.buttonPageStyle,
+                  child: Text((page - 1).toString(),
+                      style: TextStyleMobile.button_14
+                  )
+              ),
+            ) : const SizedBox(),
+            (page > 0) ? Container(
+              margin: const EdgeInsets.symmetric(horizontal: spaceBetween),
+              width: 30,
+              height: 30,
+              decoration: MobileButton.buttonPage.copyWith(
+                  color: Colors.white
+              ),
+              child: TextButton(
+                  onPressed: () {
+                    page--;
+                    setupPage(page);
+                  },
+                  style: MobileButton.buttonPageStyle,
+                  child: Text(page.toString(),
+                      style: TextStyleMobile.button_14
+                  )
+              ),
+            ) : const SizedBox(),
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: spaceBetween),
+              width: sizePageButton,
+              height: sizePageButton,
+              decoration: MobileButton.buttonPage.copyWith(
+                  color: MobileColor.orangeColor
+              ),
+              child: TextButton(
+                  onPressed: () {},
+                  style: MobileButton.buttonPageStyle,
+                  child: Text((page + 1).toString(),
+                      style: TextStyleMobile.button_14.copyWith(
+                          color: Colors.white
+                      )
+                  )
+              ),
+            ),
+            (page + 1 < totalPage) ? Container(
+              margin: const EdgeInsets.symmetric(horizontal: spaceBetween),
+              width: sizePageButton,
+              height: sizePageButton,
+              decoration: MobileButton.buttonPage.copyWith(
+                  color: Colors.white
+              ),
+              child: TextButton(
+                  onPressed: () {
+                    page++;
+                    setupPage(page);
+                  },
+                  style: MobileButton.buttonPageStyle,
+                  child: Text((page + 2).toString(),
+                      style: TextStyleMobile.button_14
+                  )
+              ),
+            ) : const SizedBox(),
+            (page + 2 < totalPage && page == 0) ? Container(
+              margin: const EdgeInsets.symmetric(horizontal: spaceBetween),
+              width: sizePageButton,
+              height: sizePageButton,
+              decoration: MobileButton.buttonPage.copyWith(
+                  color: Colors.white
+              ),
+              child: TextButton(
+                  onPressed: () {
+                    page = page + 2;
+                    setupPage(page);
+                  },
+                  style: MobileButton.buttonPageStyle,
+                  child: Text((page + 3).toString(),
+                      style: TextStyleMobile.button_14
+                  )
+              ),
+            ) : const SizedBox(),
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: spaceBetween),
+              width: sizePageButton,
+              height: sizePageButton,
+              decoration: MobileButton.buttonPage.copyWith(
+                  color: (page + 1 < totalPage) ? Colors.white : Colors.grey
+              ),
+              child: TextButton(
+                  onPressed: (page + 1 < totalPage) ? () {
+                    page++;
+                    setupPage(page);
+                  } : null,
+                  style: MobileButton.buttonPageStyle,
+                  child: Text(">",
+                      style: TextStyleMobile.button_14.copyWith(
+                          color: (page + 1 < totalPage) ? Colors.black : MobileColor.grayButtonColor
+                      )
+                  )
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: spaceBetween),
+              width: sizePageButton,
+              height: sizePageButton,
+              decoration: MobileButton.buttonPage.copyWith(
+                  color: (page + 1 < totalPage) ? Colors.white : Colors.grey
+              ),
+              child: TextButton(
+                  onPressed: (page + 1 < totalPage) ? () {
+                    page = totalPage - 1;
+                    setupPage(page);
+                  } : null,
+                  style: MobileButton.buttonPageStyle,
+                  child: Text(">>",
+                      style: TextStyleMobile.button_14.copyWith(
+                          color: (page + 1 < totalPage) ? Colors.black : MobileColor.grayButtonColor
+                      )
+                  )
+              ),
+            ),
+          ],
+        ),
+      );
   }
 }

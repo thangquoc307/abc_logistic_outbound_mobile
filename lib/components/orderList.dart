@@ -8,9 +8,6 @@ import 'package:provider/provider.dart';
 
 class OrderOutboundList extends StatelessWidget {
   const OrderOutboundList({super.key});
-  static const double spaceBetween = 3;
-  static const double sizePageButton = 30;
-
   @override
   Widget build(BuildContext context) {
     var init = Provider.of<GlobalState>(context, listen: false);
@@ -19,6 +16,11 @@ class OrderOutboundList extends StatelessWidget {
 
     return Consumer<GlobalState>(
         builder: (context, state, child) {
+          List list = List.from(state.outboundList);
+          for (var i = state.countItemOutboundDisplay; i > state.outboundList.length; i--){
+            list.add(null);
+          }
+
           return Column(
             children: [
               Expanded(
@@ -27,7 +29,10 @@ class OrderOutboundList extends StatelessWidget {
                 Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     mainAxisSize: MainAxisSize.max,
-                    children: state.outboundList.map((e) {
+                    children: list.map((e) {
+                      if (e == null) {
+                        return const Expanded(child: SizedBox());
+                      }
                       return Expanded(
                         child: InkWell(
                           onTap: () {
@@ -35,13 +40,15 @@ class OrderOutboundList extends StatelessWidget {
                             Navigator.pushNamed(context, "/create");
                           },
                           child: Container(
-                            padding: const EdgeInsets.all(5),
+                            margin: const EdgeInsets.only(bottom: 5),
+                            padding: const EdgeInsets.all(10),
                             decoration: MobileButton.itemOfList,
                             width: double.infinity,
                             child: Row(
                               children: [
                                 Expanded(
                                   child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                     children: [
                                       Row(
                                         children: [
@@ -113,168 +120,8 @@ class OrderOutboundList extends StatelessWidget {
                     },).toList()
                 ),
               ),
-              SizedBox(
-                height: 50,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.symmetric(horizontal: spaceBetween),
-                      width: sizePageButton,
-                      height: sizePageButton,
-                      decoration: MobileButton.buttonPage.copyWith(
-                          color: MobileColor.grayButtonColor
-                      ),
-                      child: TextButton(
-                          onPressed: (state.pageOrderList > 0) ? () {
-                            state.statePageOrderList(0, context);
-                          } : null,
-                          style: MobileButton.buttonPageStyle,
-                          child: Text("<<",
-                              style: TextStyleMobile.button_14
-                          )
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.symmetric(horizontal: spaceBetween),
-                      width: sizePageButton,
-                      height: sizePageButton,
-                      decoration: MobileButton.buttonPage.copyWith(
-                          color: MobileColor.grayButtonColor
-                      ),
-                      child: TextButton(
-                          onPressed: (state.pageOrderList > 0) ? () {
-                            state.statePageOrderList(state.pageOrderList - 1, context);
-                          } : null,
-                          style: MobileButton.buttonPageStyle,
-                          child: Text("<",
-                              style: TextStyleMobile.button_14
-                          )
-                      ),
-                    ),
-                    (state.pageOrderList - 1 > 0 && state.pageOrderList == state.totalPageOrderList - 1) ? Container(
-                      margin: const EdgeInsets.symmetric(horizontal: spaceBetween),
-                      width: 30,
-                      height: 30,
-                      decoration: MobileButton.buttonPage.copyWith(
-                          color: MobileColor.grayButtonColor
-                      ),
-                      child: TextButton(
-                          onPressed: () {
-                            state.statePageOrderList(state.pageOrderList - 2, context);
-
-                          },
-                          style: MobileButton.buttonPageStyle,
-                          child: Text((state.pageOrderList - 1).toString(),
-                              style: TextStyleMobile.button_14
-                          )
-                      ),
-                    ) : const SizedBox(),
-                    (state.pageOrderList > 0) ? Container(
-                      margin: const EdgeInsets.symmetric(horizontal: spaceBetween),
-                      width: 30,
-                      height: 30,
-                      decoration: MobileButton.buttonPage.copyWith(
-                          color: MobileColor.grayButtonColor
-                      ),
-                      child: TextButton(
-                          onPressed: () {
-                            state.statePageOrderList(state.pageOrderList - 1, context);
-                          },
-                          style: MobileButton.buttonPageStyle,
-                          child: Text(state.pageOrderList.toString(),
-                              style: TextStyleMobile.button_14
-                          )
-                      ),
-                    ) : const SizedBox(),
-                    Container(
-                      margin: const EdgeInsets.symmetric(horizontal: spaceBetween),
-                      width: sizePageButton,
-                      height: sizePageButton,
-                      decoration: MobileButton.buttonPage.copyWith(
-                          color: MobileColor.orangeColor
-                      ),
-                      child: TextButton(
-                          onPressed: () {},
-                          style: MobileButton.buttonPageStyle,
-                          child: Text((state.pageOrderList + 1).toString(),
-                              style: TextStyleMobile.button_14.copyWith(
-                                  color: Colors.white
-                              )
-                          )
-                      ),
-                    ),
-                    (state.pageOrderList + 1 < state.totalPageOrderList) ? Container(
-                      margin: const EdgeInsets.symmetric(horizontal: spaceBetween),
-                      width: sizePageButton,
-                      height: sizePageButton,
-                      decoration: MobileButton.buttonPage.copyWith(
-                          color: MobileColor.grayButtonColor
-                      ),
-                      child: TextButton(
-                          onPressed: () {
-                            state.statePageOrderList(state.pageOrderList + 1, context);
-                          },
-                          style: MobileButton.buttonPageStyle,
-                          child: Text((state.pageOrderList + 2).toString(),
-                              style: TextStyleMobile.button_14
-                          )
-                      ),
-                    ) : const SizedBox(),
-                    (state.pageOrderList + 2 < state.totalPageOrderList && state.pageOrderList == 0) ? Container(
-                      margin: const EdgeInsets.symmetric(horizontal: spaceBetween),
-                      width: sizePageButton,
-                      height: sizePageButton,
-                      decoration: MobileButton.buttonPage.copyWith(
-                          color: MobileColor.grayButtonColor
-                      ),
-                      child: TextButton(
-                          onPressed: () {
-                            state.statePageOrderList(state.pageOrderList + 2, context);
-                          },
-                          style: MobileButton.buttonPageStyle,
-                          child: Text((state.pageOrderList + 3).toString(),
-                              style: TextStyleMobile.button_14
-                          )
-                      ),
-                    ) : const SizedBox(),
-                    Container(
-                      margin: const EdgeInsets.symmetric(horizontal: spaceBetween),
-                      width: sizePageButton,
-                      height: sizePageButton,
-                      decoration: MobileButton.buttonPage.copyWith(
-                          color: MobileColor.grayButtonColor
-                      ),
-                      child: TextButton(
-                          onPressed: (state.pageOrderList + 1 < state.totalPageOrderList) ? () {
-                            state.statePageOrderList(state.pageOrderList + 1, context);
-                          } : null,
-                          style: MobileButton.buttonPageStyle,
-                          child: Text(">",
-                              style: TextStyleMobile.button_14
-                          )
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.symmetric(horizontal: spaceBetween),
-                      width: sizePageButton,
-                      height: sizePageButton,
-                      decoration: MobileButton.buttonPage.copyWith(
-                          color: MobileColor.grayButtonColor
-                      ),
-                      child: TextButton(
-                          onPressed: (state.pageOrderList + 1 < state.totalPageOrderList) ? () {
-                            state.statePageOrderList(state.totalPageOrderList - 1, context);
-                          } : null,
-                          style: MobileButton.buttonPageStyle,
-                          child: Text(">>",
-                              style: TextStyleMobile.button_14
-                          )
-                      ),
-                    ),
-                  ],
-                ),
-              )
+              Utils.renderPageButton([state.pageOrderList, state.totalPageOrderList],
+                      (value) {state.statePageOrderList(value);})
             ],
           );
         },

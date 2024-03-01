@@ -46,14 +46,14 @@ class GlobalState extends ChangeNotifier{
     getUnit();
   }
 
-  int _countItemOutboundDisplay = 0;
+  int countItemOutboundDisplay = 0;
 
   void setCountItemOutboundDisplay(BuildContext context) {
-    double heightItem = 120;
+    double heightItem = 130;
     int itemOfPage = (MediaQuery.of(context).size.height / heightItem).floor();
 
-    if (_countItemOutboundDisplay == 0) {
-      _countItemOutboundDisplay = itemOfPage;
+    if (countItemOutboundDisplay == 0) {
+      countItemOutboundDisplay = itemOfPage;
     }
   }
 
@@ -104,27 +104,28 @@ class GlobalState extends ChangeNotifier{
     notifyListeners();
   }
 
-  void statePagePackList(int value, BuildContext context) {
+  void statePagePackList(int value) {
     pagePackList = value;
     getPackedListDatabase();
   }
 
-  void statePagePickList(int value, BuildContext context) {
+  void statePagePickList(int value) {
     pagePickList = value;
     getPickedListDatabase();
   }
 
-  void statePageOrderList(int value, BuildContext context) {
+  void statePageOrderList(int value) {
     pageOrderList = value;
     getOrderListDatabase();
   }
-  void statePageShipList(int value, BuildContext context) {
+  void statePageShipList(int value) {
     pageShipList = value;
     getShipListDatabase();
   }
 
   Future<void> getOrderListDatabase() async {
-    Map<String, dynamic>? newData = await ApiConnector.pageSearchOutbound(pageOrderList, _searchkey, _countItemOutboundDisplay);
+    Map<String, dynamic>? newData =
+    await ApiConnector.pageSearchOutbound(pageOrderList, _searchkey, countItemOutboundDisplay);
     if (newData != null) {
       outboundList = newData["data"];
       totalPageOrderList = newData["totalPages"];
@@ -135,7 +136,8 @@ class GlobalState extends ChangeNotifier{
     notifyListeners();
   }
   Future<void> getShipListDatabase() async {
-    Map<String, dynamic>? newData = await ApiConnector.pageSearchShipping(pageShipList, _searchkey, _countItemOutboundDisplay);
+    Map<String, dynamic>? newData =
+    await ApiConnector.pageSearchShipping(pageShipList, _searchkey, countItemOutboundDisplay);
     if (newData != null) {
       shippingList = newData["data"];
       totalPageShipList = newData["totalPages"];
@@ -146,7 +148,8 @@ class GlobalState extends ChangeNotifier{
     notifyListeners();
   }
   Future<void> getPickedListDatabase() async {
-    Map<String, dynamic>? newData = await ApiConnector.pageSearchPickedOutbound(pagePickList, _searchkey, _countItemOutboundDisplay);
+    Map<String, dynamic>? newData =
+    await ApiConnector.pageSearchPickedOutbound(pagePickList, _searchkey, countItemOutboundDisplay);
     if (newData != null) {
       pickedList = newData["data"];
       totalPagePickList = newData["totalPages"];
@@ -157,7 +160,8 @@ class GlobalState extends ChangeNotifier{
     notifyListeners();
   }
   Future<void> getPackedListDatabase() async {
-    Map<String, dynamic>? newData = await ApiConnector.pageSearchPackedOutbound(pagePackList, _searchkey, _countItemOutboundDisplay);
+    Map<String, dynamic>? newData =
+    await ApiConnector.pageSearchPackedOutbound(pagePackList, _searchkey, countItemOutboundDisplay);
     if (newData != null) {
       packedList = newData["data"];
       totalPagePackList = newData["totalPages"];
@@ -279,6 +283,5 @@ class GlobalState extends ChangeNotifier{
       await getPackedListDatabase();
       await getShipListDatabase();
     }
-
   }
 }

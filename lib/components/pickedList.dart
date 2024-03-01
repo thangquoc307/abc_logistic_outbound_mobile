@@ -3,7 +3,9 @@ import 'package:provider/provider.dart';
 import '../cascadeStyle/button.dart';
 import '../cascadeStyle/color.dart';
 import '../cascadeStyle/fonts.dart';
+import '../dialog/reviewPicked.dart';
 import '../model/globalState.dart';
+import '../service/util.dart';
 
 class PickedList extends StatefulWidget {
   const PickedList({super.key});
@@ -13,8 +15,6 @@ class PickedList extends StatefulWidget {
 }
 
 class _PickedListState extends State<PickedList> {
-  static const double spaceBetween = 3;
-  static const double sizePageButton = 30;
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +24,11 @@ class _PickedListState extends State<PickedList> {
 
     return Consumer<GlobalState>(
       builder: (context, state, child) {
+        List list = List.from(state.pickedList);
+        for (var i = state.countItemOutboundDisplay; i > state.pickedList.length; i--){
+          list.add(null);
+        }
+
         return Column(
           children: [
             Expanded(
@@ -32,88 +37,92 @@ class _PickedListState extends State<PickedList> {
               Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   mainAxisSize: MainAxisSize.max,
-                  children: state.pickedList.map((e) {
+                  children: list.map((e) {
+                    if (e == null) {
+                      return const Expanded(child: SizedBox());
+                    }
                     return Expanded(
-                      child: Container(
-                        padding: const EdgeInsets.all(5),
-                        decoration: MobileButton.itemOfList,
-                        width: double.infinity,
+                      child: InkWell(
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return ReviewPickedDialog(
+                                outboundProductDetailDto: e,
+                              );
+                            },
+                          );
+                        },
                         child: Row(
                           children: [
-                            Expanded(
-                              child: Column(
-                                children: [
-                                  Row(
-                                    children: [
-                                      const Icon(
-                                        Icons.feed,
-                                        color: MobileColor.orangeColor,
+                              Expanded(
+                                child: Container(
+                                width: double.infinity,
+                                margin: const EdgeInsetsDirectional.only(bottom: ), decoration: MobileButton.itemOfList,
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      width: 50,
+                                      alignment: Alignment.topRight,
+                                      padding: const EdgeInsets.only(top: 10),
+                                      child: Container(
+                                        width: 40,
+                                        height: 40,
+                                        decoration: BoxDecoration(
+                                            color: MobileColor.grayButtonColor,
+                                            borderRadius: BorderRadius.circular(5)
+                                        ),
+                                        child: Image.asset(
+                                            'assets/images/Vector.png'),
                                       ),
-                                      const SizedBox(width: 5,),
-                                      Text(e.orderNo ?? "")
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      const Icon(
-                                        Icons.supervisor_account,
-                                        color: MobileColor.orangeColor,
+                                    ),
+                                    Expanded(child: Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          Text(e.productName ?? "",
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
+                                            style: TextStyleMobile.h2_12,),
+                                          Text("SKU: ${e.sku}",
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
+                                            style: TextStyleMobile.body_12,),
+                                          RichText(
+                                              text: TextSpan(
+                                                  children: [
+                                                    TextSpan(text: "Unit QTY: ",
+                                                      style: TextStyleMobile.body_12
+                                                          .copyWith(
+                                                          color: Colors.black
+                                                      ),
+                                                    ),
+                                                    TextSpan(text: e.pickedQty.toString(),
+                                                      style: TextStyleMobile.h2_12
+                                                          .copyWith(
+                                                          color: Colors.black
+                                                      ),
+                                                    ),
+                                                  ]
+                                              )
+                                          ),
+                                        ],
                                       ),
-                                      const SizedBox(width: 5,),
-                                      Text(e.customerProjectNo ?? "", overflow: TextOverflow.ellipsis, maxLines: 1,)
-                                    ],
-                                  )
-                                ],
+                                    )),
+                                    Container(
+                                      alignment: Alignment.topCenter,
+                                      width: 30,
+                                      padding: const EdgeInsets.only(
+                                          right: 10, top: 10),
+                                      child: const Icon(Icons.location_on_outlined,
+                                          color: Colors.grey, size: 20),
+                                    )
+                                  ],
+                                ),
                               ),
                             ),
-                            const SizedBox(width: 20,),
-                            Container(
-                              alignment: Alignment.centerRight,
-                              width: 100,
-                              child: Column(
-                                children: [
-                                  Expanded(
-                                    child: RichText(text: TextSpan(
-                                      children: [
-                                        TextSpan(text: "Picked Qty: ",
-                                            style: TextStyleMobile.body_10.copyWith(color: Colors.black)),
-                                        TextSpan(text: e.pickedQty.toString(),
-                                            style: e.pickedQty == 0
-                                                ? TextStyleMobile.h2_12.copyWith(color: Colors.red)
-                                                : TextStyleMobile.h2_12.copyWith(color: Colors.green)
-                                        ),
-                                      ]
-                                    )),
-                                  ),
-                                  Expanded(
-                                    child: RichText(text: TextSpan(
-                                        children: [
-                                          TextSpan(text: "Packed Qty: ",
-                                              style: TextStyleMobile.body_10.copyWith(color: Colors.black)),
-                                          TextSpan(text: e.packagedQty.toString(),
-                                              style: e.packagedQty == 0
-                                                  ? TextStyleMobile.h2_12.copyWith(color: Colors.red)
-                                                  : TextStyleMobile.h2_12.copyWith(color: Colors.green)
-                                          ),
-                                        ]
-                                    )),
-                                  ),
-                                  Expanded(
-                                    child: RichText(text: TextSpan(
-                                        children: [
-                                          TextSpan(text: "Shipped Qty: ",
-                                              style: TextStyleMobile.body_10.copyWith(color: Colors.black)),
-                                          TextSpan(text: e.shippedQty.toString(),
-                                              style: e.shippedQty == 0
-                                              ? TextStyleMobile.h2_12.copyWith(color: Colors.red)
-                                              : TextStyleMobile.h2_12.copyWith(color: Colors.green)
-                                          ),
-                                        ]
-                                    )),
-                                  ),
-                                ],
-                              ),
-                            )
                           ],
                         ),
                       ),
@@ -121,167 +130,8 @@ class _PickedListState extends State<PickedList> {
                   },).toList()
               ),
             ),
-            SizedBox(
-              height: 50,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    margin: const EdgeInsets.symmetric(horizontal: spaceBetween),
-                    width: sizePageButton,
-                    height: sizePageButton,
-                    decoration: MobileButton.buttonPage.copyWith(
-                        color: MobileColor.grayButtonColor
-                    ),
-                    child: TextButton(
-                        onPressed: (state.pagePickList > 0) ? () {
-                          state.statePagePickList(0, context);
-                        } : null,
-                        style: MobileButton.buttonPageStyle,
-                        child: Text("<<",
-                            style: TextStyleMobile.button_14
-                        )
-                    ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.symmetric(horizontal: spaceBetween),
-                    width: sizePageButton,
-                    height: sizePageButton,
-                    decoration: MobileButton.buttonPage.copyWith(
-                        color: MobileColor.grayButtonColor
-                    ),
-                    child: TextButton(
-                        onPressed: (state.pagePickList > 0) ? () {
-                          state.statePagePickList(state.pagePickList - 1, context);
-                        } : null,
-                        style: MobileButton.buttonPageStyle,
-                        child: Text("<",
-                            style: TextStyleMobile.button_14
-                        )
-                    ),
-                  ),
-                  (state.pagePickList - 1 > 0 && state.pagePickList == state.totalPagePickList - 1) ? Container(
-                    margin: const EdgeInsets.symmetric(horizontal: spaceBetween),
-                    width: 30,
-                    height: 30,
-                    decoration: MobileButton.buttonPage.copyWith(
-                        color: MobileColor.grayButtonColor
-                    ),
-                    child: TextButton(
-                        onPressed: () {
-                          state.statePagePickList(state.pagePickList - 2, context);
-                        },
-                        style: MobileButton.buttonPageStyle,
-                        child: Text((state.pagePickList - 1).toString(),
-                            style: TextStyleMobile.button_14
-                        )
-                    ),
-                  ) : const SizedBox(),
-                  (state.pagePickList > 0) ? Container(
-                    margin: const EdgeInsets.symmetric(horizontal: spaceBetween),
-                    width: 30,
-                    height: 30,
-                    decoration: MobileButton.buttonPage.copyWith(
-                        color: MobileColor.grayButtonColor
-                    ),
-                    child: TextButton(
-                        onPressed: () {
-                          state.statePagePickList(state.pagePickList - 1, context);
-                        },
-                        style: MobileButton.buttonPageStyle,
-                        child: Text(state.pagePickList.toString(),
-                            style: TextStyleMobile.button_14
-                        )
-                    ),
-                  ) : const SizedBox(),
-                  Container(
-                    margin: const EdgeInsets.symmetric(horizontal: spaceBetween),
-                    width: sizePageButton,
-                    height: sizePageButton,
-                    decoration: MobileButton.buttonPage.copyWith(
-                        color: MobileColor.orangeColor
-                    ),
-                    child: TextButton(
-                        onPressed: () {},
-                        style: MobileButton.buttonPageStyle,
-                        child: Text((state.pagePickList + 1).toString(),
-                            style: TextStyleMobile.button_14.copyWith(
-                                color: Colors.white
-                            )
-                        )
-                    ),
-                  ),
-                  (state.pagePickList + 1 < state.totalPagePickList) ? Container(
-                    margin: const EdgeInsets.symmetric(horizontal: spaceBetween),
-                    width: sizePageButton,
-                    height: sizePageButton,
-                    decoration: MobileButton.buttonPage.copyWith(
-                        color: MobileColor.grayButtonColor
-                    ),
-                    child: TextButton(
-                        onPressed: () {
-                          state.statePagePickList(state.pagePickList + 1, context);
-                        },
-                        style: MobileButton.buttonPageStyle,
-                        child: Text((state.pagePickList + 2).toString(),
-                            style: TextStyleMobile.button_14
-                        )
-                    ),
-                  ) : const SizedBox(),
-                  (state.pagePickList + 2 < state.totalPagePickList && state.pagePickList == 0) ? Container(
-                    margin: const EdgeInsets.symmetric(horizontal: spaceBetween),
-                    width: sizePageButton,
-                    height: sizePageButton,
-                    decoration: MobileButton.buttonPage.copyWith(
-                        color: MobileColor.grayButtonColor
-                    ),
-                    child: TextButton(
-                        onPressed: () {
-                          state.statePagePickList(state.pagePickList + 2, context);
-                        },
-                        style: MobileButton.buttonPageStyle,
-                        child: Text((state.pagePickList + 3).toString(),
-                            style: TextStyleMobile.button_14
-                        )
-                    ),
-                  ) : const SizedBox(),
-                  Container(
-                    margin: const EdgeInsets.symmetric(horizontal: spaceBetween),
-                    width: sizePageButton,
-                    height: sizePageButton,
-                    decoration: MobileButton.buttonPage.copyWith(
-                        color: MobileColor.grayButtonColor
-                    ),
-                    child: TextButton(
-                        onPressed: (state.pagePickList + 1 < state.totalPagePickList) ? () {
-                          state.statePagePickList(state.pagePickList + 1, context);
-                        } : null,
-                        style: MobileButton.buttonPageStyle,
-                        child: Text(">",
-                            style: TextStyleMobile.button_14
-                        )
-                    ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.symmetric(horizontal: spaceBetween),
-                    width: sizePageButton,
-                    height: sizePageButton,
-                    decoration: MobileButton.buttonPage.copyWith(
-                        color: MobileColor.grayButtonColor
-                    ),
-                    child: TextButton(
-                        onPressed: (state.pagePickList + 1 < state.totalPagePickList) ? () {
-                          state.statePagePickList(state.totalPagePickList - 1, context);
-                        } : null,
-                        style: MobileButton.buttonPageStyle,
-                        child: Text(">>",
-                            style: TextStyleMobile.button_14
-                        )
-                    ),
-                  ),
-                ],
-              ),
-            )
+            Utils.renderPageButton([state.pagePickList, state.totalPagePickList],
+                    (value) {state.statePagePickList(value);})
           ],
         );
       },

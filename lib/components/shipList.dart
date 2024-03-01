@@ -21,6 +21,11 @@ class OutboundShippedList extends StatelessWidget {
 
     return Consumer<GlobalState>(
       builder: (context, state, child) {
+        List list = List.from(state.shippingList);
+        for (var i = state.countItemOutboundDisplay; i > state.shippingList.length; i--){
+          list.add(null);
+        }
+
         return Column(
           children: [
             Expanded(
@@ -29,7 +34,10 @@ class OutboundShippedList extends StatelessWidget {
               Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   mainAxisSize: MainAxisSize.max,
-                  children: state.shippingList.map((e) {
+                  children: list.map((e) {
+                    if (e == null) {
+                      return const Expanded(child: SizedBox());
+                    }
                     return Expanded(
                       child: InkWell(
                         onTap: () {
@@ -44,6 +52,7 @@ class OutboundShippedList extends StatelessWidget {
                         },
                         child: Container(
                           padding: const EdgeInsets.all(5),
+                          margin: const EdgeInsets.only(bottom: 5),
                           decoration: MobileButton.itemOfList,
                           width: double.infinity,
                           child: Row(
@@ -91,191 +100,8 @@ class OutboundShippedList extends StatelessWidget {
                   }).toList(),
               ),
             ),
-            SizedBox(
-              height: 50,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    margin: const EdgeInsets.symmetric(
-                        horizontal: spaceBetween),
-                    width: sizePageButton,
-                    height: sizePageButton,
-                    decoration: MobileButton.buttonPage.copyWith(
-                        color: MobileColor.grayButtonColor
-                    ),
-                    child: TextButton(
-                        onPressed: (state.pageShipList > 0) ? () {
-                          state.statePageShipList(0, context);
-                        } : null,
-                        style: MobileButton.buttonPageStyle,
-                        child: Text("<<",
-                            style: TextStyleMobile.button_14
-                        )
-                    ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.symmetric(
-                        horizontal: spaceBetween),
-                    width: sizePageButton,
-                    height: sizePageButton,
-                    decoration: MobileButton.buttonPage.copyWith(
-                        color: MobileColor.grayButtonColor
-                    ),
-                    child: TextButton(
-                        onPressed: (state.pageShipList > 0) ? () {
-                          state.statePageShipList(state.pageShipList - 1,
-                              context);
-                        } : null,
-                        style: MobileButton.buttonPageStyle,
-                        child: Text("<",
-                            style: TextStyleMobile.button_14
-                        )
-                    ),
-                  ),
-                  (state.pageShipList - 1 > 0 &&
-                      state.pageShipList == state.totalPageShipList - 1)
-                      ? Container(
-                    margin: const EdgeInsets.symmetric(
-                        horizontal: spaceBetween),
-                    width: 30,
-                    height: 30,
-                    decoration: MobileButton.buttonPage.copyWith(
-                        color: MobileColor.grayButtonColor
-                    ),
-                    child: TextButton(
-                        onPressed: () {
-                          state.statePageShipList(state.pageShipList - 2,
-                              context);
-                        },
-                        style: MobileButton.buttonPageStyle,
-                        child: Text((state.pageShipList - 1).toString(),
-                            style: TextStyleMobile.button_14
-                        )
-                    ),
-                  )
-                      : const SizedBox(),
-                  (state.pageShipList > 0) ? Container(
-                    margin: const EdgeInsets.symmetric(
-                        horizontal: spaceBetween),
-                    width: 30,
-                    height: 30,
-                    decoration: MobileButton.buttonPage.copyWith(
-                        color: MobileColor.grayButtonColor
-                    ),
-                    child: TextButton(
-                        onPressed: () {
-                          state.statePageShipList(state.pageShipList - 1,
-                              context);
-                        },
-                        style: MobileButton.buttonPageStyle,
-                        child: Text(state.pageShipList.toString(),
-                            style: TextStyleMobile.button_14
-                        )
-                    ),
-                  ) : const SizedBox(),
-                  Container(
-                    margin: const EdgeInsets.symmetric(
-                        horizontal: spaceBetween),
-                    width: sizePageButton,
-                    height: sizePageButton,
-                    decoration: MobileButton.buttonPage.copyWith(
-                        color: MobileColor.orangeColor
-                    ),
-                    child: TextButton(
-                        onPressed: () {},
-                        style: MobileButton.buttonPageStyle,
-                        child: Text((state.pageShipList + 1).toString(),
-                            style: TextStyleMobile.button_14.copyWith(
-                                color: Colors.white
-                            )
-                        )
-                    ),
-                  ),
-                  (state.pageShipList + 1 < state.totalPageShipList)
-                      ? Container(
-                    margin: const EdgeInsets.symmetric(
-                        horizontal: spaceBetween),
-                    width: sizePageButton,
-                    height: sizePageButton,
-                    decoration: MobileButton.buttonPage.copyWith(
-                        color: MobileColor.grayButtonColor
-                    ),
-                    child: TextButton(
-                        onPressed: () {
-                          state.statePageShipList(state.pageShipList + 1,
-                              context);
-                        },
-                        style: MobileButton.buttonPageStyle,
-                        child: Text((state.pageShipList + 2).toString(),
-                            style: TextStyleMobile.button_14
-                        )
-                    ),
-                  )
-                      : const SizedBox(),
-                  (state.pageShipList + 2 < state.totalPageShipList &&
-                      state.pageShipList == 0) ? Container(
-                    margin: const EdgeInsets.symmetric(
-                        horizontal: spaceBetween),
-                    width: sizePageButton,
-                    height: sizePageButton,
-                    decoration: MobileButton.buttonPage.copyWith(
-                        color: MobileColor.grayButtonColor
-                    ),
-                    child: TextButton(
-                        onPressed: () {
-                          state.statePageShipList(state.pageShipList + 2,
-                              context);
-                        },
-                        style: MobileButton.buttonPageStyle,
-                        child: Text((state.pageShipList + 3).toString(),
-                            style: TextStyleMobile.button_14
-                        )
-                    ),
-                  ) : const SizedBox(),
-                  Container(
-                    margin: const EdgeInsets.symmetric(
-                        horizontal: spaceBetween),
-                    width: sizePageButton,
-                    height: sizePageButton,
-                    decoration: MobileButton.buttonPage.copyWith(
-                        color: MobileColor.grayButtonColor
-                    ),
-                    child: TextButton(
-                        onPressed: (state.pageShipList + 1 <
-                            state.totalPageShipList) ? () {
-                          state.statePageShipList(state.pageShipList + 1,
-                              context);
-                        } : null,
-                        style: MobileButton.buttonPageStyle,
-                        child: Text(">",
-                            style: TextStyleMobile.button_14
-                        )
-                    ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.symmetric(
-                        horizontal: spaceBetween),
-                    width: sizePageButton,
-                    height: sizePageButton,
-                    decoration: MobileButton.buttonPage.copyWith(
-                        color: MobileColor.grayButtonColor
-                    ),
-                    child: TextButton(
-                        onPressed: (state.pageShipList + 1 <
-                            state.totalPageShipList) ? () {
-                          state.statePageShipList(state.totalPageShipList - 1,
-                              context);
-                        } : null,
-                        style: MobileButton.buttonPageStyle,
-                        child: Text(">>",
-                            style: TextStyleMobile.button_14
-                        )
-                    ),
-                  ),
-                ],
-              ),
-            )
+            Utils.renderPageButton([state.pageShipList, state.totalPageShipList],
+                    (value) {state.statePageShipList(value);})
           ],
         );
       },

@@ -8,7 +8,6 @@ import 'package:provider/provider.dart';
 import '../../cascadeStyle/color.dart';
 import '../../cascadeStyle/fonts.dart';
 import '../../model/outboundLocationProductDetails.dart';
-import '../../service/apiConnector.dart';
 class Step02 extends StatefulWidget {
   const Step02({super.key});
 

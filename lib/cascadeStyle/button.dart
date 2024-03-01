@@ -10,9 +10,7 @@ class MobileButton {
     padding: MaterialStatePropertyAll(EdgeInsets.zero)
   );
   static const BoxDecoration itemOfList = BoxDecoration(
-      border: BorderDirectional(bottom: BorderSide(
-          color: Colors.grey,
-          width: 0.5
-      ))
+    color: Colors.white,
+      borderRadius: BorderRadius.all(Radius.circular(10)),
   );
 }

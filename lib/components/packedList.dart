@@ -5,6 +5,7 @@ import '../cascadeStyle/button.dart';
 import '../cascadeStyle/color.dart';
 import '../cascadeStyle/fonts.dart';
 import '../model/globalState.dart';
+import '../service/util.dart';
 
 class PackedList extends StatefulWidget {
   const PackedList({super.key});
@@ -14,8 +15,6 @@ class PackedList extends StatefulWidget {
 }
 
 class _PackedListState extends State<PackedList> {
-  static const double spaceBetween = 3;
-  static const double sizePageButton = 30;
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +24,11 @@ class _PackedListState extends State<PackedList> {
 
     return Consumer<GlobalState>(
       builder: (context, state, child) {
+        List list = List.from(state.packedList);
+        for (var i = state.countItemOutboundDisplay; i > state.packedList.length; i--){
+          list.add(null);
+        }
+
         return Column(
           children: [
             Expanded(
@@ -33,7 +37,10 @@ class _PackedListState extends State<PackedList> {
               Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   mainAxisSize: MainAxisSize.max,
-                  children: state.packedList.map((e) {
+                  children: list.map((e) {
+                    if (e == null) {
+                      return const Expanded(child: SizedBox());
+                    }
                     return Expanded(
                       child: InkWell(
                         onTap: () {
@@ -72,167 +79,8 @@ class _PackedListState extends State<PackedList> {
                   },).toList()
               ),
             ),
-            SizedBox(
-              height: 50,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    margin: const EdgeInsets.symmetric(horizontal: spaceBetween),
-                    width: sizePageButton,
-                    height: sizePageButton,
-                    decoration: MobileButton.buttonPage.copyWith(
-                        color: MobileColor.grayButtonColor
-                    ),
-                    child: TextButton(
-                        onPressed: (state.pagePackList > 0) ? () {
-                          state.statePagePackList(0, context);
-                        } : null,
-                        style: MobileButton.buttonPageStyle,
-                        child: Text("<<",
-                            style: TextStyleMobile.button_14
-                        )
-                    ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.symmetric(horizontal: spaceBetween),
-                    width: sizePageButton,
-                    height: sizePageButton,
-                    decoration: MobileButton.buttonPage.copyWith(
-                        color: MobileColor.grayButtonColor
-                    ),
-                    child: TextButton(
-                        onPressed: (state.pagePackList > 0) ? () {
-                          state.statePagePackList(state.pagePackList - 1, context);
-                        } : null,
-                        style: MobileButton.buttonPageStyle,
-                        child: Text("<",
-                            style: TextStyleMobile.button_14
-                        )
-                    ),
-                  ),
-                  (state.pagePackList - 1 > 0 && state.pagePackList == state.totalPagePackList - 1) ? Container(
-                    margin: const EdgeInsets.symmetric(horizontal: spaceBetween),
-                    width: 30,
-                    height: 30,
-                    decoration: MobileButton.buttonPage.copyWith(
-                        color: MobileColor.grayButtonColor
-                    ),
-                    child: TextButton(
-                        onPressed: () {
-                          state.statePagePackList(state.pagePackList - 2, context);
-                        },
-                        style: MobileButton.buttonPageStyle,
-                        child: Text((state.pagePackList - 1).toString(),
-                            style: TextStyleMobile.button_14
-                        )
-                    ),
-                  ) : const SizedBox(),
-                  (state.pagePackList > 0) ? Container(
-                    margin: const EdgeInsets.symmetric(horizontal: spaceBetween),
-                    width: 30,
-                    height: 30,
-                    decoration: MobileButton.buttonPage.copyWith(
-                        color: MobileColor.grayButtonColor
-                    ),
-                    child: TextButton(
-                        onPressed: () {
-                          state.statePagePackList(state.pagePackList - 1, context);
-                        },
-                        style: MobileButton.buttonPageStyle,
-                        child: Text(state.pagePackList.toString(),
-                            style: TextStyleMobile.button_14
-                        )
-                    ),
-                  ) : const SizedBox(),
-                  Container(
-                    margin: const EdgeInsets.symmetric(horizontal: spaceBetween),
-                    width: sizePageButton,
-                    height: sizePageButton,
-                    decoration: MobileButton.buttonPage.copyWith(
-                        color: MobileColor.orangeColor
-                    ),
-                    child: TextButton(
-                        onPressed: () {},
-                        style: MobileButton.buttonPageStyle,
-                        child: Text((state.pagePackList + 1).toString(),
-                            style: TextStyleMobile.button_14.copyWith(
-                                color: Colors.white
-                            )
-                        )
-                    ),
-                  ),
-                  (state.pagePackList + 1 < state.totalPagePackList) ? Container(
-                    margin: const EdgeInsets.symmetric(horizontal: spaceBetween),
-                    width: sizePageButton,
-                    height: sizePageButton,
-                    decoration: MobileButton.buttonPage.copyWith(
-                        color: MobileColor.grayButtonColor
-                    ),
-                    child: TextButton(
-                        onPressed: () {
-                          state.statePagePackList(state.pagePackList + 1, context);
-                        },
-                        style: MobileButton.buttonPageStyle,
-                        child: Text((state.pagePackList + 2).toString(),
-                            style: TextStyleMobile.button_14
-                        )
-                    ),
-                  ) : const SizedBox(),
-                  (state.pagePackList + 2 < state.totalPagePackList && state.pagePackList == 0) ? Container(
-                    margin: const EdgeInsets.symmetric(horizontal: spaceBetween),
-                    width: sizePageButton,
-                    height: sizePageButton,
-                    decoration: MobileButton.buttonPage.copyWith(
-                        color: MobileColor.grayButtonColor
-                    ),
-                    child: TextButton(
-                        onPressed: () {
-                          state.statePagePackList(state.pagePackList + 2, context);
-                        },
-                        style: MobileButton.buttonPageStyle,
-                        child: Text((state.pagePackList + 3).toString(),
-                            style: TextStyleMobile.button_14
-                        )
-                    ),
-                  ) : const SizedBox(),
-                  Container(
-                    margin: const EdgeInsets.symmetric(horizontal: spaceBetween),
-                    width: sizePageButton,
-                    height: sizePageButton,
-                    decoration: MobileButton.buttonPage.copyWith(
-                        color: MobileColor.grayButtonColor
-                    ),
-                    child: TextButton(
-                        onPressed: (state.pagePackList + 1 < state.totalPagePackList) ? () {
-                          state.statePagePackList(state.pagePackList + 1, context);
-                        } : null,
-                        style: MobileButton.buttonPageStyle,
-                        child: Text(">",
-                            style: TextStyleMobile.button_14
-                        )
-                    ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.symmetric(horizontal: spaceBetween),
-                    width: sizePageButton,
-                    height: sizePageButton,
-                    decoration: MobileButton.buttonPage.copyWith(
-                        color: MobileColor.grayButtonColor
-                    ),
-                    child: TextButton(
-                        onPressed: (state.pagePackList + 1 < state.totalPagePackList) ? () {
-                          state.statePagePackList(state.totalPagePackList - 1, context);
-                        } : null,
-                        style: MobileButton.buttonPageStyle,
-                        child: Text(">>",
-                            style: TextStyleMobile.button_14
-                        )
-                    ),
-                  ),
-                ],
-              ),
-            )
+            Utils.renderPageButton([state.pagePackList, state.totalPagePackList],
+                    (value) {state.statePagePackList(value);})
           ],
         );
       },
