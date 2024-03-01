@@ -68,6 +68,9 @@ class _PickedQtyDialogState extends State<PickedQtyDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 24.0),
+      insetPadding: const EdgeInsets.symmetric(vertical: 24.0, horizontal: 0),
+      titlePadding: const EdgeInsets.symmetric(vertical: 24.0, horizontal: 24.0),
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(15)),
       ),
@@ -230,6 +233,8 @@ class _PickedQtyDialogState extends State<PickedQtyDialog> {
                                               child: Text(
                                                 "On Hand Unit QTY",
                                                 style: TextStyleMobile.body_12,
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
                                               ),
                                             ),
                                         ),
@@ -239,6 +244,8 @@ class _PickedQtyDialogState extends State<PickedQtyDialog> {
                                             child: Text(
                                                 "Picked Unit QTY",
                                               style: TextStyleMobile.body_12,
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
                                             ),
                                           ),
                                         ),

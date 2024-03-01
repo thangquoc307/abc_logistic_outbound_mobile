@@ -41,7 +41,7 @@ class OrderOutboundList extends StatelessWidget {
                           },
                           child: Container(
                             margin: const EdgeInsets.only(bottom: 5),
-                            padding: const EdgeInsets.all(10),
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
                             decoration: MobileButton.itemOfList,
                             width: double.infinity,
                             child: Row(
@@ -57,7 +57,10 @@ class OrderOutboundList extends StatelessWidget {
                                             color: MobileColor.orangeColor,
                                           ),
                                           const SizedBox(width: 5,),
-                                          Text(e.orderNo ?? "")
+                                          Text(e.orderNo ?? "",
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
+                                          )
                                         ],
                                       ),
                                       Row(
@@ -67,7 +70,10 @@ class OrderOutboundList extends StatelessWidget {
                                             color: MobileColor.orangeColor,
                                           ),
                                           const SizedBox(width: 5,),
-                                          Text(e.issuser ?? "")
+                                          Text(e.issuser ?? "",
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
+                                          )
                                         ],
                                       )
                                     ],
@@ -80,7 +86,7 @@ class OrderOutboundList extends StatelessWidget {
                                     children: [
                                       Expanded(
                                         child: Container(
-                                          alignment: Alignment.topRight,
+                                          alignment: Alignment.centerRight,
                                           child: Container(
                                             alignment: Alignment.center,
                                             width: double.infinity,

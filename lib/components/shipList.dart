@@ -57,40 +57,42 @@ class OutboundShippedList extends StatelessWidget {
                           width: double.infinity,
                           child: Row(
                               children: [
-                                Padding(
+                                Container(
                                   padding: const EdgeInsets.all(3.0),
                                   child: Image.asset("assets/images/shipItem.png"),
                                 ),
                                 const SizedBox(width: 10,),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Expanded(
-                                      child: Text(e.sender ?? "",
-                                        style: TextStyleMobile.button_14.copyWith(color: MobileColor.orangeColor),
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 1,
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: Text("Identification Number: ${e.identificationNumber}",
-                                        style: TextStyleMobile.body_12.copyWith(
-                                            color: Colors.grey
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Expanded(
+                                        child: Text(e.sender ?? "",
+                                          style: TextStyleMobile.button_14.copyWith(color: MobileColor.orangeColor),
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
                                         ),
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 1,
                                       ),
-                                    ),
-                                    Expanded(
-                                      child: Text("DeliveryStatus: ${e.deliveryStatus}",
-                                        style: TextStyleMobile.body_12.copyWith(
-                                            color: Colors.grey
+                                      Expanded(
+                                        child: Text("Identification Number: ${e.identificationNumber}",
+                                          style: TextStyleMobile.body_12.copyWith(
+                                              color: Colors.grey
+                                          ),
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
                                         ),
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 1,
                                       ),
-                                    ),
-                                  ],
+                                      Expanded(
+                                        child: Text("DeliveryStatus: ${e.deliveryStatus}",
+                                          style: TextStyleMobile.body_12.copyWith(
+                                              color: Colors.grey
+                                          ),
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 )
                               ]
                           ),

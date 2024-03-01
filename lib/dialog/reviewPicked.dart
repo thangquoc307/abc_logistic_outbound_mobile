@@ -80,7 +80,11 @@ class _ReviewPickedDialogState extends State<ReviewPickedDialog> {
     }
 
     return AlertDialog(
-      shape: const RoundedRectangleBorder(
+        contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 24.0),
+        insetPadding: const EdgeInsets.symmetric(vertical: 24.0, horizontal: 0),
+        titlePadding: const EdgeInsets.symmetric(vertical: 24.0, horizontal: 24.0),
+
+        shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(15)),
       ),
       surfaceTintColor: Colors.white,
@@ -100,159 +104,166 @@ class _ReviewPickedDialogState extends State<ReviewPickedDialog> {
         ),
       ],
       content: Column(
-                  children: [
-                    Column(
-                      children: [
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: RichText(text: TextSpan(
-                              children: [
-                                TextSpan(text: "Number of products",
-                                    style: TextStyleMobile.body_14.
-                                    copyWith(color: Colors.black)
-                                ),
-                                TextSpan(text: " *",
-                                    style: TextStyleMobile.body_14.
-                                    copyWith(color: Colors.red)
-                                ),
-                              ]
-                          )),
+        children: [
+          SizedBox(
+            width: MediaQuery.of(context).size.width * 0.8,
+          ),
+          Column(
+            children: [
+              Align(
+                alignment: Alignment.centerLeft,
+                child: RichText(text: TextSpan(
+                    children: [
+                      TextSpan(text: "Number of products",
+                          style: TextStyleMobile.body_14.
+                          copyWith(color: Colors.black)
+                      ),
+                      TextSpan(text: " *",
+                          style: TextStyleMobile.body_14.
+                          copyWith(color: Colors.red)
+                      ),
+                    ]
+                )),
+              ),
+              const SizedBox(height: 10,),
+              Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      height: 40,
+                      alignment: Alignment.center,
+                      color: MobileColor.grayButtonColor,
+                      child: Text(numberOfProduct.toString(),
+                                style: TextStyleMobile.body_14.copyWith(
+                                    color: numberOfProduct == outboundProductDetail!.requestedUnitQty
+                                        ? MobileColor.greenButtonColor
+                                        : Colors.black
+                                )
+                            ),
+                    ),
+                  ),
+                  const SizedBox(
+                      width: 30,
+                      child: Icon(Icons.lock_outline, color: Colors.grey, size: 20)
+                  ),
+                  Expanded(
+                    child: Container(
+                      height: 40,
+                      alignment: Alignment.center,
+                      color: MobileColor.grayButtonColor,
+                      child: Text(outboundProductDetail!.requestedUnitQty.toString(),
+                        style: TextStyleMobile.body_14.copyWith(
+                            color: Colors.black
                         ),
-                        const SizedBox(height: 10,),
-                        Row(
+                      ),
+                    ),
+                  ),
+                ],
+              )
+            ],
+          ),
+          const SizedBox(height: 10,),
+          Row(
+            children: [
+              Text("Location", style: TextStyleMobile.body_14.copyWith(color: Colors.grey)),
+              const Expanded(child: SizedBox()),
+              Text("Unit QTY", style: TextStyleMobile.body_14.copyWith(color: Colors.grey)),
+            ],
+          ),
+          SingleChildScrollView(
+            child: Column(
+              children: outboundProductDetail?.outboundLocationProductDetails?.map((e) {
+                return Container(
+                  margin: const EdgeInsets.only(bottom: 10),
+                  height: 60,
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        width: 60,
+                        height: 45,
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: MobileColor.orangeColor,
+                              borderRadius: BorderRadius.circular(10)
+                          ),
+                          alignment: Alignment.center,
+                          child: Text(
+                            e.location?.locationNo ?? "",
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            style: TextStyleMobile.button_14.copyWith(
+                                color: Colors.white
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 10,),
+                      Expanded(
+                        child: Column(
+                          children: [
+                            const SizedBox(height: 5,),
+                            Expanded(
+                              child: Container(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  "On Hand Unit QTY",
+                                  style: TextStyleMobile.body_12,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: Container(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  "Picked Unit QTY",
+                                  style: TextStyleMobile.body_12,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 5,),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 30,),
+                      SizedBox(
+                        width: 70,
+                        child: Column(
                           children: [
                             Expanded(
                               child: Container(
-                                height: 40,
                                 alignment: Alignment.center,
-                                color: MobileColor.grayButtonColor,
-                                child: Text(numberOfProduct.toString(),
-                                          style: TextStyleMobile.body_14.copyWith(
-                                              color: numberOfProduct == outboundProductDetail!.requestedUnitQty
-                                                  ? MobileColor.greenButtonColor
-                                                  : Colors.black
-                                          )
-                                      ),
+                                child: Text(getOnHandQty(e.location!.id!).toString(),
+                                    style: TextStyleMobile.body_14
+                                ),
                               ),
-                            ),
-                            const SizedBox(
-                                width: 30,
-                                child: Icon(Icons.lock_outline, color: Colors.grey, size: 20)
                             ),
                             Expanded(
                               child: Container(
-                                height: 40,
                                 alignment: Alignment.center,
-                                color: MobileColor.grayButtonColor,
-                                child: Text(outboundProductDetail!.requestedUnitQty.toString(),
-                                  style: TextStyleMobile.body_14.copyWith(
-                                      color: Colors.black
-                                  ),
+                                child: TextFormField(
+                                  initialValue: e.pickedUnitQty.toString(),
+                                  decoration: InputStyle.inputTextForm,
+                                  style: TextStyleMobile.body_14,
+                                  textAlign: TextAlign.center,
+                                  readOnly: true,
                                 ),
                               ),
                             ),
                           ],
-                        )
-                      ],
-                    ),
-                    const SizedBox(height: 10,),
-                    Row(
-                      children: [
-                        Text("Location", style: TextStyleMobile.body_14.copyWith(color: Colors.grey)),
-                        const Expanded(child: SizedBox()),
-                        Text("Unit QTY", style: TextStyleMobile.body_14.copyWith(color: Colors.grey)),
-                      ],
-                    ),
-                    SingleChildScrollView(
-                      child: Column(
-                        children: outboundProductDetail?.outboundLocationProductDetails?.map((e) {
-                          return Container(
-                            margin: const EdgeInsets.only(bottom: 10),
-                            height: 60,
-                            child: Row(
-                              children: [
-                                SizedBox(
-                                  width: 60,
-                                  height: 45,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        color: MobileColor.orangeColor,
-                                        borderRadius: BorderRadius.circular(10)
-                                    ),
-                                    alignment: Alignment.center,
-                                    child: Text(
-                                      e.location?.locationNo ?? "",
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 1,
-                                      style: TextStyleMobile.button_14.copyWith(
-                                          color: Colors.white
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 10,),
-                                Expanded(
-                                  child: Column(
-                                    children: [
-                                      const SizedBox(height: 5,),
-                                      Expanded(
-                                        child: Container(
-                                          alignment: Alignment.centerLeft,
-                                          child: Text(
-                                            "On Hand Unit QTY",
-                                            style: TextStyleMobile.body_12,
-                                          ),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Container(
-                                          alignment: Alignment.centerLeft,
-                                          child: Text(
-                                            "Picked Unit QTY",
-                                            style: TextStyleMobile.body_12,
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(height: 5,),
-                                    ],
-                                  ),
-                                ),
-                                const SizedBox(width: 30,),
-                                SizedBox(
-                                  width: 70,
-                                  child: Column(
-                                    children: [
-                                      Expanded(
-                                        child: Container(
-                                          alignment: Alignment.center,
-                                          child: Text(getOnHandQty(e.location!.id!).toString(),
-                                              style: TextStyleMobile.body_14
-                                          ),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Container(
-                                          alignment: Alignment.center,
-                                          child: TextFormField(
-                                            initialValue: e.pickedUnitQty.toString(),
-                                            decoration: InputStyle.inputTextForm,
-                                            style: TextStyleMobile.body_14,
-                                            textAlign: TextAlign.center,
-                                            readOnly: true,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        }).toList() ?? [const SizedBox()],
+                        ),
                       ),
-                    ),
-                  ],
-                )
+                    ],
+                  ),
+                );
+              }).toList() ?? [const SizedBox()],
+            ),
+          ),
+        ],
+      )
     );
   }
 }

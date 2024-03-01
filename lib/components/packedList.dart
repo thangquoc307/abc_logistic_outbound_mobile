@@ -68,6 +68,8 @@ class _PackedListState extends State<PackedList> {
                               Expanded(
                                   child: Text(e.name ?? "",
                                     style: TextStyleMobile.body_14,
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
                                   )
                               ),
                               const Icon(Icons.print_outlined, color: MobileColor.orangeColor,)
