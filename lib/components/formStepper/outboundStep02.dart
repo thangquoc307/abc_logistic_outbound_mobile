@@ -30,7 +30,7 @@ class _Step02State extends State<Step02> {
       return false;
     }
     for (var element in set) {
-      if (element.pickedUnitQty != _sumQty(element.outboundLocationProductDetails!)){
+      if (element.requestedUnitQty != _sumQty(element.outboundLocationProductDetails!)){
         return false;
       }
     }
@@ -40,7 +40,8 @@ class _Step02State extends State<Step02> {
   @override
   Widget build(BuildContext context) {
     var state = Provider.of<GlobalState>(context, listen: true);
-
+    state.create = false;
+    print(state.objectForm.id);
     return Expanded(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -143,14 +144,14 @@ class _Step02State extends State<Step02> {
                                                 style: TextStyleMobile.h2_12
                                                     .copyWith(
                                                     color: qtyPick ==
-                                                        e.pickedUnitQty
+                                                        e.requestedUnitQty
                                                         ? MobileColor
                                                         .greenButtonColor
                                                         : Colors.red
                                                 ),
                                               ),
                                               TextSpan(
-                                                text: " / ${e.pickedUnitQty
+                                                text: " / ${e.requestedUnitQty
                                                     .toString()}",
                                                 style: TextStyleMobile.h2_12
                                                     .copyWith(
@@ -259,7 +260,6 @@ class _Step02State extends State<Step02> {
                   ),
                 ],
               ),
-
             )
         ]
       ),

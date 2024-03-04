@@ -56,6 +56,7 @@ class _Step05State extends State<Step05> {
                                   );
                                 },
                                 child: Container(
+                                  margin: const EdgeInsets.only(bottom: 5),
                                   padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10),
@@ -67,6 +68,7 @@ class _Step05State extends State<Step05> {
                                       Image.asset("assets/images/shipItem.png"),
                                       const SizedBox(width: 10,),
                                       Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           Expanded(
                                             child: Text(e.sender ?? "",

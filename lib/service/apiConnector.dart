@@ -11,9 +11,9 @@ import 'package:flutter_outbound/model/weight.dart';
 import 'package:http/http.dart' as http;
 
 class ApiConnector {
-  static const String prefixUrlOutboundApi = "http://192.168.1.32:9380/api/1.0/outbound/";
-  static const String prefixUrlOldOutboundApi = "http://192.168.1.32:9380/api/outbound/";
-  static const String prefixUrlCustomerApi = "http://192.168.1.32:9280/api/";
+  static const String prefixUrlOutboundApi = "http://192.168.1.20:9380/api/1.0/outbound/";
+  static const String prefixUrlOldOutboundApi = "http://192.168.1.20:9380/api/outbound/";
+  static const String prefixUrlCustomerApi = "http://192.168.1.20:9280/api/";
 
   static Future<Map<String, dynamic>?> pageSearchOutbound(int page, String searchWord, int itemOfPage) async {
     String link = "${prefixUrlOutboundApi}list?"
@@ -169,7 +169,8 @@ class ApiConnector {
     print(link);
     final res = await http.get(Uri.parse(link));
     if (res.statusCode == 200) {
-      final List<dynamic> customerList = json.decode(res.body)['data']['customers'];
+      final String responseBody = utf8.decode(res.bodyBytes);
+      final List<dynamic> customerList = json.decode(responseBody)['data']['customers'];
       final List<Customer> result = customerList
           .map((dynamic e) => Customer.fromJson(e)).toList();
       return result;

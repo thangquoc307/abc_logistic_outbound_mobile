@@ -110,6 +110,7 @@ class _Step04State extends State<Step04> {
                                 );
                               },
                               child: Container(
+                                margin: const EdgeInsets.only(bottom: 5),
                                 padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),

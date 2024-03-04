@@ -47,6 +47,7 @@ class _Step01State extends State<Step01> {
     getCustomerList();
     _formMode = true;
   }
+
   @override
   Widget build(BuildContext context) {
     final state = Provider.of<GlobalState>(context, listen: true);
@@ -69,70 +70,75 @@ class _Step01State extends State<Step01> {
     TextEditingController noteController = TextEditingController(
         text: state.objectForm.note
     );
+    TextEditingController cpoController = TextEditingController(
+        text: state.objectForm.customerProjectNo
+    );
 
     return Expanded(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          SizedBox(
-            height: 40,
-            child: Row(
-              children: [
-                Expanded(child: InkWell(
-                  onTap: () {
-                    setState(() {
-                      _formMode = true;
-                      _formValidate = false;
-                    });
-                  },
-                  child: Container(
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: _formMode ? Colors.white : null,
-                      borderRadius: const BorderRadiusDirectional.only(topEnd: Radius.circular(12))
-                    ),
-                    child: Text("Form", style: TextStyleMobile.body_14.copyWith(
-                      color: _formMode ? MobileColor.orangeColor : Colors.grey
-                    )),
-                  ),
-                )),
-                Expanded(child: InkWell(
-                  onTap: () {
-                    setState(() {
-                      if (state.objectForm.customer?.customerId != null) {
-                        state.getProductByCustomerId(state.objectForm.customer!.customerId);
-                        _formMode = false;
-                        _formValidate = _formKey.currentState!.validate();
-                      } else {
-                        Utils.showSnackBarAlert(context, "Please choose Customer");
-                      }
-                    });
-                  },
-                  child: Container(
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                        color: !_formMode ? Colors.white : null,
-                        borderRadius: const BorderRadiusDirectional.only(topStart: Radius.circular(12))
-                    ),
-                    child: Text("Product", style: TextStyleMobile.body_14.copyWith(
-                        color: !_formMode ? MobileColor.orangeColor : Colors.grey
-                    )),
-                  ),
-                )),
-              ],
-            ),
-          ),
+      child: Container(
+        color: Colors.white,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
             Expanded(
-              child: Container(
-                color: Colors.white,
-                  child: _formMode
-                    ? SingleChildScrollView(
-                      scrollDirection: Axis.vertical,
-                          child: Container(
-                            padding: const EdgeInsets.all(15),
-                            width: double.infinity,
-                            color: Colors.white,
-                            child: Form(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      Container(
+                        color: MobileColor.grayButtonColor,
+                        height: 40,
+                        child: Row(
+                          children: [
+                            Expanded(child: InkWell(
+                              onTap: () {
+                                setState(() {
+                                  _formMode = true;
+                                  _formValidate = false;
+                                });
+                              },
+                              child: Container(
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                    color: _formMode ? Colors.white : null,
+                                    borderRadius: const BorderRadiusDirectional.only(topEnd: Radius.circular(12))
+                                ),
+                                child: Text("Form", style: TextStyleMobile.body_14.copyWith(
+                                    color: _formMode ? MobileColor.orangeColor : Colors.grey
+                                )),
+                              ),
+                            )),
+                            Expanded(child: InkWell(
+                              onTap: () {
+                                setState(() {
+                                  if (state.objectForm.customer?.customerId != null) {
+                                    state.getProductByCustomerId(state.objectForm.customer!.customerId);
+                                    _formMode = false;
+                                    _formValidate = _formKey.currentState!.validate();
+                                  } else {
+                                    Utils.showSnackBarAlert(context, "Please choose Customer");
+                                  }
+                                });
+                              },
+                              child: Container(
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                    color: !_formMode ? Colors.white : null,
+                                    borderRadius: const BorderRadiusDirectional.only(topStart: Radius.circular(12))
+                                ),
+                                child: Text("Product", style: TextStyleMobile.body_14.copyWith(
+                                    color: !_formMode ? MobileColor.orangeColor : Colors.grey
+                                )),
+                              ),
+                            )),
+                          ],
+                        ),
+                      ),
+                      _formMode
+                        ? Container(
+                        padding: const EdgeInsets.all(15),
+                        width: double.infinity,
+                        color: Colors.white,
+                        child: Form(
                             key: _formKey,
                             autovalidateMode: AutovalidateMode.always,
                             child: Column(
@@ -154,13 +160,10 @@ class _Step01State extends State<Step01> {
                                 ),
                                 InputStyle.offsetText,
                                 TextFormField(
-                                    controller: outboundOrderNoController,
-                                    validator: (value) => Utils.validateRequire(value, "Outbound Order No."),
-                                    textAlignVertical: TextAlignVertical.center,
-                                    decoration: InputStyle.inputTextForm,
-                                  onChanged: (value) {
-                                    state.objectForm.orderNo = value;
-                                  },
+                                  controller: outboundOrderNoController,
+                                  textAlignVertical: TextAlignVertical.center,
+                                  decoration: InputStyle.inputTextForm,
+                                  readOnly: true,
                                 ),
                                 InputStyle.offsetForm,
                                 Align(
@@ -180,10 +183,36 @@ class _Step01State extends State<Step01> {
                                 ),
                                 InputStyle.offsetText,
                                 TextFormField(
-                                  readOnly: true,
+                                    readOnly: true,
                                     controller: issuerController,
                                     textAlignVertical: TextAlignVertical.center,
                                     decoration: InputStyle.inputTextForm
+                                ),
+                                InputStyle.offsetForm,
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: RichText(text: TextSpan(
+                                      children: [
+                                        TextSpan(text: "CPO",
+                                            style: TextStyleMobile.h1_14.
+                                            copyWith(color: Colors.black)
+                                        ),
+                                        TextSpan(text: " *",
+                                            style: TextStyleMobile.h1_14.
+                                            copyWith(color: Colors.red)
+                                        ),
+                                      ]
+                                  )),
+                                ),
+                                InputStyle.offsetText,
+                                TextFormField(
+                                  controller: cpoController,
+                                  validator: (value) => Utils.validateRequire(value, "CPO"),
+                                  textAlignVertical: TextAlignVertical.center,
+                                  decoration: InputStyle.inputTextForm,
+                                  onChanged: (value) {
+                                    state.objectForm.customerProjectNo = value;
+                                  },
                                 ),
                                 InputStyle.offsetForm,
                                 Align(
@@ -234,7 +263,24 @@ class _Step01State extends State<Step01> {
                                   onSelected: (Customer value) {
                                     setState(() {
                                       state.objectForm.customer = value;
+                                      state.objectForm.billing = Billing(
+                                          null,
+                                          value.billing!.name,
+                                          value.billing!.addressOne,
+                                          value.billing!.addressTwo,
+                                          value.billing!.city,
+                                          value.billing!.state,
+                                          value.billing!.zipCode,
+                                          value.billing!.country);
                                     });
+                                    state.objectForm.shipFromAddress = ShippingAddress(
+                                        null,
+                                        value.billing!.addressOne,
+                                        value.billing!.addressTwo,
+                                        value.billing!.city,
+                                        value.billing!.state,
+                                        value.billing!.zipCode,
+                                        value.billing!.country);
                                   },
                                 ),
                                 InputStyle.offsetForm,
@@ -255,18 +301,18 @@ class _Step01State extends State<Step01> {
                                 ),
                                 InputStyle.offsetText,
                                 TextFormField(
-                                  validator: (value) => Utils.validateLocation(value, "Billing"),
-                                  controller: TextEditingController(
-                                    text:
+                                    validator: (value) => Utils.validateLocation(value, "Billing"),
+                                    controller: TextEditingController(
+                                        text:
                                         "${state.objectForm.billing?.addressOne ?? ''}, "
-                                        "${state.objectForm.billing?.addressTwo ?? ''}, "
-                                        "${state.objectForm.billing?.city ?? ''}, "
-                                        "${state.objectForm.billing?.state ?? ''}, "
-                                        "${state.objectForm.billing?.zipCode ?? ''}, "
-                                        "${state.objectForm.billing?.country ?? ''}"
-                                  ),
-                                  onTap: () {
-                                    showDialog(
+                                            "${state.objectForm.billing?.addressTwo ?? ''}, "
+                                            "${state.objectForm.billing?.city ?? ''}, "
+                                            "${state.objectForm.billing?.state ?? ''}, "
+                                            "${state.objectForm.billing?.zipCode ?? ''}, "
+                                            "${state.objectForm.billing?.country ?? ''}"
+                                    ),
+                                    onTap: () {
+                                      showDialog(
                                         context: context,
                                         builder: (context) {
                                           return BillingDialog(dataSubmit: (Map<String, String> map) {
@@ -276,11 +322,11 @@ class _Step01State extends State<Step01> {
                                                   map['city'], map['state'],
                                                   map['zipcode'], map['country']);
                                             });
-                                          }, initValue: state.objectForm.billing,);
+                                          }, initValue: Billing.fromJson(state.objectForm.billing!.toJson(),));
                                         },
-                                    );
-                                  },
-                                  readOnly: true,
+                                      );
+                                    },
+                                    readOnly: true,
                                     textAlignVertical: TextAlignVertical.center,
                                     decoration: InputStyle.inputTextForm
                                 ),
@@ -363,9 +409,9 @@ class _Step01State extends State<Step01> {
                                 InputStyle.offsetText,
                                 TextField(
                                     controller: TextEditingController(
-                                      text: Utils.convertTime(state.objectForm.createdDate)
+                                        text: Utils.convertTime(state.objectForm.createdDate)
                                     ),
-                                      textAlignVertical: TextAlignVertical.center,
+                                    textAlignVertical: TextAlignVertical.center,
                                     decoration: InputStyle.lockTextForm
                                 ),
                                 InputStyle.offsetForm,
@@ -415,7 +461,7 @@ class _Step01State extends State<Step01> {
                                       child: Text(e),
                                     );
                                   }).toList(),
-                                  validator: (value) => Utils.validateLocation(value, "Status"),
+                                  validator: (value) => Utils.validateRequire(value, "Status"),
                                   onChanged: (String? value) {
                                     state.objectForm.status = value;
                                   },
@@ -439,13 +485,12 @@ class _Step01State extends State<Step01> {
                                 InputStyle.offsetText,
                                 TextFormField(
                                   controller: senderController,
-                                    validator: (value) => Utils.validateRequire(value, "Sender"),
-                                    textAlignVertical: TextAlignVertical.center,
-                                    decoration: InputStyle.inputTextForm,
+                                  validator: (value) => Utils.validateRequire(value, "Sender"),
+                                  textAlignVertical: TextAlignVertical.center,
+                                  decoration: InputStyle.inputTextForm,
                                   onChanged: (value) {
                                     state.objectForm.sender = value;
                                   },
-
                                 ),
                                 InputStyle.offsetForm,
                                 Align(
@@ -466,9 +511,9 @@ class _Step01State extends State<Step01> {
                                 InputStyle.offsetText,
                                 TextFormField(
                                   controller: receiverController,
-                                    validator: (value) => Utils.validateRequire(value, "Receiver"),
-                                    textAlignVertical: TextAlignVertical.center,
-                                    decoration: InputStyle.inputTextForm,
+                                  validator: (value) => Utils.validateRequire(value, "Receiver"),
+                                  textAlignVertical: TextAlignVertical.center,
+                                  decoration: InputStyle.inputTextForm,
                                   onChanged: (value) {
                                     state.objectForm.receiver = value;
                                   },
@@ -512,7 +557,7 @@ class _Step01State extends State<Step01> {
                                                   map['city'], map['state'],
                                                   map['zipcode'], map['country']);
                                             });
-                                          }, initValue: state.objectForm.shipFromAddress,);
+                                          }, initValue: ShippingAddress.fromJson(state.objectForm.shipFromAddress!.toJson()));
                                         },
                                       );
                                     },
@@ -559,13 +604,34 @@ class _Step01State extends State<Step01> {
                                                   map['city'], map['state'],
                                                   map['zipcode'], map['country']);
                                             });
-                                          }, initValue: state.objectForm.shipToAddress,);
+                                          }, initValue: ShippingAddress.fromJson(state.objectForm.shipToAddress!.toJson()));
                                         },
                                       );
                                     },
                                     readOnly: true,
                                     textAlignVertical: TextAlignVertical.center,
                                     decoration: InputStyle.inputTextForm
+                                ),
+                                InputStyle.offsetForm,
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: RichText(text: TextSpan(
+                                      children: [
+                                        TextSpan(text: "Note",
+                                            style: TextStyleMobile.h1_14.
+                                            copyWith(color: Colors.black)
+                                        ),
+                                      ]
+                                  )),
+                                ),
+                                InputStyle.offsetText,
+                                TextFormField(
+                                  controller: noteController,
+                                  textAlignVertical: TextAlignVertical.center,
+                                  decoration: InputStyle.inputTextForm,
+                                  onChanged: (value) {
+                                    state.objectForm.note = value;
+                                  },
                                 ),
                                 InputStyle.offsetForm,
                                 Align(
@@ -591,10 +657,10 @@ class _Step01State extends State<Step01> {
                                   },
                                   child: TextFormField(
                                     controller: TextEditingController(
-                                      text: Utils.convertTime(state.objectForm.etd)
+                                        text: Utils.convertTime(state.objectForm.etd)
                                     ),
-                                      textAlignVertical: TextAlignVertical.center,
-                                      decoration: InputStyle.dateForm,
+                                    textAlignVertical: TextAlignVertical.center,
+                                    decoration: InputStyle.dateForm,
                                   ),
                                 ),
                                 InputStyle.offsetForm,
@@ -620,35 +686,15 @@ class _Step01State extends State<Step01> {
                                     }
                                   },
                                   child: TextFormField(
-                                      controller: TextEditingController(
-                                          text: Utils.convertTime(state.objectForm.eta)
-                                      ),
-                                      textAlignVertical: TextAlignVertical.center,
-                                      decoration: InputStyle.dateForm,
+                                    controller: TextEditingController(
+                                        text: Utils.convertTime(state.objectForm.eta)
+                                    ),
+                                    textAlignVertical: TextAlignVertical.center,
+                                    decoration: InputStyle.dateForm,
                                   ),
                                 ),
                                 InputStyle.offsetForm,
-                                Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: RichText(text: TextSpan(
-                                      children: [
-                                        TextSpan(text: "Note",
-                                            style: TextStyleMobile.h1_14.
-                                            copyWith(color: Colors.black)
-                                        ),
-                                      ]
-                                  )),
-                                ),
-                                InputStyle.offsetText,
-                                TextFormField(
-                                    controller: noteController,
-                                    textAlignVertical: TextAlignVertical.center,
-                                    decoration: InputStyle.inputTextForm,
-                                  onChanged: (value) {
-                                    state.objectForm.note = value;
-                                  },
-                                ),
-                                InputStyle.offsetForm,
+
                                 Align(
                                   alignment: Alignment.centerLeft,
                                   child: RichText(text: TextSpan(
@@ -683,231 +729,229 @@ class _Step01State extends State<Step01> {
                               ],
                             )
                           ),
-                        ),
-                      ) :
-                    Container(
-                      color: Colors.white,
-                      padding: const EdgeInsets.all(15),
-                      child: Column(
-                        children: [
-                          Container(
-                            padding: const EdgeInsetsDirectional.only(top: 12, bottom: 12),
-                            height: 65,
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child:
-                                    TextField(
-                                      onChanged: (value) {
-                                        if (value != null){
-                                          setState(() {
-                                            searchKey = value;
-                                          });
-                                        }
-                                      },
-                                      decoration: const InputDecoration(
-                                          prefixIcon: Icon(Icons.search),
-                                          hintText: "Search UPC",
-                                          hintStyle: TextStyle(
-                                              color: Colors.grey
-                                          ),
-                                          border: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  style: BorderStyle.solid,
+                        )
+                        : Container(
+                          color: Colors.white,
+                          padding: const EdgeInsets.all(15),
+                          child: Column(
+                            children: [
+                              Container(
+                                padding: const EdgeInsetsDirectional.only(top: 12, bottom: 12),
+                                height: 65,
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                        child:
+                                        TextField(
+                                          onChanged: (value) {
+                                            if (value != null){
+                                              setState(() {
+                                                searchKey = value;
+                                              });
+                                            }
+                                          },
+                                          decoration: const InputDecoration(
+                                              prefixIcon: Icon(Icons.search),
+                                              hintText: "Search UPC",
+                                              hintStyle: TextStyle(
                                                   color: Colors.grey
-                                              )
+                                              ),
+                                              border: OutlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                      style: BorderStyle.solid,
+                                                      color: Colors.grey
+                                                  )
+                                              ),
+                                              focusedBorder: OutlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                      color: MobileColor.orangeColor,
+                                                      width: 2
+                                                  )
+                                              ),
+                                              contentPadding: EdgeInsets.symmetric(vertical: 0)
                                           ),
-                                          focusedBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  color: MobileColor.orangeColor,
-                                                  width: 2
-                                              )
-                                          ),
-                                          contentPadding: EdgeInsets.symmetric(vertical: 0)
-                                      ),
-                                    )
-                              ),
-                              const SizedBox(width: 10,),
-                              IconButton(
-                                  onPressed: (){
-                                    showDialog(
-                                      context: context,
-                                      builder: (context) {
-                                        return const AddRequestedDialog();
-                                      },
-                                    );
-                                  },
-                                  icon: const Icon(Icons.add),
-                                  style: ButtonStyle(
-                                      shape: MaterialStatePropertyAll(RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(5)
-                                      )),
-                                      side: const MaterialStatePropertyAll(BorderSide(
-                                          color: Colors.grey,
-                                          style: BorderStyle.solid,
-                                          width: 1
-                                      ))
-                                  )
-                              )
-                            ],
-                          ),
-                        ),
-                        Expanded(
-                          child: SingleChildScrollView(
-                            child: Column(
-                              children: state.objectForm.outboundProductDetails!.map((e) {
-                                bool check = e.product!.upc!.contains(searchKey);
-                                if (check) {
-                                return Container(
-                                  width: double.infinity,
-                                  height: 80,
-                                  margin: const EdgeInsetsDirectional.only(bottom: 10),
-                                  decoration: BoxDecoration(
-                                    color: MobileColor.grayButtonColor,
-                                    borderRadius: BorderRadius.circular(10)
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      Container(
-                                        width: 50,
-                                        alignment: Alignment.topRight,
-                                        padding: const EdgeInsets.only(top: 10),
-                                        child: Container(
-                                          width: 40,
-                                          height: 40,
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius: BorderRadius.circular(5)
-                                          ),
-                                          child: Image.asset('assets/images/Vector.png'),
-                                        ),
-                                      ),
-                                      Expanded(child: Container(
-                                        padding: const EdgeInsets.all(10),
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                          children: [
-                                            Text(e.product?.name ?? "",
-                                                overflow: TextOverflow.ellipsis,
-                                                maxLines: 1,
-                                                style: TextStyleMobile.h2_12,),
-                                            Text("SKU: ${e.sku}",
-                                              overflow: TextOverflow.ellipsis,
-                                              maxLines: 1,
-                                              style: TextStyleMobile.body_12,),
-                                            RichText(
-                                                text: TextSpan(
-                                                  children: [
-                                                    TextSpan(text: "Requested QTY: ",
-                                                      style: TextStyleMobile.body_12.copyWith(
-                                                          color: Colors.black
-                                                      ),
-                                                    ),
-                                                    TextSpan(text: e.requestedQty.toString(),
-                                                      style: TextStyleMobile.h2_12.copyWith(
-                                                          color: MobileColor.greenButtonColor
-                                                      ),
-                                                    ),
-                                                  ]
-                                                )
-                                            ),
-                                          ],
-                                        ),
-                                      )),
-                                      InkWell(
-                                        onTap: () {
+                                        )
+                                    ),
+                                    const SizedBox(width: 10,),
+                                    IconButton(
+                                        onPressed: (){
                                           showDialog(
                                             context: context,
                                             builder: (context) {
-                                              return RequestedQTYDialog(editedElement: e,);
+                                              return const AddRequestedDialog();
                                             },
                                           );
                                         },
-                                        child: Container(
-                                          alignment: Alignment.topCenter,
-                                          width: 30,
-                                          padding: const EdgeInsets.only(right: 10, top: 10),
-                                          child: const Icon(Icons.edit_square, color: Colors.grey, size: 20),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                );}
-                                return const SizedBox();
-                              }).toList(),
-                            ),
+                                        icon: const Icon(Icons.add),
+                                        style: ButtonStyle(
+                                            shape: MaterialStatePropertyAll(RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(5)
+                                            )),
+                                            side: const MaterialStatePropertyAll(BorderSide(
+                                                color: Colors.grey,
+                                                style: BorderStyle.solid,
+                                                width: 1
+                                            ))
+                                        )
+                                    )
+                                  ],
+                                ),
+                              ),
+                              Column(
+                                children: state.objectForm.outboundProductDetails!.map((e) {
+                                  bool check = e.product!.upc!.contains(searchKey);
+                                  if (check) {
+                                    return Container(
+                                      width: double.infinity,
+                                      height: 80,
+                                      margin: const EdgeInsetsDirectional.only(bottom: 5),
+                                      decoration: BoxDecoration(
+                                          color: MobileColor.grayButtonColor,
+                                          borderRadius: BorderRadius.circular(10)
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          Container(
+                                            width: 50,
+                                            alignment: Alignment.topRight,
+                                            padding: const EdgeInsets.only(top: 10),
+                                            child: Container(
+                                              width: 40,
+                                              height: 40,
+                                              decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius: BorderRadius.circular(5)
+                                              ),
+                                              child: Image.asset('assets/images/Vector.png'),
+                                            ),
+                                          ),
+                                          Expanded(child: Container(
+                                            padding: const EdgeInsets.all(10),
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                              children: [
+                                                Text(e.product?.name ?? "",
+                                                  overflow: TextOverflow.ellipsis,
+                                                  maxLines: 1,
+                                                  style: TextStyleMobile.h2_12,),
+                                                Text("SKU: ${e.sku}",
+                                                  overflow: TextOverflow.ellipsis,
+                                                  maxLines: 1,
+                                                  style: TextStyleMobile.body_12,),
+                                                RichText(
+                                                    text: TextSpan(
+                                                        children: [
+                                                          TextSpan(text: "Requested QTY: ",
+                                                            style: TextStyleMobile.body_12.copyWith(
+                                                                color: Colors.black
+                                                            ),
+                                                          ),
+                                                          TextSpan(text: e.requestedQty.toString(),
+                                                            style: TextStyleMobile.h2_12.copyWith(
+                                                                color: MobileColor.greenButtonColor
+                                                            ),
+                                                          ),
+                                                        ]
+                                                    )
+                                                ),
+                                              ],
+                                            ),
+                                          )),
+                                          InkWell(
+                                            onTap: () {
+                                              showDialog(
+                                                context: context,
+                                                builder: (context) {
+                                                  return RequestedQTYDialog(editedElement: e,);
+                                                },
+                                              );
+                                            },
+                                            child: Container(
+                                              alignment: Alignment.topCenter,
+                                              width: 30,
+                                              padding: const EdgeInsets.only(right: 10, top: 10),
+                                              child: const Icon(Icons.edit_square, color: Colors.grey, size: 20),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    );}
+                                  return const SizedBox();
+                                }).toList(),
+                              ),
+                            ],
                           ),
                         )
-                      ],
-                    ),
-                  )
-              ),
+                    ],
+                  ),
+                )
             ),
-            Container(
-              color: Colors.white,
-              child: Container(
-                padding: const EdgeInsets.only(right: 20, left: 20, bottom: 15, top: 30),
-                height: 90,
-                decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.2),
-                      spreadRadius: 2,
-                      blurRadius: 10
-                    )
-                  ],
-                  borderRadius: const BorderRadiusDirectional.only(
-                      topEnd: Radius.circular(24),
-                      topStart: Radius.circular(24)
-                  ),
-                  color: Colors.white
-                ),
+              Container(
+                color: Colors.white,
                 child: Container(
+                  padding: const EdgeInsets.only(right: 20, left: 20, bottom: 15, top: 30),
+                  height: 90,
                   decoration: BoxDecoration(
-                    color: MobileColor.orangeColor,
-                    borderRadius: BorderRadius.circular(10)
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2),
+                        spreadRadius: 2,
+                        blurRadius: 10
+                      )
+                    ],
+                    borderRadius: const BorderRadiusDirectional.only(
+                        topEnd: Radius.circular(24),
+                        topStart: Radius.circular(24)
+                    ),
+                    color: Colors.white
                   ),
-                  child: ConstrainedBox(
-                    constraints: const BoxConstraints.expand(),
-                    child: TextButton(
-                      onPressed: () {
-                        if (_formMode){
-                          if(_formKey.currentState!.validate()) {
-                            if(state.objectForm.outboundProductDetails == null || state.objectForm.outboundProductDetails!.isEmpty){
-                              Utils.showSnackBarAlert(context, "Please choose Products");
-                            } else {
-                              state.createOutbound(state.create);
-                              Utils.showSnackBar(context, "Data is saved");
-                              if (state.finishStep == 0){
-                                state.finishStep++;
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: MobileColor.orangeColor,
+                      borderRadius: BorderRadius.circular(10)
+                    ),
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints.expand(),
+                      child: TextButton(
+                        onPressed: () {
+                          if (_formMode){
+                            if(_formKey.currentState!.validate()) {
+                              if(state.objectForm.outboundProductDetails == null || state.objectForm.outboundProductDetails!.isEmpty){
+                                Utils.showSnackBarAlert(context, "Please choose Products");
+                              } else {
+                                state.createOutbound(state.create);
+                                Utils.showSnackBar(context, "Data is saved");
+                                if (state.finishStep == 0){
+                                  state.finishStep++;
+                                }
+                                state.currentStep = 1;
                               }
-                              state.currentStep = 1;
+                            }
+                          } else {
+                            if(_formValidate) {
+                              if(state.objectForm.outboundProductDetails == null || state.objectForm.outboundProductDetails!.isEmpty){
+                                Utils.showSnackBarAlert(context, "Please choose Products");
+                              } else {
+                                state.createOutbound(state.create);
+                                Utils.showSnackBar(context, "Data is saved");
+                                if (state.finishStep == 0){
+                                  state.finishStep++;
+                                }
+                                state.currentStep = 1;
+                              }
                             }
                           }
-                        } else {
-                          if(_formValidate) {
-                            if(state.objectForm.outboundProductDetails == null || state.objectForm.outboundProductDetails!.isEmpty){
-                              Utils.showSnackBarAlert(context, "Please choose Products");
-                            } else {
-                              state.createOutbound(state.create);
-                              Utils.showSnackBar(context, "Data is saved");
-                              if (state.finishStep == 0){
-                                state.finishStep++;
-                              }
-                              state.currentStep = 1;
-                            }
-                          }
-                        }
-                      },
-                      child: Text("Next", style: TextStyleMobile.button_14.copyWith(color: Colors.white)),
+                        },
+                        child: Text("Next", style: TextStyleMobile.button_14.copyWith(color: Colors.white)),
+                      ),
                     ),
                   ),
                 ),
-              ),
-            )
-          ],
-        ),
+              )
+            ],
+          ),
+      ),
       );
   }
 }

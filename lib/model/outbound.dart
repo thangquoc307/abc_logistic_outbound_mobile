@@ -71,6 +71,10 @@ class Outbound {
     _outboundPackages = {};
     _outboundProductDetails = {};
     _shippings = {};
+    _createdDate = DateTime.now();
+    _issuser = "admin";
+    _note = "";
+    _orderNo = "";
   }
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();

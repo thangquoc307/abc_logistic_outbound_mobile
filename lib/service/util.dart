@@ -56,6 +56,21 @@ class Utils {
     }
     return null;
   }
+  static String? validateZipCode(String? value) {
+    RegExp regExp = RegExp(r'^\d{5,6}$');
+
+    if (value == null || value.isEmpty) {
+      return 'Zip Code is required';
+    } else if (!regExp.hasMatch(value!)){
+      return 'Zip Code is invalid';
+    }
+    return null;
+  }
+  static bool validateDoubleNumber(String? value){
+    RegExp regExp = RegExp(r'^\d+\.?\d{0,2}');
+    return !(value == null || value.isEmpty) && regExp.hasMatch(value);
+  }
+
   static Widget renderBoxDimension(Widget inbound, Widget unit){
     return Expanded(
       child: Container(

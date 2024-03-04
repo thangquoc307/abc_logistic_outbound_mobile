@@ -205,7 +205,7 @@ class GlobalState extends ChangeNotifier{
 
   void editRequestedQty(int? productId, double newMCQty, double newUnitQty) {
     OutboundProductDetail? target = objectForm.outboundProductDetails?.firstWhere(
-            (element) => element.id == productId);
+            (element) => element.product!.id == productId);
     target?.requestedQty = newMCQty;
     target?.requestedUnitQty = newUnitQty;
     notifyListeners();
@@ -249,9 +249,15 @@ class GlobalState extends ChangeNotifier{
     List<OutboundLocationProductDetails>? list = outboundProductDetail.outboundLocationProductDetails;
     double? factor = await ApiConnector.getConvertFactor(outboundProductDetail.product!.id!);
 
+    double mcQtyTotal = 0;
+    double unitQtyTotal = 0;
+
     listController.forEach((key, value) {
       int unitQty = int.parse(value.text);
       double mcQty = double.parse(value.text) / factor!;
+
+      unitQtyTotal += unitQty;
+      mcQtyTotal += mcQty;
 
       OutboundLocationProductDetails? locationProductDetails = _getOutboundLocation(key, list!);
       if(locationProductDetails != null){
@@ -264,6 +270,8 @@ class GlobalState extends ChangeNotifier{
         list.add(outboundLocationProductDetails);
       }
     });
+    outboundProductDetail.pickedUnitQty = unitQtyTotal;
+    outboundProductDetail.pickedQty = mcQtyTotal;
     createOutbound(false);
   }
   OutboundLocationProductDetails? _getOutboundLocation (int locationId, List<OutboundLocationProductDetails> list){
@@ -276,12 +284,14 @@ class GlobalState extends ChangeNotifier{
   }
   Future<void> createOutbound(bool isCreate) async {
     Outbound? result = await ApiConnector.createOutbound(_objectForm, isCreate);
+    print(result);
     if (result != null) {
       _objectForm = result;
       await getOrderListDatabase();
       await getPickedListDatabase();
       await getPackedListDatabase();
       await getShipListDatabase();
+      notifyListeners();
     }
   }
 }

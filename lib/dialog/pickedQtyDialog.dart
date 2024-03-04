@@ -275,9 +275,9 @@ class _PickedQtyDialogState extends State<PickedQtyDialog> {
                                               },
                                               controller: controller,
                                               validator: (value) => checkQtyOnHand(value, e.totalUnitQty!, oldValue),
-                                              keyboardType: TextInputType.number,
+                                              keyboardType: const TextInputType.numberWithOptions(decimal: true),
                                               inputFormatters: <TextInputFormatter>[
-                                                FilteringTextInputFormatter.digitsOnly
+                                                FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
                                               ],
                                               decoration: InputStyle.inputTextForm,
                                               style: TextStyleMobile.body_14,

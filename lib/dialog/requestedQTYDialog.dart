@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_outbound/model/globalState.dart';
 import 'package:flutter_outbound/model/outboundProductDetails.dart';
 import 'package:flutter_outbound/service/apiConnector.dart';
+import 'package:flutter_outbound/service/util.dart';
 import 'package:provider/provider.dart';
 
 import '../cascadeStyle/color.dart';
@@ -65,6 +66,9 @@ class _RequestedQTYDialogState extends State<RequestedQTYDialog> {
     }
 
     return AlertDialog(
+      contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 24.0),
+      insetPadding: const EdgeInsets.symmetric(vertical: 24.0, horizontal: 0),
+      titlePadding: const EdgeInsets.symmetric(vertical: 24.0, horizontal: 24.0),
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(15)),
       ),
@@ -94,7 +98,7 @@ class _RequestedQTYDialogState extends State<RequestedQTYDialog> {
         TextButton(
           onPressed: () {
             if (requestedQtyValidation() == "") {
-              state.editRequestedQty(widget.editedElement.id,
+              state.editRequestedQty(widget.editedElement.product!.id,
                   double.parse(_mcQtyController.text),
                   double.parse(_unitQtyController.text)
               );
@@ -108,16 +112,29 @@ class _RequestedQTYDialogState extends State<RequestedQTYDialog> {
       content: SingleChildScrollView(
         child: Column(
           children: [
+            SizedBox(width: MediaQuery.of(context).size.width * 0.8),
             Row(
               children: [
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Prob Name:  ", style: TextStyleMobile.body_14.copyWith(color: Colors.grey)),
+                    Text("Prob Name:  ",
+                        style: TextStyleMobile.body_14.copyWith(color: Colors.grey),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                     InputStyle.offsetText,
-                    Text("SKU:  ", style: TextStyleMobile.body_14.copyWith(color: Colors.grey)),
+                    Text("SKU:  ",
+                        style: TextStyleMobile.body_14.copyWith(color: Colors.grey),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                     InputStyle.offsetText,
-                    Text("UPC:  ", style: TextStyleMobile.body_14.copyWith(color: Colors.grey)),
+                    Text("UPC:  ",
+                        style: TextStyleMobile.body_14.copyWith(color: Colors.grey),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ],
                 ),
                 Expanded(
@@ -179,16 +196,18 @@ class _RequestedQTYDialogState extends State<RequestedQTYDialog> {
                     Expanded(
                       child: TextFormField(
                         controller: _mcQtyController,
-                        keyboardType: TextInputType.number,
+                        keyboardType: const TextInputType.numberWithOptions(decimal: true),
                         inputFormatters: <TextInputFormatter>[
-                          FilteringTextInputFormatter.digitsOnly
+                          FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
                         ],
                         textAlign: TextAlign.center,
                         textAlignVertical: TextAlignVertical.center,
                         decoration: InputStyle.inputTextForm,
                         onChanged: (value) {
                           setState(() {
-                            _unitQtyController.text = (double.parse(value) * _factor!).toString();
+                            if (Utils.validateDoubleNumber(value)){
+                              _unitQtyController.text = (double.parse(value) * _factor!).toString();
+                            }
                           });
                         },
                       ),
@@ -201,9 +220,9 @@ class _RequestedQTYDialogState extends State<RequestedQTYDialog> {
                     Expanded(
                       child: TextFormField(
                         controller: _unitQtyController,
-                        keyboardType: TextInputType.number,
+                        keyboardType: const TextInputType.numberWithOptions(decimal: true),
                         inputFormatters: <TextInputFormatter>[
-                          FilteringTextInputFormatter.digitsOnly
+                          FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
                         ],
                         textAlign: TextAlign.center,
                         textAlignVertical: TextAlignVertical.center,

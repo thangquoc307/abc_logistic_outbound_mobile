@@ -602,9 +602,9 @@ class _AddReceiverDialogState extends State<AddReceiverDialog> {
                 onChanged: (value) {
                   widget.shipping.shippingAmount = double.parse(value);
                 },
-                keyboardType: TextInputType.number,
+                keyboardType: const TextInputType.numberWithOptions(decimal: true),
                 inputFormatters: <TextInputFormatter>[
-                  FilteringTextInputFormatter.digitsOnly
+                  FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
                 ],
               ),
               InputStyle.offsetForm,

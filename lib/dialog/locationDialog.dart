@@ -12,26 +12,10 @@ class BillingDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController add1Controller = TextEditingController(
-        text: initValue.addressOne
-    );
-    TextEditingController add2Controller = TextEditingController(
-        text: initValue.addressTwo
-    );
-    TextEditingController cityController = TextEditingController(
-        text: initValue.city
-    );
-    TextEditingController stateController = TextEditingController(
-        text: initValue.state
-    );
-    TextEditingController zipCodeController = TextEditingController(
-        text: initValue.zipCode
-    );
-    TextEditingController countryController = TextEditingController(
-        text: initValue.country
-    );
-    final double widthDialog = MediaQuery.of(context).size.width;
     return AlertDialog(
+      contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 24.0),
+      insetPadding: const EdgeInsets.symmetric(vertical: 24.0, horizontal: 0),
+      titlePadding: const EdgeInsets.symmetric(vertical: 24.0, horizontal: 24.0),
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(15)),
       ),
@@ -44,7 +28,7 @@ class BillingDialog extends StatelessWidget {
       ),
       content: SingleChildScrollView(
         child: SizedBox(
-          width: widthDialog,
+          width: MediaQuery.of(context).size.width * 0.8,
           child: Form(
             autovalidateMode: AutovalidateMode.always,
             key: _billingLocationKey,
@@ -68,10 +52,13 @@ class BillingDialog extends StatelessWidget {
                 ),
                 InputStyle.offsetText,
                 TextFormField(
-                  controller: add1Controller,
+                  initialValue: initValue.addressOne,
                   validator: (value) => Utils.validateRequire(value, "Address 1"),
                   textAlignVertical: TextAlignVertical.center,
                   decoration: InputStyle.inputTextForm,
+                  onChanged: (value) {
+                    initValue.addressOne = value;
+                  },
                 ),
                 InputStyle.offsetForm,
                 Align(
@@ -87,9 +74,12 @@ class BillingDialog extends StatelessWidget {
                 ),
                 InputStyle.offsetText,
                 TextFormField(
-                  controller: add2Controller,
+                  initialValue: initValue.addressTwo,
                   textAlignVertical: TextAlignVertical.center,
                   decoration: InputStyle.inputTextForm,
+                  onChanged: (value) {
+                    initValue.addressTwo = value;
+                  },
                 ),
                 InputStyle.offsetForm,
                 Align(
@@ -109,10 +99,13 @@ class BillingDialog extends StatelessWidget {
                 ),
                 InputStyle.offsetText,
                 TextFormField(
-                  controller: cityController,
+                  initialValue: initValue.city,
                   validator: (value) => Utils.validateRequire(value, "City"),
                   textAlignVertical: TextAlignVertical.center,
                   decoration: InputStyle.inputTextForm,
+                  onChanged: (value) {
+                    initValue.city = value;
+                  },
                 ),
                 InputStyle.offsetForm,
                 Align(
@@ -132,10 +125,13 @@ class BillingDialog extends StatelessWidget {
                 ),
                 InputStyle.offsetText,
                 TextFormField(
-                  controller: stateController,
+                  initialValue: initValue.state,
                   validator: (value) => Utils.validateRequire(value, "State"),
                   textAlignVertical: TextAlignVertical.center,
                   decoration: InputStyle.inputTextForm,
+                  onChanged: (value) {
+                    initValue.state = value;
+                  },
                 ),
                 InputStyle.offsetForm,
                 Align(
@@ -155,10 +151,13 @@ class BillingDialog extends StatelessWidget {
                 ),
                 InputStyle.offsetText,
                 TextFormField(
-                  controller: zipCodeController,
-                  validator: (value) => Utils.validateRequire(value, "Zip code"),
+                  initialValue: initValue.zipCode,
+                  validator: Utils.validateZipCode,
                   textAlignVertical: TextAlignVertical.center,
                   decoration: InputStyle.inputTextForm,
+                  onChanged: (value) {
+                    initValue.zipCode = value;
+                  },
                 ),
                 InputStyle.offsetForm,
                 Align(
@@ -178,10 +177,13 @@ class BillingDialog extends StatelessWidget {
                 ),
                 InputStyle.offsetText,
                 TextFormField(
-                  controller: countryController,
+                  initialValue: initValue.country,
                   validator: (value) => Utils.validateRequire(value, "Country"),
                   textAlignVertical: TextAlignVertical.center,
                   decoration: InputStyle.inputTextForm,
+                  onChanged: (value) {
+                    initValue.country = value;
+                  },
                 ),
                 InputStyle.offsetForm,
               ],
@@ -201,12 +203,12 @@ class BillingDialog extends StatelessWidget {
           onPressed: () {
             if(_billingLocationKey.currentState!.validate()){
               Map<String, String> result = {};
-              result['add1'] = add1Controller.text;
-              result['add2'] = add2Controller.text;
-              result['city'] = cityController.text;
-              result['state'] = stateController.text;
-              result['zipcode'] = zipCodeController.text;
-              result['country'] = countryController.text;
+              result['add1'] = initValue.addressOne;
+              result['add2'] = initValue.addressTwo ?? "";
+              result['city'] = initValue.city;
+              result['state'] = initValue.state;
+              result['zipcode'] = initValue.zipCode;
+              result['country'] = initValue.country;
 
               dataSubmit(result);
               Navigator.of(context).pop();

@@ -43,7 +43,7 @@ class ShippingAddress {
 
   String? get zipCode => _zipCode;
 
-  set zipcode(String? value) {
+  set zipCode(String? value) {
     _zipCode = value;
   }
 
@@ -67,7 +67,7 @@ class ShippingAddress {
 
   String? get addressOne => _addressOne;
 
-  set address1(String? value) {
+  set addressOne(String? value) {
     _addressOne = value;
   }
 

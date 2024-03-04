@@ -8,6 +8,7 @@ import 'package:flutter_outbound/model/product.dart';
 import 'package:flutter_outbound/model/weight.dart';
 import 'package:flutter_outbound/service/apiConnector.dart';
 import 'package:flutter_outbound/service/stepRender.dart';
+import 'package:flutter_outbound/service/util.dart';
 import 'package:provider/provider.dart';
 
 import '../cascadeStyle/color.dart';
@@ -36,11 +37,9 @@ class _AddProductToPackageState extends State<AddProductToPackageDialog> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getFactor();
   }
-
 
   Future<void> getFactor() async {
     for (var element in widget.outboundProductDetail) {
@@ -61,24 +60,6 @@ class _AddProductToPackageState extends State<AddProductToPackageDialog> {
     List<double> dimensionList = _analDimension(value);
     if (dimensionList[0] == 0 || dimensionList[1] == 0 || dimensionList[2] == 0) {
       return 'Dimension not equal 0';
-    }
-    return null;
-  }
-  String? _trackingNoValidate(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Tracking no is required';
-    }
-    return null;
-  }
-  String? _dimensionValidate(int? value) {
-    if (value == null) {
-      return 'Dimension unit is required';
-    }
-    return null;
-  }
-  String? _weightValidate(int? value) {
-    if (value == null) {
-      return 'Weight unit is required';
     }
     return null;
   }
@@ -123,7 +104,7 @@ class _AddProductToPackageState extends State<AddProductToPackageDialog> {
 
   @override
   Widget build(BuildContext context) {
-    var state = Provider.of<GlobalState>(context, listen: false);
+    var state = Provider.of<GlobalState>(context, listen: true);
     Map<int, double> unfulfilledQty = state.getUnfulfilledQty();
 
     return AlertDialog(
@@ -164,6 +145,16 @@ class _AddProductToPackageState extends State<AddProductToPackageDialog> {
                   }
                 }
                 widget.outboundPackage.outboundPackageProductDetails = setPack;
+
+                if (widget.outboundPackage.id == null){
+                  state.objectForm.outboundPackages!.add(widget.outboundPackage);
+                } else {
+                  for (var element in state.objectForm.outboundPackages!) {
+                    if (element.id == widget.outboundPackage.id){
+                      element = widget.outboundPackage;
+                    }
+                  }
+                }
                 state.createOutbound(false);
                 Navigator.of(context).pop();
               }
@@ -186,188 +177,192 @@ class _AddProductToPackageState extends State<AddProductToPackageDialog> {
             InputStyle.offsetForm,
             Expanded(
               child: SingleChildScrollView(
-                child: step == 0 ? Form(
-                  key: _formKey1,
-                    autovalidateMode: AutovalidateMode.always,
-                    child: Column(
-                      children: [
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: RichText(text: TextSpan(
-                              children: [
-                                TextSpan(text: "Package name",
-                                    style: TextStyleMobile.h1_14.
-                                    copyWith(color: Colors.black)
-                                ),
-                                TextSpan(text: " *",
-                                    style: TextStyleMobile.h1_14.
-                                    copyWith(color: Colors.red)
-                                ),
-                              ]
-                          )),
-                        ),
-                        InputStyle.offsetText,
-                        TextFormField(
-                          initialValue: widget.outboundPackage.name,
-                          textAlignVertical: TextAlignVertical.center,
-                          decoration: InputStyle.inputTextForm,
-                          readOnly: true,
-                        ),
-                        InputStyle.offsetForm,
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: RichText(text: TextSpan(
-                              children: [
-                                TextSpan(text: "Tracking no.",
-                                    style: TextStyleMobile.h1_14.
-                                    copyWith(color: Colors.black)
-                                ),
-                                TextSpan(text: " *",
-                                    style: TextStyleMobile.h1_14.
-                                    copyWith(color: Colors.red)
-                                ),
-                              ]
-                          )),
-                        ),
-                        InputStyle.offsetText,
-                        TextFormField(
-                          initialValue: widget.outboundPackage.trackingNo,
-                          validator: _trackingNoValidate,
-                          textAlignVertical: TextAlignVertical.center,
-                          decoration: InputStyle.inputTextForm,
-                          onChanged: (value) {
-                            widget.outboundPackage.trackingNo = value;
-                          },
-                        ),
-                        InputStyle.offsetForm,
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: RichText(text: TextSpan(
-                              children: [
-                                TextSpan(text: "Unit of Dimension",
-                                    style: TextStyleMobile.h1_14.
-                                    copyWith(color: Colors.black)
-                                ),
-                                TextSpan(text: " *",
-                                    style: TextStyleMobile.h1_14.
-                                    copyWith(color: Colors.red)
-                                ),
-                              ]
-                          )),
-                        ),
-                        InputStyle.offsetText,
-                        DropdownButtonFormField<int>(
-                          value: widget.outboundPackage.dimension?.id,
-                          hint: const Text("Select Dimension Unit"),
-                          decoration: InputStyle.inputTextForm,
-                          items: state.dimensiontUnit.entries.map((MapEntry<int, String> e) {
-                            return DropdownMenuItem<int>(
-                              value: e.key,
-                              child: Text(e.value),
-                            );
-                          }).toList(),
-                          validator: _dimensionValidate,
-                          onChanged: (value) {
-                            widget.outboundPackage.dimension = DimensionDto(value, null);
-                          },
-                        ),
-                        InputStyle.offsetForm,
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: RichText(text: TextSpan(
-                              children: [
-                                TextSpan(text: "Dimension",
-                                    style: TextStyleMobile.h1_14.
-                                    copyWith(color: Colors.black)
-                                ),
-                                TextSpan(text: " *",
-                                    style: TextStyleMobile.h1_14.
-                                    copyWith(color: Colors.red)
-                                ),
-                              ]
-                          )),
-                        ),
-                        InputStyle.offsetText,
-                        TextFormField(
-                          initialValue: "${widget.outboundPackage.pWidth.toString()}"
-                              "x${widget.outboundPackage.pHeight.toString()}"
-                              "x${widget.outboundPackage.pLength.toString()}",
-                          validator: _dimensionValueValidate,
-                          textAlignVertical: TextAlignVertical.center,
-                          decoration: InputStyle.inputTextForm,
-                          onChanged: (value) {
-                            List<double> result = _analDimension(value);
-                            widget.outboundPackage.pWidth = result[0];
-                            widget.outboundPackage.pHeight = result[1];
-                            widget.outboundPackage.pLength = result[2];
-                          },
-                        ),
-                        InputStyle.offsetForm,
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: RichText(text: TextSpan(
-                              children: [
-                                TextSpan(text: "Unit of Weight",
-                                    style: TextStyleMobile.h1_14.
-                                    copyWith(color: Colors.black)
-                                ),
-                                TextSpan(text: " *",
-                                    style: TextStyleMobile.h1_14.
-                                    copyWith(color: Colors.red)
-                                ),
-                              ]
-                          )),
-                        ),
-                        InputStyle.offsetText,
-                        DropdownButtonFormField<int>(
-                          value: widget.outboundPackage.weight?.id,
-                          hint: const Text("Select Weight Unit"),
-                          decoration: InputStyle.inputTextForm,
-                          items: state.weightUnit.entries.map((MapEntry<int, String> e) {
-                            return DropdownMenuItem<int>(
-                              value: e.key,
-                              child: Text(e.value),
-                            );
-                          }).toList(),
-                          validator: _weightValidate,
-                          onChanged: (value) {
-                            widget.outboundPackage.weight = Weight(value, null);
-                          },
-                        ),
-                        InputStyle.offsetForm,
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: RichText(text: TextSpan(
-                              children: [
-                                TextSpan(text: "Weight",
-                                    style: TextStyleMobile.h1_14.
-                                    copyWith(color: Colors.black)
-                                ),
-                                TextSpan(text: " *",
-                                    style: TextStyleMobile.h1_14.
-                                    copyWith(color: Colors.red)
-                                ),
-                              ]
-                          )),
-                        ),
-                        InputStyle.offsetText,
-                        TextFormField(
-                          initialValue: widget.outboundPackage.pWeight.toString(),
-                          textAlignVertical: TextAlignVertical.center,
-                          keyboardType: TextInputType.number,
-                          inputFormatters: <TextInputFormatter>[
-                            FilteringTextInputFormatter.digitsOnly
-                          ],
-                          decoration: InputStyle.inputTextForm,
-                          validator: _weightValueValidate,
-                          onChanged: (value) {
+                child: step == 0
+                  ? Form(
+                key: _formKey1,
+                  autovalidateMode: AutovalidateMode.always,
+                  child: Column(
+                    children: [
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: RichText(text: TextSpan(
+                            children: [
+                              TextSpan(text: "Package name",
+                                  style: TextStyleMobile.h1_14.
+                                  copyWith(color: Colors.black)
+                              ),
+                              TextSpan(text: " *",
+                                  style: TextStyleMobile.h1_14.
+                                  copyWith(color: Colors.red)
+                              ),
+                            ]
+                        )),
+                      ),
+                      InputStyle.offsetText,
+                      TextFormField(
+                        initialValue: widget.outboundPackage.name,
+                        textAlignVertical: TextAlignVertical.center,
+                        decoration: InputStyle.inputTextForm,
+                        readOnly: true,
+                      ),
+                      InputStyle.offsetForm,
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: RichText(text: TextSpan(
+                            children: [
+                              TextSpan(text: "Tracking no.",
+                                  style: TextStyleMobile.h1_14.
+                                  copyWith(color: Colors.black)
+                              ),
+                              TextSpan(text: " *",
+                                  style: TextStyleMobile.h1_14.
+                                  copyWith(color: Colors.red)
+                              ),
+                            ]
+                        )),
+                      ),
+                      InputStyle.offsetText,
+                      TextFormField(
+                        initialValue: widget.outboundPackage.trackingNo,
+                        validator: (value) => Utils.validateRequire(value, "Tracking no."),
+                        textAlignVertical: TextAlignVertical.center,
+                        decoration: InputStyle.inputTextForm,
+                        onChanged: (value) {
+                          widget.outboundPackage.trackingNo = value;
+                        },
+                      ),
+                      InputStyle.offsetForm,
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: RichText(text: TextSpan(
+                            children: [
+                              TextSpan(text: "Unit of Dimension",
+                                  style: TextStyleMobile.h1_14.
+                                  copyWith(color: Colors.black)
+                              ),
+                              TextSpan(text: " *",
+                                  style: TextStyleMobile.h1_14.
+                                  copyWith(color: Colors.red)
+                              ),
+                            ]
+                        )),
+                      ),
+                      InputStyle.offsetText,
+                      DropdownButtonFormField<int>(
+                        value: widget.outboundPackage.dimension?.id,
+                        hint: const Text("Select Dimension Unit"),
+                        decoration: InputStyle.inputTextForm,
+                        items: state.dimensiontUnit.entries.map((MapEntry<int, String> e) {
+                          return DropdownMenuItem<int>(
+                            value: e.key,
+                            child: Text(e.value),
+                          );
+                        }).toList(),
+                        validator: (value) => Utils.validateRequire(value.toString(), "Dimension unit"),
+                        onChanged: (value) {
+                          widget.outboundPackage.dimension = DimensionDto(value, null);
+                        },
+                      ),
+                      InputStyle.offsetForm,
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: RichText(text: TextSpan(
+                            children: [
+                              TextSpan(text: "Dimension",
+                                  style: TextStyleMobile.h1_14.
+                                  copyWith(color: Colors.black)
+                              ),
+                              TextSpan(text: " *",
+                                  style: TextStyleMobile.h1_14.
+                                  copyWith(color: Colors.red)
+                              ),
+                            ]
+                        )),
+                      ),
+                      InputStyle.offsetText,
+                      TextFormField(
+                        initialValue: "${widget.outboundPackage.pWidth.toString()}"
+                            "x${widget.outboundPackage.pHeight.toString()}"
+                            "x${widget.outboundPackage.pLength.toString()}",
+                        validator: _dimensionValueValidate,
+                        textAlignVertical: TextAlignVertical.center,
+                        decoration: InputStyle.inputTextForm,
+                        onChanged: (value) {
+                          List<double> result = _analDimension(value);
+                          widget.outboundPackage.pWidth = result[0];
+                          widget.outboundPackage.pHeight = result[1];
+                          widget.outboundPackage.pLength = result[2];
+                        },
+                      ),
+                      InputStyle.offsetForm,
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: RichText(text: TextSpan(
+                            children: [
+                              TextSpan(text: "Unit of Weight",
+                                  style: TextStyleMobile.h1_14.
+                                  copyWith(color: Colors.black)
+                              ),
+                              TextSpan(text: " *",
+                                  style: TextStyleMobile.h1_14.
+                                  copyWith(color: Colors.red)
+                              ),
+                            ]
+                        )),
+                      ),
+                      InputStyle.offsetText,
+                      DropdownButtonFormField<int>(
+                        value: widget.outboundPackage.weight?.id,
+                        hint: const Text("Select Weight Unit"),
+                        decoration: InputStyle.inputTextForm,
+                        items: state.weightUnit.entries.map((MapEntry<int, String> e) {
+                          return DropdownMenuItem<int>(
+                            value: e.key,
+                            child: Text(e.value),
+                          );
+                        }).toList(),
+                        validator: (value) => Utils.validateRequire(value.toString(), "Weight unit"),
+                        onChanged: (value) {
+                          widget.outboundPackage.weight = Weight(value, null);
+                        },
+                      ),
+                      InputStyle.offsetForm,
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: RichText(text: TextSpan(
+                            children: [
+                              TextSpan(text: "Weight",
+                                  style: TextStyleMobile.h1_14.
+                                  copyWith(color: Colors.black)
+                              ),
+                              TextSpan(text: " *",
+                                  style: TextStyleMobile.h1_14.
+                                  copyWith(color: Colors.red)
+                              ),
+                            ]
+                        )),
+                      ),
+                      InputStyle.offsetText,
+                      TextFormField(
+                        initialValue: widget.outboundPackage.pWeight.toString(),
+                        textAlignVertical: TextAlignVertical.center,
+                        keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                        inputFormatters: <TextInputFormatter>[
+                          FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
+                        ],
+                        decoration: InputStyle.inputTextForm,
+                        validator: _weightValueValidate,
+                        onChanged: (value) {
+                          if(Utils.validateDoubleNumber(value)){
                             widget.outboundPackage.pWeight = double.parse(value);
-                          },
-                        ),
-                        InputStyle.offsetForm,
-                      ],
-                    )
-                ) : Column(
+                          }
+                        },
+                      ),
+                      InputStyle.offsetForm,
+                    ],
+                  )
+              )
+                  : Column(
                   children: [
                     TextField(
                       onChanged: (value) {
@@ -405,10 +400,12 @@ class _AddProductToPackageState extends State<AddProductToPackageDialog> {
                       child: SingleChildScrollView(
                         child: Column(
                           children: state.objectForm.outboundProductDetails!.map((e) {
+
                             bool check = e.sku!.contains(searchKey);
                             if(check){
                               OutboundPackageProductDetail oldPackage = _getOldPackage(e.product!);
-                              double oldValue =  oldPackage.packagedQty ?? 0;
+                              double oldValue = oldPackage.packagedQty ?? 0;
+
                               double unfulfilled = e.pickedUnitQty! - (unfulfilledQty[e.product!.id] ?? 0);
                               mapResult[e.product!.id!] = oldPackage;
                               double factor = mapFactor[e.product!.id!] ?? 1;
@@ -506,9 +503,9 @@ class _AddProductToPackageState extends State<AddProductToPackageDialog> {
                                         textAlign: TextAlign.center,
                                         decoration: InputStyle.qtyTextForm,
                                         validator: (value) => _checkPackageQty(value, unfulfilled, oldValue),
-                                        keyboardType: TextInputType.number,
+                                        keyboardType: const TextInputType.numberWithOptions(decimal: true),
                                         inputFormatters: <TextInputFormatter>[
-                                          FilteringTextInputFormatter.digitsOnly
+                                          FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
                                         ],
                                         onChanged: (value) {
                                           oldPackage.packagedUnitQty = double.parse(value) * factor;

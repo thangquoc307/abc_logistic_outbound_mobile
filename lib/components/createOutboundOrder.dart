@@ -11,6 +11,7 @@ class CreateOutboundOrder extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
           appBar: AppBar(
             surfaceTintColor: Colors.white,
             shadowColor: Colors.black,
@@ -93,9 +94,16 @@ class CreateOutboundOrder extends StatelessWidget {
                     ],
                   ),
                 ),
-                const StepperCustom(),
-                const SizedBox(height: 10,),
-                const FormOutbound()
+                const Expanded(
+                    child: Column(
+                      children: [
+                        StepperCustom(),
+                        SizedBox(height: 10,),
+                        FormOutbound()
+                      ],
+                    )
+                ),
+
               ],
             ),
           )
