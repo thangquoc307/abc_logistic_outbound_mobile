@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_outbound/cascadeStyle/image.dart';
 import 'package:flutter_outbound/model/outboundPackedDto.dart';
 import 'package:flutter_outbound/service/apiConnector.dart';
 import 'package:flutter_outbound/service/stepRender.dart';
@@ -306,7 +307,7 @@ class _AddProductToPackageState extends State<ReviewPackageDialog> {
                                                 color: MobileColor.orangeColor,
                                                 borderRadius: BorderRadius.circular(5)
                                             ),
-                                            child: Image.asset('assets/images/Vectorwhite.png'),
+                                            child: const Image(image: AssetsImage.whiteVectorImage),
                                           ),
                                         ),
                                         Expanded(child: Container(

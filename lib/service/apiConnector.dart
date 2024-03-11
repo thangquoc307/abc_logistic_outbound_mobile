@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 import 'package:flutter_outbound/model/inventoryLocationProductDetail.dart';
 import 'package:flutter_outbound/model/outboundProductDetailDto.dart';
 import 'package:flutter_outbound/model/customer.dart';
@@ -11,9 +12,11 @@ import 'package:flutter_outbound/model/weight.dart';
 import 'package:http/http.dart' as http;
 
 class ApiConnector {
-  static const String prefixUrlOutboundApi = "http://192.168.1.20:9380/api/1.0/outbound/";
-  static const String prefixUrlOldOutboundApi = "http://192.168.1.20:9380/api/outbound/";
-  static const String prefixUrlCustomerApi = "http://192.168.1.20:9280/api/";
+  static const String prefixUrlOutboundApi = "http://192.168.1.25:9380/api/1.0/outbound/";
+  static const String prefixUrlOldOutboundApi = "http://192.168.1.25:9380/api/outbound/";
+  static const String prefixUrlCustomerApi = "http://192.168.1.25:9280/api/";
+  static const String prefixUrlPrinterApi = "http://192.168.1.25:8080/api/public/";
+  static const String zplConvertApi = "http://api.labelary.com/v1/printers/8dpmm/labels/4x6/0/";
 
   static Future<Map<String, dynamic>?> pageSearchOutbound(int page, String searchWord, int itemOfPage) async {
     String link = "${prefixUrlOutboundApi}list?"
@@ -250,6 +253,50 @@ class ApiConnector {
       final Outbound outbound =
       Outbound.fromJson(json.decode(res.body)['data']['outbound']);
       return outbound;
+    } else {
+      print("Error: ${res.statusCode}");
+      return null;
+    }
+  }
+
+  static Future<Uint8List?> convertZplToImage (String zplCode) async {
+    print(zplConvertApi);
+    final Uri uri = Uri.parse(zplConvertApi);
+    final res = await http.post(
+        uri,
+        headers: {
+          'Accept': 'image/png',
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: zplCode,
+        encoding: Encoding.getByName("utf-8")
+    );
+
+    if (res.statusCode == 200) {
+      return res.bodyBytes;
+    } else {
+      print("Error: ${res.statusCode}");
+      return null;
+    }
+  }
+
+  static Future<bool?> printZpl(String zplCode) async {
+    const String link = "${prefixUrlPrinterApi}print-zpl";
+    print(link);
+    final Uri uri = Uri.parse(link);
+    final res = await http.post(
+        uri,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: jsonEncode({
+          "zplCode": zplCode
+        }),
+        encoding: Encoding.getByName("utf-8")
+    );
+    if (res.statusCode == 200) {
+
+      return false;
     } else {
       print("Error: ${res.statusCode}");
       return null;

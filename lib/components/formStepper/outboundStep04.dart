@@ -10,6 +10,7 @@ import 'package:mobkit_dashed_border/mobkit_dashed_border.dart';
 
 import '../../cascadeStyle/color.dart';
 import '../../cascadeStyle/fonts.dart';
+import '../../cascadeStyle/image.dart';
 import '../../model/globalState.dart';
 
 class Step04 extends StatefulWidget {
@@ -119,7 +120,7 @@ class _Step04State extends State<Step04> {
                                 height: 75,
                                 child: Row(
                                     children: [
-                                      Image.asset("assets/images/shipItem.png"),
+                                      const Image(image: AssetsImage.shippingImage),
                                       const SizedBox(width: 10,),
                                       Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,

@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:mobkit_dashed_border/mobkit_dashed_border.dart';
 import '../../cascadeStyle/color.dart';
 import '../../cascadeStyle/fonts.dart';
+import '../../cascadeStyle/image.dart';
 import '../../model/globalState.dart';
 import '../../model/outboundProductDetails.dart';
 
@@ -231,7 +232,7 @@ class _Step03State extends State<Step03> {
                                         color: Colors.white,
                                         borderRadius: BorderRadius.circular(5)
                                     ),
-                                    child: Image.asset('assets/images/Vector.png'),
+                                    child: const Image(image: AssetsImage.blackVectorImage),
                                   ),
                                 ),
                                 Expanded(child: Container(

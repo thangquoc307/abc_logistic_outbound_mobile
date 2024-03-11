@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_outbound/cascadeStyle/color.dart';
 import 'package:flutter_outbound/cascadeStyle/fonts.dart';
+import 'package:flutter_outbound/cascadeStyle/image.dart';
 import 'package:flutter_outbound/cascadeStyle/input.dart';
 import 'package:flutter_outbound/dialog/addRequestedDialog.dart';
 import 'package:flutter_outbound/dialog/locationDialog.dart';
@@ -822,7 +823,7 @@ class _Step01State extends State<Step01> {
                                                   color: Colors.white,
                                                   borderRadius: BorderRadius.circular(5)
                                               ),
-                                              child: Image.asset('assets/images/Vector.png'),
+                                              child: const Image(image: AssetsImage.blackVectorImage),
                                             ),
                                           ),
                                           Expanded(child: Container(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_outbound/cascadeStyle/image.dart';
 import 'package:flutter_outbound/model/globalState.dart';
 import 'package:provider/provider.dart';
 
@@ -154,7 +155,7 @@ class _AddRequestedDialogState extends State<AddRequestedDialog> {
                                       color: Colors.white,
                                       borderRadius: BorderRadius.circular(5)
                                   ),
-                                  child: Image.asset('assets/images/Vector.png'),
+                                  child: const Image(image: AssetsImage.blackVectorImage),
                                 ),
                               ),
                               Expanded(child: Container(

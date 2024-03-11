@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 
 import '../../cascadeStyle/color.dart';
 import '../../cascadeStyle/fonts.dart';
+import '../../cascadeStyle/image.dart';
 import '../../model/outboundLocationProductDetails.dart';
 class Step02 extends StatefulWidget {
   const Step02({super.key});
@@ -112,8 +113,7 @@ class _Step02State extends State<Step02> {
                                       color: MobileColor.grayButtonColor,
                                       borderRadius: BorderRadius.circular(5)
                                   ),
-                                  child: Image.asset(
-                                      'assets/images/Vector.png'),
+                                  child: const Image(image: AssetsImage.blackVectorImage),
                                 ),
                               ),
                               Expanded(child: Container(

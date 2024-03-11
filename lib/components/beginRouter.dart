@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_outbound/cascadeStyle/image.dart';
 import '../cascadeStyle/color.dart';
 
 class BeginRouter extends StatelessWidget {
@@ -14,7 +15,7 @@ class BeginRouter extends StatelessWidget {
           appBar: AppBar(
             toolbarHeight: 70,
             backgroundColor: MobileColor.orangeColor,
-            title: Image.asset('assets/images/logo1.png'),
+            title: const Image(image: AssetsImage.logoImage),
             actions: const [
               Icon(
                 Icons.more_vert,
@@ -26,13 +27,26 @@ class BeginRouter extends StatelessWidget {
           ),
           body: Container(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-            child: Center(
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, "/display");
-                },
-                child: Text("Outbound"),
-              ),
+            child: Column(
+              children: [
+                Center(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, "/display");
+                    },
+                    child: const Text("Test Outbound"),
+                  ),
+                ),
+                const SizedBox(height: 10,),
+                Center(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, "/relabel");
+                    },
+                    child: const Text("Test Relabel"),
+                  ),
+                ),
+              ],
             ),
           ),
         ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_outbound/cascadeStyle/image.dart';
 import 'package:provider/provider.dart';
 import '../cascadeStyle/button.dart';
 import '../cascadeStyle/color.dart';
@@ -73,8 +74,7 @@ class _PickedListState extends State<PickedList> {
                                             color: MobileColor.grayButtonColor,
                                             borderRadius: BorderRadius.circular(5)
                                         ),
-                                        child: Image.asset(
-                                            'assets/images/Vector.png'),
+                                        child: const Image(image: AssetsImage.blackVectorImage),
                                       ),
                                     ),
                                     Expanded(child: Container(

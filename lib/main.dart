@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_outbound/components/beginRouter.dart';
 import 'package:flutter_outbound/components/createOutboundOrder.dart';
 import 'package:flutter_outbound/components/outboundDisplay.dart';
+import 'package:flutter_outbound/components/relabelFeature.dart';
 import 'package:flutter_outbound/model/globalState.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -27,6 +28,7 @@ void main() {
           '/': (context) => const BeginRouter(),
           '/display': (context) => const OutboundDisplay(),
           '/create': (context) => const CreateOutboundOrder(),
+          '/relabel': (context) => const RelabelFeature(),
         },
       ),
     ),

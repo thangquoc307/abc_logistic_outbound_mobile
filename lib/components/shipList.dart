@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_outbound/cascadeStyle/image.dart';
 import 'package:provider/provider.dart';
 
 import '../cascadeStyle/button.dart';
@@ -59,7 +60,7 @@ class OutboundShippedList extends StatelessWidget {
                               children: [
                                 Container(
                                   padding: const EdgeInsets.all(3.0),
-                                  child: Image.asset("assets/images/shipItem.png"),
+                                  child: const Image(image: AssetsImage.shippingImage),
                                 ),
                                 const SizedBox(width: 10,),
                                 Expanded(

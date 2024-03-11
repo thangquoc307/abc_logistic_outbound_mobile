@@ -21,6 +21,8 @@ dev_dependencies:
   flutter_typeahead:
   google_fonts:
   mobkit_dashed_border: ^0.0.6
+  flutter_blue:
+  esc_pos_printer:
 flutter:
   assets:
     - assets/images/

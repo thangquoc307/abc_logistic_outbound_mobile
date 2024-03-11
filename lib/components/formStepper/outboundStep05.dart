@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_outbound/cascadeStyle/color.dart';
+import 'package:flutter_outbound/cascadeStyle/image.dart';
 import 'package:flutter_outbound/dialog/reviewShipping.dart';
 import 'package:flutter_outbound/model/outboundPackageProductDetail.dart';
 import 'package:flutter_outbound/model/shipping.dart';
@@ -65,7 +66,7 @@ class _Step05State extends State<Step05> {
                                   height: 75,
                                   child: Row(
                                     children: [
-                                      Image.asset("assets/images/shipItem.png"),
+                                      const Image(image: AssetsImage.shippingImage),
                                       const SizedBox(width: 10,),
                                       Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,

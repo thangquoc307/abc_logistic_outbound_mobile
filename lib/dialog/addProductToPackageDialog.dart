@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_outbound/cascadeStyle/image.dart';
 import 'package:flutter_outbound/model/dimension.dart';
 import 'package:flutter_outbound/model/globalState.dart';
 import 'package:flutter_outbound/model/outboundPackageProductDetail.dart';
@@ -436,9 +437,9 @@ class _AddProductToPackageState extends State<AddProductToPackageDialog> {
                                             color: oldValue > 0 ? MobileColor.orangeColor : Colors.white,
                                             borderRadius: BorderRadius.circular(5)
                                         ),
-                                        child: Image.asset(oldValue > 0
-                                            ? 'assets/images/Vectorwhite.png'
-                                            : 'assets/images/Vector.png'),
+                                        child: Image(image: oldValue > 0
+                                            ? AssetsImage.whiteVectorImage
+                                            : AssetsImage.blackVectorImage),
                                       ),
                                     ),
                                     Expanded(child: Container(
