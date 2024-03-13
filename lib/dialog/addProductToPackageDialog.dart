@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_outbound/cascadeStyle/image.dart';
 import 'package:flutter_outbound/model/dimension.dart';
-import 'package:flutter_outbound/model/globalState.dart';
+import 'package:flutter_outbound/state/globalState.dart';
 import 'package:flutter_outbound/model/outboundPackageProductDetail.dart';
 import 'package:flutter_outbound/model/outboundProductDetails.dart';
 import 'package:flutter_outbound/model/product.dart';

@@ -11,8 +11,8 @@ import 'package:flutter_outbound/model/weight.dart';
 import '../service/apiConnector.dart';
 import 'package:flutter_outbound/model/outboundProductDetailDto.dart';
 
-import 'outboundLocationProductDetails.dart';
-import 'outboundProductDetails.dart';
+import '../model/outboundLocationProductDetails.dart';
+import '../model/outboundProductDetails.dart';
 
 class GlobalState extends ChangeNotifier{
   Outbound _objectForm = Outbound.nullObject();

@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import '../cascadeStyle/button.dart';
 import '../cascadeStyle/color.dart';
 import '../cascadeStyle/fonts.dart';
-import '../model/globalState.dart';
+import '../state/globalState.dart';
 import '../service/util.dart';
 
 class PackedList extends StatefulWidget {

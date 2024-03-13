@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_outbound/cascadeStyle/color.dart';
 import 'package:flutter_outbound/cascadeStyle/fonts.dart';
-import 'package:flutter_outbound/model/globalState.dart';
+import 'package:flutter_outbound/state/globalState.dart';
 import 'package:provider/provider.dart';
 
 class StepperCustom extends StatelessWidget {

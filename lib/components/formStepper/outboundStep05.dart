@@ -7,7 +7,7 @@ import 'package:flutter_outbound/model/shipping.dart';
 import 'package:flutter_outbound/model/shippingPackage.dart';
 import 'package:provider/provider.dart';
 import '../../cascadeStyle/fonts.dart';
-import '../../model/globalState.dart';
+import '../../state/globalState.dart';
 
 class Step05 extends StatefulWidget {
   const Step05({super.key});

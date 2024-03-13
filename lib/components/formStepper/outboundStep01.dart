@@ -8,7 +8,7 @@ import 'package:flutter_outbound/dialog/locationDialog.dart';
 import 'package:flutter_outbound/dialog/requestedQTYDialog.dart';
 import 'package:flutter_outbound/model/billing.dart';
 import 'package:flutter_outbound/model/customer.dart';
-import 'package:flutter_outbound/model/globalState.dart';
+import 'package:flutter_outbound/state/globalState.dart';
 import 'package:flutter_outbound/model/shippingAddress.dart';
 import 'package:flutter_outbound/service/apiConnector.dart';
 import 'package:flutter_outbound/service/util.dart';

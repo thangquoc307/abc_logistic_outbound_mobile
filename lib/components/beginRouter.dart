@@ -46,6 +46,15 @@ class BeginRouter extends StatelessWidget {
                     child: const Text("Test Relabel"),
                   ),
                 ),
+                const SizedBox(height: 10,),
+                Center(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, "/test");
+                    },
+                    child: const Text("Test Printer"),
+                  ),
+                ),
               ],
             ),
           ),

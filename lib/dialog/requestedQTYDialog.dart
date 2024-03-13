@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_outbound/model/globalState.dart';
+import 'package:flutter_outbound/state/globalState.dart';
 import 'package:flutter_outbound/model/outboundProductDetails.dart';
 import 'package:flutter_outbound/service/apiConnector.dart';
 import 'package:flutter_outbound/service/util.dart';

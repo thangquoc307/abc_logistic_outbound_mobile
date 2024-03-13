@@ -11,7 +11,7 @@ import 'package:mobkit_dashed_border/mobkit_dashed_border.dart';
 import '../../cascadeStyle/color.dart';
 import '../../cascadeStyle/fonts.dart';
 import '../../cascadeStyle/image.dart';
-import '../../model/globalState.dart';
+import '../../state/globalState.dart';
 
 class Step04 extends StatefulWidget {
   const Step04({super.key});

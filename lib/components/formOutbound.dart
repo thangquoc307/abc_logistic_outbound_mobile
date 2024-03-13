@@ -3,7 +3,7 @@ import 'package:flutter_outbound/components/formStepper/outboundStep02.dart';
 import 'package:flutter_outbound/components/formStepper/outboundStep03.dart';
 import 'package:flutter_outbound/components/formStepper/outboundStep04.dart';
 import 'package:flutter_outbound/components/formStepper/outboundStep05.dart';
-import 'package:flutter_outbound/model/globalState.dart';
+import 'package:flutter_outbound/state/globalState.dart';
 import 'package:provider/provider.dart';
 
 import 'formStepper/outboundStep01.dart';

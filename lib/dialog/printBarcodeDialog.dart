@@ -29,6 +29,7 @@ class _PrintBarcodeDialogState extends State<PrintBarcodeDialog> {
     });
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Padding(

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_outbound/cascadeStyle/button.dart';
 import 'package:flutter_outbound/cascadeStyle/color.dart';
 import 'package:flutter_outbound/cascadeStyle/fonts.dart';
-import 'package:flutter_outbound/model/globalState.dart';
+import 'package:flutter_outbound/state/globalState.dart';
 import 'package:flutter_outbound/service/util.dart';
 import 'package:provider/provider.dart';
 

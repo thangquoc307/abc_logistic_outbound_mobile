@@ -5,7 +5,7 @@ import 'package:flutter_outbound/components/orderList.dart';
 import 'package:flutter_outbound/components/packedList.dart';
 import 'package:flutter_outbound/components/pickedList.dart';
 import 'package:flutter_outbound/components/shipList.dart';
-import 'package:flutter_outbound/model/globalState.dart';
+import 'package:flutter_outbound/state/globalState.dart';
 import 'package:provider/provider.dart';
 
 class OutboundDisplay extends StatefulWidget {

@@ -8,7 +8,7 @@ import 'package:mobkit_dashed_border/mobkit_dashed_border.dart';
 import '../../cascadeStyle/color.dart';
 import '../../cascadeStyle/fonts.dart';
 import '../../cascadeStyle/image.dart';
-import '../../model/globalState.dart';
+import '../../state/globalState.dart';
 import '../../model/outboundProductDetails.dart';
 
 class Step03 extends StatefulWidget {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_outbound/cascadeStyle/image.dart';
-import 'package:flutter_outbound/model/globalState.dart';
+import 'package:flutter_outbound/state/globalState.dart';
 import 'package:provider/provider.dart';
 
 import '../cascadeStyle/color.dart';
