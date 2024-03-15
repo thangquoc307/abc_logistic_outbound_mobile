@@ -1,11 +1,17 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_outbound/dialog/bluetoothPrinterManageDialog.dart';
-import 'package:flutter_outbound/dialog/printBarcodeDialog.dart';
-import 'package:flutter_outbound/service/fakeData.dart';
+import 'dart:ffi';
 
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_outbound/dialog/bluetoothPrinterManageDialog.dart';
+import 'package:flutter_outbound/dialog/noItemDialog.dart';
+import 'package:flutter_outbound/dialog/printBarcodeDialog.dart';
+import 'package:flutter_outbound/dialog/selectRelabelScannedDialog.dart';
+import 'package:flutter_outbound/model/relabelDetail.dart';
+import 'package:flutter_outbound/service/apiConnector.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:flutter_outbound/service/util.dart';
 import '../cascadeStyle/color.dart';
 import '../cascadeStyle/fonts.dart';
-import '../model/relabel.dart';
 
 class RelabelFeature extends StatefulWidget {
   const RelabelFeature({super.key});
@@ -15,12 +21,110 @@ class RelabelFeature extends StatefulWidget {
 }
 
 class _RelabelFeatureState extends State<RelabelFeature> {
-  List<Relabel> relabelList = FakeData.zplCode;
+  List<RelabelDetail>? _relabelList;
+  final GlobalKey _displayKey = GlobalKey();
+  int _page = 0;
+  int _totalPage = 0;
+  String _searchWord = "";
+  int itemOfPage = 0;
+
+  Future<void> scanBarcodeNormal() async {
+    String barcodeScanRes;
+    try {
+      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+          '#ff6666', 'Cancel', true, ScanMode.BARCODE);
+
+      List<RelabelDetail>? relabelDetailScanned = await ApiConnector.getRelabelByOriginBarcode(barcodeScanRes);
+
+      if(relabelDetailScanned == null) {
+        showDialog(
+            context: context,
+            builder: (context) {
+              return const NoItemDialog();
+            }
+        );
+      } else if (relabelDetailScanned.length == 1){
+        showDialog(
+            context: context,
+            builder: (context) {
+              return PrintBarcodeDialog(relabel: relabelDetailScanned[0],);
+            }
+        );
+      } else if (relabelDetailScanned.length == 0){
+        showDialog(
+            context: context,
+            builder: (context) {
+              return const NoItemDialog();
+            }
+        );
+      } else {
+        showDialog(
+            context: context,
+            builder: (context) {
+              return SelectRelabelScannedDialog(list: relabelDetailScanned);
+            }
+        );
+      }
+
+    } on PlatformException {
+      barcodeScanRes = 'Failed to get platform version.';
+    }
+
+    if (!mounted) return;
+
+
+    //goij api kiem file
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      if (_displayKey.currentContext != null) {
+        getRelabelDetail();
+      }
+    });
+  }
+
+  Future<void> getRelabelDetail() async {
+    double heightItem = 75;
+    double displayHeight = _displayKey.currentContext?.size?.height ?? 0;
+
+    itemOfPage = (displayHeight / heightItem).floor();
+
+    Map<String, dynamic>? newData = await ApiConnector.pageSearchRelabel(_page, _searchWord, itemOfPage);
+
+    setState(() {
+      if (newData != null) {
+        _relabelList = newData["data"];
+        _totalPage = newData["totalPages"];
+      } else {
+        _relabelList = [];
+        _totalPage = 0;
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    List list = [];
+    if(_relabelList != null) {
+      list = List.from(_relabelList!);
+      for (var i = itemOfPage; i > _relabelList!.length; i--){
+        list.add(null);
+      }
+    }
+
     return SafeArea(
       child: Scaffold(
+        floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              scanBarcodeNormal();
+            },
+          backgroundColor: MobileColor.orangeColor,
+          child: const Icon(Icons.barcode_reader, color: Colors.white,),
+        ),
         backgroundColor: MobileColor.grayButtonColor,
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
@@ -134,123 +238,142 @@ class _RelabelFeatureState extends State<RelabelFeature> {
               ),
             ),
             Expanded(
-              child: SingleChildScrollView(
+              child: Container(
+                key: _displayKey,
                 child: Column(
-                  children: relabelList.map((e) {
-                    return Container(
-                      margin: const EdgeInsets.only(bottom: 10, left: 15, right: 15),
-                      child: Row(
-                        children: [
-                          Expanded(
+                  children: list.map((e) {
+                    if (e == null) {
+                      return const Expanded(child: SizedBox());
+                    }
+                    return Expanded(
+                      child: Container(
+                        margin: const EdgeInsets.only(bottom: 10, left: 15, right: 15),
+                        child: Row(
+                          children: [
+                            Expanded(
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 15, vertical: 10
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        margin: const EdgeInsets.only(right: 10),
+                                        width: 40,
+                                        height: 40,
+                                        decoration: BoxDecoration(
+                                          color: MobileColor.grayButtonColor,
+                                          borderRadius: BorderRadius.circular(10)
+                                        ),
+                                        child: const Icon(Icons.document_scanner_outlined,
+                                          color: Colors.grey,
+                                          size: 28,
+                                        ),
+                                      ),
+                                      Expanded(
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              RichText(
+                                                  overflow: TextOverflow.ellipsis,
+                                                  maxLines: 1,
+                                                  text: TextSpan(
+                                                    children: [
+                                                      TextSpan(
+                                                        text: "Original Barcode: ",
+                                                        style: TextStyleMobile.body_12.copyWith(
+                                                            color: Colors.grey
+                                                        ),
+                                                      ),
+                                                      TextSpan(
+                                                        text: e.originalBarcode ?? "",
+                                                        style: TextStyleMobile.h2_12.copyWith(
+                                                            color: Colors.black
+                                                        ),
+                                                      )
+                                                    ]
+                                                  )
+                                              ),
+                                              RichText(
+                                                  overflow: TextOverflow.ellipsis,
+                                                  maxLines: 1,
+                                                  text: TextSpan(
+                                                      children: [
+                                                        TextSpan(
+                                                          text: "New Barcode: ",
+                                                          style: TextStyleMobile.body_12.copyWith(
+                                                              color: Colors.grey
+                                                          ),
+                                                        ),
+                                                        TextSpan(
+                                                          text: e.newBarcode ?? "",
+                                                          style: TextStyleMobile.h2_12.copyWith(
+                                                              color: Colors.black
+                                                          ),
+                                                        )
+                                                      ]
+                                                  ),
+                                              ),
+                                              Expanded(
+                                                child: Align(
+                                                  alignment: Alignment.bottomRight,
+                                                  child: Text(Utils.convertFullTime(e.createdDate),
+                                                    style: TextStyleMobile.body_12.copyWith(
+                                                      color: Colors.grey
+                                                    ),
+                                                  ),
+                                                ),
+                                              )
+
+                                            ],
+                                          )
+                                      )
+
+                                    ],
+                                  ),
+                                ),
+                            ),
+                            const SizedBox(width: 10,),
+                            InkWell(
                               child: Container(
                                 decoration: BoxDecoration(
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(10),
                                 ),
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      margin: const EdgeInsets.all(10),
-                                      width: 40,
-                                      height: 40,
-                                      decoration: BoxDecoration(
-                                        color: MobileColor.grayButtonColor,
-                                        borderRadius: BorderRadius.circular(10)
-                                      ),
-                                      child: const Icon(Icons.document_scanner_outlined,
-                                        color: Colors.grey,
-                                        size: 28,
-                                      ),
-                                    ),
-                                    Expanded(
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text("Original Barcode:",
-                                              overflow: TextOverflow.ellipsis,
-                                              maxLines: 1,
-                                              style: TextStyleMobile.button_14.copyWith(
-                                                color: Colors.grey
-                                              ),
-                                            ),
-                                            Text(e.originalBarcode,
-                                              overflow: TextOverflow.ellipsis,
-                                              maxLines: 1,
-                                              style: TextStyleMobile.h1_14.copyWith(
-                                                color: Colors.black
-                                              ),
-                                            )
-                                          ],
-                                        )
-                                    )
-
-                                  ],
+                                width: 50,
+                                height: double.infinity,
+                                child: const Icon(Icons.print_outlined,
+                                  size: 28,
+                                  color: Colors.grey,
                                 ),
                               ),
-                          ),
-                          const SizedBox(width: 10,),
-                          InkWell(
-                            child: Container(
-                              width: 60,
-                              height: 60,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: const Icon(Icons.print_outlined,
-                                size: 28,
-                                color: Colors.grey,
-                              ),
-                            ),
-                            onTap: () {
-                              showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return PrintBarcodeDialog(relabel: e,);
-                                  }
-                              );
-                            },
-                          )
-                        ],
+
+                              onTap: () {
+                                showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return PrintBarcodeDialog(relabel: e,);
+                                    }
+                                );
+                              },
+                            )
+                          ],
+                        ),
                       ),
                     );
                   }).toList(),
                 ),
               ),
             ),
-            Container(
-              padding: const EdgeInsets.only(right: 20, left: 20, bottom: 15, top: 30),
-              height: 90,
-              decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                        color: Colors.black.withOpacity(0.2),
-                        spreadRadius: 2,
-                        blurRadius: 10
-                    )
-                  ],
-                  borderRadius: const BorderRadiusDirectional.only(
-                      topEnd: Radius.circular(24),
-                      topStart: Radius.circular(24)
-                  ),
-                  color: Colors.white
-              ),
-              child: Container(
-                decoration: BoxDecoration(
-                    color: MobileColor.orangeColor,
-                    borderRadius: BorderRadius.circular(10)
-                ),
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints.expand(),
-                  child: TextButton(
-                    onPressed: () {
-
-                    },
-                    child: Text("Scanned", style: TextStyleMobile.button_14.copyWith(color: Colors.white)),
-                  ),
-                ),
-              ),
-            )
+            Utils.renderPageButton([_page, _totalPage], (value) {
+              _page = value;
+              getRelabelDetail();
+            })
           ],
         ),
 

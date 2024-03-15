@@ -1,14 +1,14 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_outbound/model/relabel.dart';
+import 'package:flutter_outbound/model/relabelDetail.dart';
 import '../cascadeStyle/color.dart';
 import '../cascadeStyle/fonts.dart';
 import '../service/apiConnector.dart';
 
 class PrintBarcodeDialog extends StatefulWidget {
   const PrintBarcodeDialog({super.key, required this.relabel, });
-  final Relabel relabel;
+  final RelabelDetail relabel;
   @override
   State<PrintBarcodeDialog> createState() => _PrintBarcodeDialogState();
 }
@@ -23,7 +23,8 @@ class _PrintBarcodeDialogState extends State<PrintBarcodeDialog> {
   }
 
   Future<void> getImageFromAPI() async {
-    Uint8List? bitCode = await ApiConnector.convertZplToImage(widget.relabel.zplCode);
+    print(widget.relabel.relabelDetailFiles!.text);
+    Uint8List? bitCode = await ApiConnector.convertZplToImage(widget.relabel.relabelDetailFiles!.text!);
     setState(() {
       imageData = bitCode;
     });
@@ -74,7 +75,7 @@ class _PrintBarcodeDialogState extends State<PrintBarcodeDialog> {
                 color: Colors.grey
               ),
             ),
-            Text(widget.relabel.originalBarcode,
+            Text(widget.relabel.originalBarcode!,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: TextStyleMobile.h1_14.copyWith(
@@ -89,7 +90,7 @@ class _PrintBarcodeDialogState extends State<PrintBarcodeDialog> {
                   color: Colors.grey
               ),
             ),
-            Text(widget.relabel.newBarcode,
+            Text(widget.relabel.newBarcode!,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: TextStyleMobile.h1_14.copyWith(
@@ -116,7 +117,7 @@ class _PrintBarcodeDialogState extends State<PrintBarcodeDialog> {
             const SizedBox(height: 15,),
             InkWell(
               onTap: () {
-                ApiConnector.printZpl(widget.relabel.zplCode);
+                ApiConnector.printZpl(widget.relabel.relabelDetailFiles!.text!);
               },
               child: Container(
                 alignment: Alignment.center,

@@ -4,6 +4,18 @@ import '../cascadeStyle/color.dart';
 import '../cascadeStyle/fonts.dart';
 
 class Utils {
+  static String convertFullTime(DateTime? time) {
+    if (time != null) {
+      return
+      "${time.hour < 10 ? '0' : ''}${time.hour}"
+      ":${time.minute < 10 ? '0' : ''}${time.minute}"
+      " - ${time.day < 10 ? '0' : ''}${time.day}"
+      "/${time.month < 10 ? '0' : ''}${time.month}"
+      "/${time.year}";
+    } else {
+      return "";
+    }
+  }
   static String convertTime(DateTime? time) {
     if (time != null) {
       return
@@ -289,5 +301,8 @@ class Utils {
           ],
         ),
       );
+  }
+  static Widget waitingDataWidget(){
+    return const Center(child: CircularProgressIndicator(color: MobileColor.orangeColor,));
   }
 }

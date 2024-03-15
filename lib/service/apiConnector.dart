@@ -7,6 +7,7 @@ import 'package:flutter_outbound/model/dimension.dart';
 import 'package:flutter_outbound/model/outbound.dart';
 import 'package:flutter_outbound/model/outboundPackedDto.dart';
 import 'package:flutter_outbound/model/product.dart';
+import 'package:flutter_outbound/model/relabelDetail.dart';
 import 'package:flutter_outbound/model/shipping.dart';
 import 'package:flutter_outbound/model/weight.dart';
 import 'package:http/http.dart' as http;
@@ -16,6 +17,7 @@ class ApiConnector {
   static const String prefixUrlOldOutboundApi = "http://192.168.1.25:9380/api/outbound/";
   static const String prefixUrlCustomerApi = "http://192.168.1.25:9280/api/";
   static const String prefixUrlPrinterApi = "http://192.168.1.25:8080/api/public/";
+  static const String prefixUrlRelabelApi = "http://51.79.255.60:9580/api/relabel/";
   static const String zplConvertApi = "http://api.labelary.com/v1/printers/8dpmm/labels/4x6/0/";
 
   static Future<Map<String, dynamic>?> pageSearchOutbound(int page, String searchWord, int itemOfPage) async {
@@ -297,6 +299,55 @@ class ApiConnector {
     if (res.statusCode == 200) {
 
       return false;
+    } else {
+      print("Error: ${res.statusCode}");
+      return null;
+    }
+  }
+
+  static Future<Map<String, dynamic>?> pageSearchRelabel(int page, String searchWord, int itemOfPage) async {
+    String link = "${prefixUrlRelabelApi}get-all-relabel-detail?"
+        "page=${page}&size=${itemOfPage}";
+    print(link);
+    final res = await http.get(Uri.parse(link));
+
+    if (res.statusCode == 200) {
+      final String responseBody = utf8.decode(res.bodyBytes);
+      final Map<String, dynamic> responseData = json.decode(responseBody)['data']['relabelDetails'];
+      final Map<String, dynamic> result = {"totalPages" : responseData["totalPages"]};
+
+      if (responseData.containsKey("content") && responseData["content"] is List) {
+        final List<dynamic> productList = responseData["content"];
+        final List<RelabelDetail> relabelDetailList = productList
+            .map((dynamic e) => RelabelDetail.fromJson(e)).toList();
+        result['data'] = relabelDetailList;
+      } else {
+        result['data'] = [];
+      }
+      return result;
+    } else {
+      print("Error: ${res.statusCode}");
+      return null;
+    }
+  }
+
+  static Future<List<RelabelDetail>?> getRelabelByOriginBarcode(String originBarcode) async {
+    String link = "${prefixUrlRelabelApi}get-relabel-by-original-barcode/${originBarcode}";
+    print(link);
+    final res = await http.get(Uri.parse(link));
+
+    if (res.statusCode == 200) {
+      final String responseBody = utf8.decode(res.bodyBytes);
+      final Map<String, dynamic> responseData = json.decode(responseBody)['data'];
+
+      if (responseData.containsKey("relabelDetail") && responseData["relabelDetail"] is List) {
+        final List<dynamic> productList = responseData["relabelDetail"];
+        final List<RelabelDetail> relabelDetailList = productList
+            .map((dynamic e) => RelabelDetail.fromJson(e)).toList();
+        return relabelDetailList;
+      } else {
+        return [];
+      }
     } else {
       print("Error: ${res.statusCode}");
       return null;

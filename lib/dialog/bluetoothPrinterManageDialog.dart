@@ -38,6 +38,7 @@ class _BluetoothPrinterManageDialogState extends State<BluetoothPrinterManageDia
     }).catchError((error) {
       print('Lỗi khi kết nối với thiết bị: $error');
     });
+    setState(() {});
   }
 
   @override

@@ -18,6 +18,7 @@ dependencies:
   mobkit_dashed_border: ^0.0.6
   flutter_blue: ^0.8.0
   flutter_zebra_sdk: ^0.0.4+1
+  flutter_barcode_scanner:
 #  zebrautility: ^0.0.41
 #  zsdk: ^2.0.0+11
 
