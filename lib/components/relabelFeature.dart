@@ -1,7 +1,7 @@
-import 'dart:ffi';
-
+import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_outbound/cascadeStyle/image.dart';
 import 'package:flutter_outbound/dialog/bluetoothPrinterManageDialog.dart';
 import 'package:flutter_outbound/dialog/noItemDialog.dart';
 import 'package:flutter_outbound/dialog/printBarcodeDialog.dart';
@@ -25,8 +25,37 @@ class _RelabelFeatureState extends State<RelabelFeature> {
   final GlobalKey _displayKey = GlobalKey();
   int _page = 0;
   int _totalPage = 0;
-  String _searchWord = "";
   int itemOfPage = 0;
+
+  String _searchWord = "";
+  DateTime? _startDate;
+  DateTime? _endDate;
+
+  Future<void> _selectDateRange(BuildContext context) async {
+    if (_startDate != null) {
+      _startDate = null;
+      _endDate = null;
+    } else {
+      List<DateTime?>? picker = (await showCalendarDatePicker2Dialog(context: context,
+          config: CalendarDatePicker2WithActionButtonsConfig(
+              calendarType: CalendarDatePicker2Type.range,
+              okButtonTextStyle: TextStyleMobile.h1_14.copyWith(color: MobileColor.orangeColor),
+              cancelButtonTextStyle: TextStyleMobile.h1_14.copyWith(color: Colors.grey),
+              selectedRangeDayTextStyle: TextStyleMobile.body_14.copyWith(color: MobileColor.orangeColor),
+              selectedRangeHighlightColor: MobileColor.softOrangeColor,
+              selectedDayHighlightColor: MobileColor.orangeColor
+          ),
+          dialogSize: Size(MediaQuery.of(context).size.width, 350)
+      ));
+      if(picker != null && picker.length == 2) {
+        _startDate = picker[0];
+        _endDate = picker[1]!.add(const Duration(days: 1));
+      }
+    }
+    _page = 0;
+    getRelabelDetail();
+  }
+
 
   Future<void> scanBarcodeNormal() async {
     String barcodeScanRes;
@@ -35,8 +64,8 @@ class _RelabelFeatureState extends State<RelabelFeature> {
           '#ff6666', 'Cancel', true, ScanMode.BARCODE);
 
       List<RelabelDetail>? relabelDetailScanned = await ApiConnector.getRelabelByOriginBarcode(barcodeScanRes);
-
-      if(relabelDetailScanned == null) {
+      if(relabelDetailScanned == null || relabelDetailScanned.isEmpty) {
+        // ignore: use_build_context_synchronously
         showDialog(
             context: context,
             builder: (context) {
@@ -44,20 +73,15 @@ class _RelabelFeatureState extends State<RelabelFeature> {
             }
         );
       } else if (relabelDetailScanned.length == 1){
+        // ignore: use_build_context_synchronously
         showDialog(
             context: context,
             builder: (context) {
               return PrintBarcodeDialog(relabel: relabelDetailScanned[0],);
             }
         );
-      } else if (relabelDetailScanned.length == 0){
-        showDialog(
-            context: context,
-            builder: (context) {
-              return const NoItemDialog();
-            }
-        );
       } else {
+        // ignore: use_build_context_synchronously
         showDialog(
             context: context,
             builder: (context) {
@@ -65,15 +89,10 @@ class _RelabelFeatureState extends State<RelabelFeature> {
             }
         );
       }
-
     } on PlatformException {
       barcodeScanRes = 'Failed to get platform version.';
     }
-
     if (!mounted) return;
-
-
-    //goij api kiem file
   }
 
   @override
@@ -93,7 +112,8 @@ class _RelabelFeatureState extends State<RelabelFeature> {
 
     itemOfPage = (displayHeight / heightItem).floor();
 
-    Map<String, dynamic>? newData = await ApiConnector.pageSearchRelabel(_page, _searchWord, itemOfPage);
+    Map<String, dynamic>? newData = await ApiConnector.pageSearchRelabel(
+        _page, _searchWord, itemOfPage, _searchWord, _startDate, _endDate);
 
     setState(() {
       if (newData != null) {
@@ -110,9 +130,11 @@ class _RelabelFeatureState extends State<RelabelFeature> {
   Widget build(BuildContext context) {
     List list = [];
     if(_relabelList != null) {
-      list = List.from(_relabelList!);
-      for (var i = itemOfPage; i > _relabelList!.length; i--){
-        list.add(null);
+      if (_relabelList!.isNotEmpty) {
+        list = List.from(_relabelList!);
+        for (var i = itemOfPage; i > _relabelList!.length; i--){
+          list.add(null);
+        }
       }
     }
 
@@ -146,36 +168,66 @@ class _RelabelFeatureState extends State<RelabelFeature> {
             Container(
               margin: const EdgeInsets.only(right: 15, left: 15, top: 15),
               height: 65,
-              child: TextField(
-                onChanged: (value) {
-                  if (value != null){
-                    setState(() {
-
-                    });
-                  }
-                },
-                decoration: const InputDecoration(
-                  prefixIcon: Icon(Icons.search),
-                  hintText: "Search Barcode",
-                  hintStyle: TextStyle(
-                      color: Colors.grey
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      onChanged: (value) {
+                        if (value != null){
+                          _page = 0;
+                          _searchWord = value;
+                          getRelabelDetail();
+                        }
+                      },
+                      decoration: const InputDecoration(
+                        prefixIcon: Icon(Icons.search),
+                        hintText: "Search Barcode",
+                        hintStyle: TextStyle(
+                            color: Colors.grey
+                        ),
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                style: BorderStyle.solid,
+                                color: Colors.grey
+                            )
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: MobileColor.orangeColor,
+                                width: 2
+                            )
+                        ),
+                        contentPadding: EdgeInsets.symmetric(vertical: 0),
+                        fillColor: Colors.white,
+                        filled: true,
+                      ),
+                    ),
                   ),
-                  border: OutlineInputBorder(
-                      borderSide: BorderSide(
-                          style: BorderStyle.solid,
-                          color: Colors.grey
-                      )
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                          color: MobileColor.orangeColor,
-                          width: 2
-                      )
-                  ),
-                  contentPadding: EdgeInsets.symmetric(vertical: 0),
-                  fillColor: Colors.white,
-                  filled: true,
-                ),
+                  InkWell(
+                    onTap: () {
+                      _selectDateRange(context);
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.only(left: 15,),
+                      width: 50,
+                      height: 50,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                            color: (_startDate == null)
+                                ? Colors.grey
+                                : MobileColor.orangeColor
+                        )
+                      ),
+                      child: Icon(Icons.calendar_month_outlined,
+                          color: (_startDate == null)
+                              ? Colors.grey
+                              : MobileColor.orangeColor
+                      ),
+                    ),
+                  )
+                ],
               ),
             ),
             Container(
@@ -240,7 +292,9 @@ class _RelabelFeatureState extends State<RelabelFeature> {
             Expanded(
               child: Container(
                 key: _displayKey,
-                child: Column(
+                child: list.isEmpty
+                  ? const Center(child: Image(image: AssetsImage.notFound),)
+                  : Column(
                   children: list.map((e) {
                     if (e == null) {
                       return const Expanded(child: SizedBox());

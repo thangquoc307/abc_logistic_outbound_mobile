@@ -26,6 +26,14 @@ class Utils {
       return "";
     }
   }
+  static String convertTimeApi(DateTime? time) {
+    if (time != null) {
+      return
+        "${time.year}-${time.month}-${time.day}";
+    } else {
+      return "";
+    }
+  }
   static Future<DateTime?> selectDate(BuildContext context, DateTime? initDate) async {
     initDate ??= DateTime.now();
     final DateTime? picker = await showDatePicker(

@@ -10,6 +10,7 @@ import 'package:flutter_outbound/model/product.dart';
 import 'package:flutter_outbound/model/relabelDetail.dart';
 import 'package:flutter_outbound/model/shipping.dart';
 import 'package:flutter_outbound/model/weight.dart';
+import 'package:flutter_outbound/service/util.dart';
 import 'package:http/http.dart' as http;
 
 class ApiConnector {
@@ -305,9 +306,13 @@ class ApiConnector {
     }
   }
 
-  static Future<Map<String, dynamic>?> pageSearchRelabel(int page, String searchWord, int itemOfPage) async {
+  static Future<Map<String, dynamic>?> pageSearchRelabel(
+      int page, String searchWord, int itemOfPage, String barcode, DateTime? startDate, DateTime? endDate) async {
+
     String link = "${prefixUrlRelabelApi}get-all-relabel-detail?"
-        "page=${page}&size=${itemOfPage}";
+        "page=$page&size=$itemOfPage&barcode=$barcode"
+        "&date_start=${Utils.convertTimeApi(startDate)}"
+        "&date_finish=${Utils.convertTimeApi(endDate)}";
     print(link);
     final res = await http.get(Uri.parse(link));
 

@@ -19,6 +19,7 @@ dependencies:
   flutter_blue: ^0.8.0
   flutter_zebra_sdk: ^0.0.4+1
   flutter_barcode_scanner:
+  calendar_date_picker2: ^0.5.3
 #  zebrautility: ^0.0.41
 #  zsdk: ^2.0.0+11
 
